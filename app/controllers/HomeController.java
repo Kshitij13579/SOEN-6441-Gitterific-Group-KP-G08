@@ -42,15 +42,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 	@Inject FormFactory formFactory;
     public Result index() throws InterruptedException, ExecutionException {
     	Form<UrlParam> urlForm = formFactory.form(UrlParam.class);
-//    	WSRequest request = ws.url("https://api.github.com/search/repositories?q=soen-6441-risk-fall");
-//    	request.setMethod("GET");
-//    	request.addHeader("ACCEPT", "application/vnd.github.v3+json");
-//    	
-//    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.asJson());
-//    	String s=jsonPromise.toCompletableFuture().get().get("items").get(1).get("name").toString();
-//    	String s1=jsonPromise.toCompletableFuture().get().get("items").get(0).get("name").toString();
-//    	tasks.add(s);
-//    	tasks.add(s1);
         return ok(index.render(tasks,urlForm));
     }
     
