@@ -54,7 +54,6 @@ public class HomeController extends Controller implements WSBodyReadables {
     public Result search(String query) throws InterruptedException, ExecutionException {
     	Form<UrlParam> urlForm = formFactory.form(UrlParam.class).bindFromRequest();
     	UrlParam param = urlForm.get();
-    	System.out.println(query);
     	WSRequest request = ws.url("https://api.github.com/search/repositories?q="+query+"&page=1&per_page=10");
     	request.setMethod("GET");
     	request.addHeader("ACCEPT", "application/vnd.github.v3+json");
