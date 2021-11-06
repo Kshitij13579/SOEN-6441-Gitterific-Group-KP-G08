@@ -4,14 +4,14 @@
 <center><h2 class="center">Gitterific</h2></center>
 <body>
 	<center>
-		<form method="GET" action="save">
+		<form method="GET" action="search">
 		 Search : <input type="text" name="query"></input>
 		 <input type="submit" value="Go"></input>
 		</form>
 	</center>
 	<center><ul>
 	    @for(task <- tasks){
-	      <li>@task</li>
+	      <li style="list-style-type: none;">@task</li>
 	    }
 	</ul></center>
 </body>

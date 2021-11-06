@@ -4,7 +4,7 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
-GET     /save                       controllers.HomeController.save(query:String)
+GET     /search                       controllers.HomeController.search(query:String)
 GET     /create                     controllers.HomeController.create
 
 

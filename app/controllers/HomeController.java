@@ -31,7 +31,7 @@ import java.util.concurrent.ExecutionException;
  * to the application's home page.
  */
 public class HomeController extends Controller implements WSBodyReadables {
-
+	List<String> tasks = new ArrayList<String>();
     /**
      * An action that renders an HTML page with a welcome message.
      * The configuration in the <code>routes</code> file means that
@@ -41,18 +41,16 @@ public class HomeController extends Controller implements WSBodyReadables {
 	@Inject WSClient ws;
 	@Inject FormFactory formFactory;
     public Result index() throws InterruptedException, ExecutionException {
-    	
-    	WSRequest request = ws.url("https://api.github.com/search/repositories?q=soen-6441-risk-fall");
-    	request.setMethod("GET");
-    	request.addHeader("ACCEPT", "application/vnd.github.v3+json");
-    	
-    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.asJson());
-    	String s=jsonPromise.toCompletableFuture().get().get("items").get(1).get("name").toString();
-    	String s1=jsonPromise.toCompletableFuture().get().get("items").get(0).get("name").toString();
-    	List<String> tasks = new ArrayList<String>();
-    	tasks.add(s);
-    	tasks.add(s1);
     	Form<UrlParam> urlForm = formFactory.form(UrlParam.class);
+//    	WSRequest request = ws.url("https://api.github.com/search/repositories?q=soen-6441-risk-fall");
+//    	request.setMethod("GET");
+//    	request.addHeader("ACCEPT", "application/vnd.github.v3+json");
+//    	
+//    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.asJson());
+//    	String s=jsonPromise.toCompletableFuture().get().get("items").get(1).get("name").toString();
+//    	String s1=jsonPromise.toCompletableFuture().get().get("items").get(0).get("name").toString();
+//    	tasks.add(s);
+//    	tasks.add(s1);
         return ok(index.render(tasks,urlForm));
     }
     
@@ -62,11 +60,11 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(index.render(s,urlForm));
     }
     
-    public Result save(String query) throws InterruptedException, ExecutionException {
+    public Result search(String query) throws InterruptedException, ExecutionException {
     	Form<UrlParam> urlForm = formFactory.form(UrlParam.class).bindFromRequest();
     	UrlParam param = urlForm.get();
     	System.out.println(query);
-    	WSRequest request = ws.url("https://api.github.com/search/repositories?q="+query+"&page=1&per_page=20");
+    	WSRequest request = ws.url("https://api.github.com/search/repositories?q="+query+"&page=1&per_page=10");
     	request.setMethod("GET");
     	request.addHeader("ACCEPT", "application/vnd.github.v3+json");
     	
