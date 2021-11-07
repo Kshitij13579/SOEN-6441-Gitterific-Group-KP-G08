@@ -4,8 +4,7 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
-GET     /save                       controllers.HomeController.save(query:String)
-GET     /create                     controllers.HomeController.create
+GET     /fetch                       controllers.HomeController.fetch(query:String)
 
 
 # Map static resources from the /public folder to the /assets URL path

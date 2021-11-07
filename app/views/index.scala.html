@@ -1,18 +1,37 @@
-@(tasks: List[String],urlForm : Form[UrlParam])
-@import helper._
+@(repos: List[model.Repository])
 <html>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
 <center><h2 class="center">Gitterific</h2></center>
 <body>
 	<center>
-		<form method="GET" action="save">
+		<form method="GET" action="fetch">
 		 Search : <input type="text" name="query"></input>
 		 <input type="submit" value="Go"></input>
 		</form>
 	</center>
-	<center><ul>
-	    @for(task <- tasks){
-	      <li>@task</li>
+	<center>
+	    <table>
+	         <tr>
+			    <th>User</th>
+			    <th>Repository</th>
+			    <th>Issues</th>
+			    <th>Topics</th>
+			    <th>Commit Statistics</th>
+             </tr>
+	    @for(repo <- repos){
+	      <tr>
+			    <td>@repo.login</td>
+			    <td>@repo.name</td>
+			    <td>@repo.issues_url</td>
+			    <td>Topic</td>
+			    <td><a href=@repo.commits_url>Link</a></td>
+          </tr>
 	    }
-	</ul></center>
+	   </table>
+	</center>
 </body>
 </html>

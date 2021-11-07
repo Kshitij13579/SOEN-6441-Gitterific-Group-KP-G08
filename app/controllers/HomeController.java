@@ -5,12 +5,17 @@ import javax.inject.Inject;
 import org.w3c.dom.Document;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.typesafe.config.ConfigFactory;
 
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
+import model.GIT_HEADER;
+import model.GIT_PARAM;
+import model.Repository;
 import play.mvc.*;
 import play.mvc.Http.Cookie;
 import play.mvc.Http.MultipartFormData.Part;
+import service.RepositorySearchService;
 import views.html.index;
 import play.data.Form;
 import play.data.FormFactory;
@@ -38,46 +43,31 @@ public class HomeController extends Controller implements WSBodyReadables {
      * this method will be called when the application receives a
      * <code>GET</code> request with a path of <code>/</code>.
      */
-	@Inject WSClient ws;
-	@Inject FormFactory formFactory;
+	
+	@Inject
+	WSClient ws;
+	
     public Result index() throws InterruptedException, ExecutionException {
     	
-    	WSRequest request = ws.url("https://api.github.com/search/repositories?q=soen-6441-risk-fall");
-    	request.setMethod("GET");
-    	request.addHeader("ACCEPT", "application/vnd.github.v3+json");
-    	
-    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.asJson());
-    	String s=jsonPromise.toCompletableFuture().get().get("items").get(1).get("name").toString();
-    	String s1=jsonPromise.toCompletableFuture().get().get("items").get(0).get("name").toString();
-    	List<String> tasks = new ArrayList<String>();
-    	tasks.add(s);
-    	tasks.add(s1);
-    	Form<UrlParam> urlForm = formFactory.form(UrlParam.class);
-        return ok(index.render(tasks,urlForm));
+    	List<Repository> repoList = new ArrayList<Repository>();
+        return ok(index.render(repoList));
     }
     
-    public Result create() {
-    	Form<UrlParam> urlForm = formFactory.form(UrlParam.class);
-    	List<String> s = new ArrayList<String>();
-    	return ok(index.render(s,urlForm));
-    }
-    
-    public Result save(String query) throws InterruptedException, ExecutionException {
-    	Form<UrlParam> urlForm = formFactory.form(UrlParam.class).bindFromRequest();
-    	UrlParam param = urlForm.get();
-    	System.out.println(query);
-    	WSRequest request = ws.url("https://api.github.com/search/repositories?q="+query+"&page=1&per_page=20");
-    	request.setMethod("GET");
-    	request.addHeader("ACCEPT", "application/vnd.github.v3+json");
+    public Result fetch(String query) throws InterruptedException, ExecutionException {
     	
-    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.asJson());
-    	List<String> tasks = new ArrayList<String>();
-    	for(int i=0;i<jsonPromise.toCompletableFuture().get().get("items").size();i++) {
-        	tasks.add(jsonPromise.toCompletableFuture().get().get("items").get(i).get("name").toString());
-        	
-        	}
+    	RepositorySearchService repoService = new RepositorySearchService();
+    	List<Repository> repoList = new ArrayList<Repository>();
     	
-		return ok(index.render(tasks, urlForm));
+    	WSRequest request = ws.url(ConfigFactory.load().getString("git_search_repo_url"))
+    			              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"))
+    			              .addQueryParameter(GIT_PARAM.QUERY.value, query)
+    			              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
+    			              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"));
+    	
+    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+    	repoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
+    	
+		return ok(index.render(repoList));
     }
     
 }
