@@ -1,0 +1,4 @@
+[debug] "not up to date. inChanged = true, force = false
+[debug] Updating ProjectRef(uri("file:/D:/University/Concordia%20University/Fall%202021/APP/APP_Project/SOEN-6441-Gitterific-Group-KP-G08/project/"), "soen-6441-gitterific-group-kp-g08-build")...
+[debug] Done updating ProjectRef(uri("file:/D:/University/Concordia%20University/Fall%202021/APP/APP_Project/SOEN-6441-Gitterific-Group-KP-G08/project/"), "soen-6441-gitterific-group-kp-g08-build")
+[warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.

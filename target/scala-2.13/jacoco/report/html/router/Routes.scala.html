@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Routes.scala</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=2;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Jacoco Coverage Report</a> &gt; <a href="index.source.html" class="el_package">router</a> &gt; <span class="el_source">Routes.scala</span></div><h1>Routes.scala</h1><pre class="source lang-java linenums">// @GENERATOR:play-routes-compiler
+// @SOURCE:D:/University/Concordia University/Fall 2021/APP/APP_Project/SOEN-6441-Gitterific-Group-KP-G08/conf/routes
+// @DATE:Sat Nov 06 15:20:43 EDT 2021
+
+package router
+
+import play.core.routing._
+import play.core.routing.HandlerInvokerFactory._
+
+import play.api.mvc._
+
+import _root_.controllers.Assets.Asset
+import _root_.play.libs.F
+
+<span class="fc" id="L15">class Routes(</span>
+<span class="fc" id="L16">  override val errorHandler: play.api.http.HttpErrorHandler, </span>
+  // @LINE:6
+<span class="fc" id="L18">  HomeController_1: controllers.HomeController,</span>
+  // @LINE:12
+<span class="fc" id="L20">  Assets_0: controllers.Assets,</span>
+<span class="fc" id="L21">  val prefix: String</span>
+<span class="fc" id="L22">) extends GeneratedRouter {</span>
+
+   @javax.inject.Inject()
+   def this(errorHandler: play.api.http.HttpErrorHandler,
+    // @LINE:6
+    HomeController_1: controllers.HomeController,
+    // @LINE:12
+    Assets_0: controllers.Assets
+<span class="fc" id="L30">  ) = this(errorHandler, HomeController_1, Assets_0, &quot;/&quot;)</span>
+
+  def withPrefix(addPrefix: String): Routes = {
+<span class="fc" id="L33">    val prefix = play.api.routing.Router.concatPrefix(addPrefix, this.prefix)</span>
+<span class="fc" id="L34">    router.RoutesPrefix.setPrefix(prefix)</span>
+<span class="fc" id="L35">    new Routes(errorHandler, HomeController_1, Assets_0, prefix)</span>
+  }
+
+<span class="fc" id="L38">  private[this] val defaultPrefix: String = {</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">    if (this.prefix.endsWith(&quot;/&quot;)) &quot;&quot; else &quot;/&quot;</span>
+  }
+
+<span class="nc" id="L42">  def documentation = List(</span>
+<span class="nc" id="L43">    (&quot;&quot;&quot;GET&quot;&quot;&quot;, this.prefix, &quot;&quot;&quot;controllers.HomeController.index&quot;&quot;&quot;),</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">    (&quot;&quot;&quot;GET&quot;&quot;&quot;, this.prefix + (if(this.prefix.endsWith(&quot;/&quot;)) &quot;&quot; else &quot;/&quot;) + &quot;&quot;&quot;save&quot;&quot;&quot;, &quot;&quot;&quot;controllers.HomeController.save(query:String)&quot;&quot;&quot;),</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">    (&quot;&quot;&quot;GET&quot;&quot;&quot;, this.prefix + (if(this.prefix.endsWith(&quot;/&quot;)) &quot;&quot; else &quot;/&quot;) + &quot;&quot;&quot;create&quot;&quot;&quot;, &quot;&quot;&quot;controllers.HomeController.create&quot;&quot;&quot;),</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">    (&quot;&quot;&quot;GET&quot;&quot;&quot;, this.prefix + (if(this.prefix.endsWith(&quot;/&quot;)) &quot;&quot; else &quot;/&quot;) + &quot;&quot;&quot;assets/&quot;&quot;&quot; + &quot;$&quot; + &quot;&quot;&quot;file&lt;.+&gt;&quot;&quot;&quot;, &quot;&quot;&quot;controllers.Assets.versioned(path:String = &quot;/public&quot;, file:Asset)&quot;&quot;&quot;),</span>
+<span class="nc" id="L47">    Nil</span>
+<span class="nc" id="L48">  ).foldLeft(List.empty[(String,String,String)]) { (s,e) =&gt; e.asInstanceOf[Any] match {</span>
+    case r @ (_,_,_) =&gt; s :+ r.asInstanceOf[(String,String,String)]
+    case l =&gt; s ++ l.asInstanceOf[List[(String,String,String)]]
+  }}
+
+
+  // @LINE:6
+<span class="pc bpc" id="L55" title="2 of 4 branches missed.">  private[this] lazy val controllers_HomeController_index0_route = Route(&quot;GET&quot;,</span>
+<span class="fc" id="L56">    PathPattern(List(StaticPart(this.prefix)))</span>
+  )
+<span class="pc bpc" id="L58" title="2 of 4 branches missed.">  private[this] lazy val controllers_HomeController_index0_invoker = createInvoker(</span>
+<span class="fc" id="L59">    HomeController_1.index,</span>
+<span class="fc" id="L60">    play.api.routing.HandlerDef(this.getClass.getClassLoader,</span>
+<span class="fc" id="L61">      &quot;router&quot;,</span>
+<span class="fc" id="L62">      &quot;controllers.HomeController&quot;,</span>
+<span class="fc" id="L63">      &quot;index&quot;,</span>
+<span class="fc" id="L64">      Nil,</span>
+<span class="fc" id="L65">      &quot;GET&quot;,</span>
+<span class="fc" id="L66">      this.prefix + &quot;&quot;&quot;&quot;&quot;&quot;,</span>
+<span class="fc" id="L67">      &quot;&quot;&quot; An example controller showing a sample home page&quot;&quot;&quot;,</span>
+<span class="fc" id="L68">      Seq()</span>
+    )
+  )
+
+  // @LINE:7
+<span class="nc bnc" id="L73" title="All 4 branches missed.">  private[this] lazy val controllers_HomeController_save1_route = Route(&quot;GET&quot;,</span>
+<span class="nc" id="L74">    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart(&quot;save&quot;)))</span>
+  )
+<span class="nc bnc" id="L76" title="All 4 branches missed.">  private[this] lazy val controllers_HomeController_save1_invoker = createInvoker(</span>
+<span class="nc" id="L77">    HomeController_1.save(fakeValue[String]),</span>
+<span class="nc" id="L78">    play.api.routing.HandlerDef(this.getClass.getClassLoader,</span>
+<span class="nc" id="L79">      &quot;router&quot;,</span>
+<span class="nc" id="L80">      &quot;controllers.HomeController&quot;,</span>
+<span class="nc" id="L81">      &quot;save&quot;,</span>
+<span class="nc" id="L82">      Seq(classOf[String]),</span>
+<span class="nc" id="L83">      &quot;GET&quot;,</span>
+<span class="nc" id="L84">      this.prefix + &quot;&quot;&quot;save&quot;&quot;&quot;,</span>
+<span class="nc" id="L85">      &quot;&quot;&quot;&quot;&quot;&quot;,</span>
+<span class="nc" id="L86">      Seq()</span>
+    )
+  )
+
+  // @LINE:8
+<span class="nc bnc" id="L91" title="All 4 branches missed.">  private[this] lazy val controllers_HomeController_create2_route = Route(&quot;GET&quot;,</span>
+<span class="nc" id="L92">    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart(&quot;create&quot;)))</span>
+  )
+<span class="nc bnc" id="L94" title="All 4 branches missed.">  private[this] lazy val controllers_HomeController_create2_invoker = createInvoker(</span>
+<span class="nc" id="L95">    HomeController_1.create,</span>
+<span class="nc" id="L96">    play.api.routing.HandlerDef(this.getClass.getClassLoader,</span>
+<span class="nc" id="L97">      &quot;router&quot;,</span>
+<span class="nc" id="L98">      &quot;controllers.HomeController&quot;,</span>
+<span class="nc" id="L99">      &quot;create&quot;,</span>
+<span class="nc" id="L100">      Nil,</span>
+<span class="nc" id="L101">      &quot;GET&quot;,</span>
+<span class="nc" id="L102">      this.prefix + &quot;&quot;&quot;create&quot;&quot;&quot;,</span>
+<span class="nc" id="L103">      &quot;&quot;&quot;&quot;&quot;&quot;,</span>
+<span class="nc" id="L104">      Seq()</span>
+    )
+  )
+
+  // @LINE:12
+<span class="nc bnc" id="L109" title="All 4 branches missed.">  private[this] lazy val controllers_Assets_versioned3_route = Route(&quot;GET&quot;,</span>
+<span class="nc" id="L110">    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart(&quot;assets/&quot;), DynamicPart(&quot;file&quot;, &quot;&quot;&quot;.+&quot;&quot;&quot;,false)))</span>
+  )
+<span class="nc bnc" id="L112" title="All 4 branches missed.">  private[this] lazy val controllers_Assets_versioned3_invoker = createInvoker(</span>
+<span class="nc" id="L113">    Assets_0.versioned(fakeValue[String], fakeValue[Asset]),</span>
+<span class="nc" id="L114">    play.api.routing.HandlerDef(this.getClass.getClassLoader,</span>
+<span class="nc" id="L115">      &quot;router&quot;,</span>
+<span class="nc" id="L116">      &quot;controllers.Assets&quot;,</span>
+<span class="nc" id="L117">      &quot;versioned&quot;,</span>
+<span class="nc" id="L118">      Seq(classOf[String], classOf[Asset]),</span>
+<span class="nc" id="L119">      &quot;GET&quot;,</span>
+<span class="nc" id="L120">      this.prefix + &quot;&quot;&quot;assets/&quot;&quot;&quot; + &quot;$&quot; + &quot;&quot;&quot;file&lt;.+&gt;&quot;&quot;&quot;,</span>
+<span class="nc" id="L121">      &quot;&quot;&quot; Map static resources from the /public folder to the /assets URL path&quot;&quot;&quot;,</span>
+<span class="nc" id="L122">      Seq()</span>
+    )
+  )
+
+
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">  def routes: PartialFunction[RequestHeader, Handler] = {</span>
+  
+    // @LINE:6
+<span class="pc bpc" id="L130" title="6 of 8 branches missed.">    case controllers_HomeController_index0_route(params@_) =&gt;</span>
+<span class="pc" id="L131">      call { </span>
+<span class="fc" id="L132">        controllers_HomeController_index0_invoker.call(HomeController_1.index)</span>
+      }
+  
+    // @LINE:7
+<span class="nc bnc" id="L136" title="All 8 branches missed.">    case controllers_HomeController_save1_route(params@_) =&gt;</span>
+<span class="nc" id="L137">      call(params.fromQuery[String](&quot;query&quot;, None)) { (query) =&gt;</span>
+        controllers_HomeController_save1_invoker.call(HomeController_1.save(query))
+      }
+  
+    // @LINE:8
+<span class="nc bnc" id="L142" title="All 8 branches missed.">    case controllers_HomeController_create2_route(params@_) =&gt;</span>
+<span class="nc" id="L143">      call { </span>
+<span class="nc" id="L144">        controllers_HomeController_create2_invoker.call(HomeController_1.create)</span>
+      }
+  
+    // @LINE:12
+<span class="nc bnc" id="L148" title="All 8 branches missed.">    case controllers_Assets_versioned3_route(params@_) =&gt;</span>
+<span class="nc" id="L149">      call(Param[String](&quot;path&quot;, Right(&quot;/public&quot;)), params.fromPath[Asset](&quot;file&quot;, None)) { (path, file) =&gt;</span>
+        controllers_Assets_versioned3_invoker.call(Assets_0.versioned(path, file))
+      }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
