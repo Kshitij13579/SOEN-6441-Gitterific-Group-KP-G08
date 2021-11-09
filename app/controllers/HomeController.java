@@ -53,7 +53,7 @@ public class HomeController extends Controller implements WSBodyReadables {
         return ok(index.render(repoList));
     }
     
-    public Result fetch(String query) throws InterruptedException, ExecutionException {
+    public Result search(String query) throws InterruptedException, ExecutionException {
     	
     	RepositorySearchService repoService = new RepositorySearchService();
     	List<Repository> repoList = new ArrayList<Repository>();
