@@ -3,3 +3,8 @@ jacoco
 run
 test
 jacoco
+run
+test
+jacoco
+test
+run

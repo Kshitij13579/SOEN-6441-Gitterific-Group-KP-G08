@@ -2,13 +2,17 @@
 [debug] Forking tests - parallelism = false
 [debug] Create a single-thread test executor
 [debug] Runner for com.novocode.junit.JUnitFramework produced 1 initial tasks for 1 tests.
-[debug]   Running TaskDef(controllers.HomeControllerTest, sbt.ForkMain$AnnotatedFingerscan@6eb6e5f6, false, [SuiteSelector])
+[debug]   Running TaskDef(controllers.HomeControllerTest, sbt.ForkMain$AnnotatedFingerscan@3de6b562, false, [SuiteSelector])
 [debug] Test run started
 [debug] Test controllers.HomeControllerTest.testIndex started
-[debug] Test controllers.HomeControllerTest.testIndex finished, took 4.503 sec
-[debug] Test run finished: 0 failed, 0 ignored, 1 total, 4.509s
-[debug]     Produced 0 nested tasks and 1 events.
+[debug] Test controllers.HomeControllerTest.testIndex finished, took 3.551 sec
+[debug] Test controllers.HomeControllerTest.testRepositoryFalse started
+[error] Test controllers.HomeControllerTest.testRepositoryFalse failed: null, took 0.135 sec
+[debug] Test controllers.HomeControllerTest.testRepositoryFalse finished, took 0.136 sec
+[debug] Test run finished: 1 failed, 0 ignored, 2 total, 3.692s
+[debug]     Produced 0 nested tasks and 2 events.
 [debug] Summary for JUnit not available.
-[info] Passed: Total 1, Failed 0, Errors 0, Passed 1
-[debug] Passed tests:
-[debug] 	controllers.HomeControllerTest
+[error] Failed: Total 2, Failed 1, Errors 0, Passed 1
+[error] Failed tests:
+[error] 	controllers.HomeControllerTest
+[error] (Test / test) sbt.TestsFailedException: Tests unsuccessful

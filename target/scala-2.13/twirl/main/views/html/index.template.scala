@@ -22,39 +22,58 @@ import play.mvc.Http.Context.Implicit._
 import play.data._
 import play.core.j.PlayFormsMagicForJava._
 
-object index extends _root_.play.twirl.api.BaseScalaTemplate[play.twirl.api.HtmlFormat.Appendable,_root_.play.twirl.api.Format[play.twirl.api.HtmlFormat.Appendable]](play.twirl.api.HtmlFormat) with _root_.play.twirl.api.Template2[List[String],Form[UrlParam],play.twirl.api.HtmlFormat.Appendable] {
+object index extends _root_.play.twirl.api.BaseScalaTemplate[play.twirl.api.HtmlFormat.Appendable,_root_.play.twirl.api.Format[play.twirl.api.HtmlFormat.Appendable]](play.twirl.api.HtmlFormat) with _root_.play.twirl.api.Template1[List[model.Repository],play.twirl.api.HtmlFormat.Appendable] {
 
   /**/
-  def apply/*1.2*/(tasks: List[String],urlForm : Form[UrlParam]):play.twirl.api.HtmlFormat.Appendable = {
+  def apply/*1.2*/(repos: List[model.Repository]):play.twirl.api.HtmlFormat.Appendable = {
     _display_ {
       {
-/*2.2*/import helper._
 
 
-Seq[Any](format.raw/*1.48*/("""
-"""),format.raw/*3.1*/("""<html>
+Seq[Any](format.raw/*1.33*/("""
+"""),format.raw/*2.1*/("""<html>
+<style>
+table, th, td """),format.raw/*4.15*/("""{"""),format.raw/*4.16*/("""
+  """),format.raw/*5.3*/("""border:1px solid black;
+"""),format.raw/*6.1*/("""}"""),format.raw/*6.2*/("""
+"""),format.raw/*7.1*/("""</style>
 <center><h2 class="center">Gitterific</h2></center>
 <body>
 	<center>
-		<form method="GET" action="save">
+		<form method="GET" action="fetch">
 		 Search : <input type="text" name="query"></input>
 		 <input type="submit" value="Go"></input>
 		</form>
 	</center>
-	<center><ul>
-	    """),_display_(/*13.7*/for(task <- tasks) yield /*13.25*/{_display_(Seq[Any](format.raw/*13.26*/("""
-	      """),format.raw/*14.8*/("""<li>"""),_display_(/*14.13*/task),format.raw/*14.17*/("""</li>
-	    """)))}),format.raw/*15.7*/("""
-	"""),format.raw/*16.2*/("""</ul></center>
+	<center>
+	    <table>
+	         <tr>
+			    <th>User</th>
+			    <th>Repository</th>
+			    <th>Issues</th>
+			    <th>Topics</th>
+			    <th>Commit Statistics</th>
+             </tr>
+	    """),_display_(/*25.7*/for(repo <- repos) yield /*25.25*/{_display_(Seq[Any](format.raw/*25.26*/("""
+	      """),format.raw/*26.8*/("""<tr>
+			    <td>"""),_display_(/*27.13*/repo/*27.17*/.login),format.raw/*27.23*/("""</td>
+			    <td>"""),_display_(/*28.13*/repo/*28.17*/.name),format.raw/*28.22*/("""</td>
+			    <td>"""),_display_(/*29.13*/repo/*29.17*/.issues_url),format.raw/*29.28*/("""</td>
+			    <td>Topic</td>
+			    <td><a href="""),_display_(/*31.21*/repo/*31.25*/.commits_url),format.raw/*31.37*/(""">Link</a></td>
+          </tr>
+	    """)))}),format.raw/*33.7*/("""
+	   """),format.raw/*34.5*/("""</table>
+	</center>
 </body>
 </html>"""))
       }
     }
   }
 
-  def render(tasks:List[String],urlForm:Form[UrlParam]): play.twirl.api.HtmlFormat.Appendable = apply(tasks,urlForm)
+  def render(repos:List[model.Repository]): play.twirl.api.HtmlFormat.Appendable = apply(repos)
 
-  def f:((List[String],Form[UrlParam]) => play.twirl.api.HtmlFormat.Appendable) = (tasks,urlForm) => apply(tasks,urlForm)
+  def f:((List[model.Repository]) => play.twirl.api.HtmlFormat.Appendable) = (repos) => apply(repos)
 
   def ref: this.type = this
 
@@ -63,11 +82,11 @@ Seq[Any](format.raw/*1.48*/("""
 
               /*
                   -- GENERATED --
-                  DATE: 2021-11-06T15:20:43.914826600
+                  DATE: 2021-11-07T22:22:32.290023900
                   SOURCE: D:/University/Concordia University/Fall 2021/APP/APP_Project/SOEN-6441-Gitterific-Group-KP-G08/app/views/index.scala.html
-                  HASH: 7d05c6f792a63ab360c97e90db1029c1ec39144d
-                  MATRIX: 969->1|1088->50|1133->47|1161->67|1447->327|1481->345|1520->346|1556->355|1588->360|1613->364|1656->377|1686->380
-                  LINES: 28->1|31->2|34->1|35->3|45->13|45->13|45->13|46->14|46->14|46->14|47->15|48->16
+                  HASH: 31afb380a480767fd9f23ee68baf5fb0d517b655
+                  MATRIX: 964->1|1090->32|1118->34|1176->65|1204->66|1234->70|1285->95|1312->96|1340->98|1808->540|1842->558|1881->559|1917->568|1962->586|1975->590|2002->596|2048->615|2061->619|2087->624|2133->643|2146->647|2178->658|2255->708|2268->712|2301->724|2370->763|2403->769
+                  LINES: 28->1|33->1|34->2|36->4|36->4|37->5|38->6|38->6|39->7|57->25|57->25|57->25|58->26|59->27|59->27|59->27|60->28|60->28|60->28|61->29|61->29|61->29|63->31|63->31|63->31|65->33|66->34
                   -- GENERATED --
               */
           

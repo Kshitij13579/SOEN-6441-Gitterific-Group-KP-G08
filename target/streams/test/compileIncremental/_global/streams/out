@@ -1,1 +1,23 @@
-[debug] No changes
+[debug] 
+[debug] Initial source changes: 
+[debug] 	removed:Set()
+[debug] 	added: Set()
+[debug] 	modified: Set(D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\test\controllers\HomeControllerTest.java)
+[debug] Invalidated products: Set()
+[debug] External API changes: API Changes: Set()
+[debug] Modified binary dependencies: Set()
+[debug] Initial directly invalidated classes: Set(controllers.HomeControllerTest)
+[debug] 
+[debug] Sources indirectly invalidated by:
+[debug] 	product: Set()
+[debug] 	binary dep: Set()
+[debug] 	external source: Set()
+[debug] All sources are invalidated.
+[debug] Initial set of included nodes: controllers.HomeControllerTest
+[debug] Recompiling all sources: number of invalidated sources > 50.0% of all sources
+[info] Compiling 1 Java source to D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\test-classes ...
+[debug] Attempting to call com.sun.tools.javac.api.JavacTool@6fd45ccf directly...
+[debug] Java compilation took 0.9976379 s
+[debug] Java analysis took 0.060995 s
+[debug] Java compilation + analysis took 1.0662243 s
+[info] Done compiling.

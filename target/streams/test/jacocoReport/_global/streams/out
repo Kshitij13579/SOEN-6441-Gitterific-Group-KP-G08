@@ -1,12 +1,12 @@
 [info] 
 [info] ------- Jacoco Coverage Report -------
 [info] 
-[info] Lines: 23.98% (>= required 0.0%) covered, 168 of 221 missed, OK
-[info] Instructions: 20.08% (>= required 0.0%) covered, 1516 of 1897 missed, OK
-[info] Branches: 9.3% (>= required 0.0%) covered, 78 of 86 missed, OK
-[info] Methods: 20.18% (>= required 0.0%) covered, 91 of 114 missed, OK
-[info] Complexity: 14.65% (>= required 0.0%) covered, 134 of 157 missed, OK
-[info] Class: 31.58% (>= required 0.0%) covered, 13 of 19 missed, OK
+[info] Lines: 30.39% (>= required 0.0%) covered, 126 of 181 missed, OK
+[info] Instructions: 24.09% (>= required 0.0%) covered, 1194 of 1573 missed, OK
+[info] Branches: 12.12% (>= required 0.0%) covered, 58 of 66 missed, OK
+[info] Methods: 23.53% (>= required 0.0%) covered, 78 of 102 missed, OK
+[info] Complexity: 17.78% (>= required 0.0%) covered, 111 of 135 missed, OK
+[info] Class: 41.18% (>= required 0.0%) covered, 10 of 17 missed, OK
 [info] 
 [info] Check D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\jacoco\report for detailed report
 [info]  

@@ -5,12 +5,17 @@ import javax.inject.Inject;
 import org.w3c.dom.Document;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.typesafe.config.ConfigFactory;
 
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
+import model.GIT_HEADER;
+import model.GIT_PARAM;
+import model.Repository;
 import play.mvc.*;
 import play.mvc.Http.Cookie;
 import play.mvc.Http.MultipartFormData.Part;
+import service.RepositorySearchService;
 import views.html.index;
 import play.data.Form;
 import play.data.FormFactory;
@@ -30,7 +35,7 @@ import java.util.concurrent.ExecutionException;
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
  */
-<span class="fc" id="L33">public class HomeController extends Controller implements WSBodyReadables {</span>
+<span class="fc" id="L38">public class HomeController extends Controller implements WSBodyReadables {</span>
 
     /**
      * An action that renders an HTML page with a welcome message.
@@ -38,46 +43,31 @@ import java.util.concurrent.ExecutionException;
      * this method will be called when the application receives a
      * &lt;code&gt;GET&lt;/code&gt; request with a path of &lt;code&gt;/&lt;/code&gt;.
      */
-	@Inject WSClient ws;
-	@Inject FormFactory formFactory;
+	
+	@Inject
+	WSClient ws;
+	
     public Result index() throws InterruptedException, ExecutionException {
     	
-<span class="fc" id="L45">    	WSRequest request = ws.url(&quot;https://api.github.com/search/repositories?q=soen-6441-risk-fall&quot;);</span>
-<span class="fc" id="L46">    	request.setMethod(&quot;GET&quot;);</span>
-<span class="fc" id="L47">    	request.addHeader(&quot;ACCEPT&quot;, &quot;application/vnd.github.v3+json&quot;);</span>
-    	
-<span class="fc" id="L49">    	CompletionStage&lt;JsonNode&gt; jsonPromise = request.get().thenApply(r -&gt; r.asJson());</span>
-<span class="fc" id="L50">    	String s=jsonPromise.toCompletableFuture().get().get(&quot;items&quot;).get(1).get(&quot;name&quot;).toString();</span>
-<span class="fc" id="L51">    	String s1=jsonPromise.toCompletableFuture().get().get(&quot;items&quot;).get(0).get(&quot;name&quot;).toString();</span>
-<span class="fc" id="L52">    	List&lt;String&gt; tasks = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L53">    	tasks.add(s);</span>
-<span class="fc" id="L54">    	tasks.add(s1);</span>
-<span class="fc" id="L55">    	Form&lt;UrlParam&gt; urlForm = formFactory.form(UrlParam.class);</span>
-<span class="fc" id="L56">        return ok(index.render(tasks,urlForm));</span>
+<span class="fc" id="L52">    	List&lt;Repository&gt; repoList = new ArrayList&lt;Repository&gt;();</span>
+<span class="fc" id="L53">        return ok(index.render(repoList));</span>
     }
     
-    public Result create() {
-<span class="nc" id="L60">    	Form&lt;UrlParam&gt; urlForm = formFactory.form(UrlParam.class);</span>
-<span class="nc" id="L61">    	List&lt;String&gt; s = new ArrayList&lt;String&gt;();</span>
-<span class="nc" id="L62">    	return ok(index.render(s,urlForm));</span>
-    }
-    
-    public Result save(String query) throws InterruptedException, ExecutionException {
-<span class="nc" id="L66">    	Form&lt;UrlParam&gt; urlForm = formFactory.form(UrlParam.class).bindFromRequest();</span>
-<span class="nc" id="L67">    	UrlParam param = urlForm.get();</span>
-<span class="nc" id="L68">    	System.out.println(query);</span>
-<span class="nc" id="L69">    	WSRequest request = ws.url(&quot;https://api.github.com/search/repositories?q=&quot;+query+&quot;&amp;page=1&amp;per_page=20&quot;);</span>
-<span class="nc" id="L70">    	request.setMethod(&quot;GET&quot;);</span>
-<span class="nc" id="L71">    	request.addHeader(&quot;ACCEPT&quot;, &quot;application/vnd.github.v3+json&quot;);</span>
+    public Result fetch(String query) throws InterruptedException, ExecutionException {
     	
-<span class="nc" id="L73">    	CompletionStage&lt;JsonNode&gt; jsonPromise = request.get().thenApply(r -&gt; r.asJson());</span>
-<span class="nc" id="L74">    	List&lt;String&gt; tasks = new ArrayList&lt;String&gt;();</span>
-<span class="nc bnc" id="L75" title="All 2 branches missed.">    	for(int i=0;i&lt;jsonPromise.toCompletableFuture().get().get(&quot;items&quot;).size();i++) {</span>
-<span class="nc" id="L76">        	tasks.add(jsonPromise.toCompletableFuture().get().get(&quot;items&quot;).get(i).get(&quot;name&quot;).toString());</span>
-        	
-        	}
+<span class="nc" id="L58">    	RepositorySearchService repoService = new RepositorySearchService();</span>
+<span class="nc" id="L59">    	List&lt;Repository&gt; repoList = new ArrayList&lt;Repository&gt;();</span>
     	
-<span class="nc" id="L80">		return ok(index.render(tasks, urlForm));</span>
+<span class="nc" id="L61">    	WSRequest request = ws.url(ConfigFactory.load().getString(&quot;git_search_repo_url&quot;))</span>
+<span class="nc" id="L62">    			              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString(&quot;git_header.Content-Type&quot;))</span>
+<span class="nc" id="L63">    			              .addQueryParameter(GIT_PARAM.QUERY.value, query)</span>
+<span class="nc" id="L64">    			              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString(&quot;repo_per_page&quot;))</span>
+<span class="nc" id="L65">    			              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString(&quot;repo_page&quot;));</span>
+    	
+<span class="nc" id="L67">    	CompletionStage&lt;JsonNode&gt; jsonPromise = request.get().thenApply(r -&gt; r.getBody(json()));</span>
+<span class="nc" id="L68">    	repoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());</span>
+    	
+<span class="nc" id="L70">		return ok(index.render(repoList));</span>
     }
     
 }

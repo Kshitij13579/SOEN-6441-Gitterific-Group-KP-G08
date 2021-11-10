@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:D:/University/Concordia University/Fall 2021/APP/APP_Project/SOEN-6441-Gitterific-Group-KP-G08/conf/routes
-// @DATE:Sat Nov 06 15:20:43 EDT 2021
+// @DATE:Sun Nov 07 22:22:31 EST 2021
 
 import play.api.routing.JavaScriptReverseRoute
 
@@ -20,21 +20,11 @@ package controllers.javascript {
 
   
     // @LINE:7
-    def save: JavaScriptReverseRoute = JavaScriptReverseRoute(
-      "controllers.HomeController.save",
+    def fetch: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.HomeController.fetch",
       """
         function(query0) {
-          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "save" + _qS([(""" + implicitly[play.api.mvc.QueryStringBindable[String]].javascriptUnbind + """)("query", query0)])})
-        }
-      """
-    )
-  
-    // @LINE:8
-    def create: JavaScriptReverseRoute = JavaScriptReverseRoute(
-      "controllers.HomeController.create",
-      """
-        function() {
-          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "create"})
+          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "fetch" + _qS([(""" + implicitly[play.api.mvc.QueryStringBindable[String]].javascriptUnbind + """)("query", query0)])})
         }
       """
     )
@@ -51,7 +41,7 @@ package controllers.javascript {
   
   }
 
-  // @LINE:12
+  // @LINE:11
   class ReverseAssets(_prefix: => String) {
 
     def _defaultPrefix: String = {
@@ -59,7 +49,7 @@ package controllers.javascript {
     }
 
   
-    // @LINE:12
+    // @LINE:11
     def versioned: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.Assets.versioned",
       """
