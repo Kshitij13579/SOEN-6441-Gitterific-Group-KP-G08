@@ -9,14 +9,17 @@ import com.typesafe.config.ConfigFactory;
 
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
+import model.Commit;
+import model.CommitStat;
 import model.GIT_HEADER;
 import model.GIT_PARAM;
 import model.Repository;
 import play.mvc.*;
 import play.mvc.Http.Cookie;
 import play.mvc.Http.MultipartFormData.Part;
+import service.CommitStatService;
 import service.RepositorySearchService;
-import views.html.index;
+import views.html.*;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.ws.*;
@@ -68,6 +71,56 @@ public class HomeController extends Controller implements WSBodyReadables {
     	repoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
     	
 		return ok(index.render(repoList));
+    }
+    
+    public Result commits(String user, String repository) throws InterruptedException, ExecutionException {
+    	
+    	CommitStatService commStatService = new CommitStatService();
+    	List<Commit> commitList = new ArrayList<Commit>();
+    	
+    	WSRequest request = ws.url("https://api.github.com/repos/"+user+"/"+repository+"/commits")
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"))
+	              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("commits_per_page"))
+	              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("commits_page"))
+	              .setAuth(ConfigFactory.load().getString("git_user"),ConfigFactory.load().getString("git_token"));
+
+        CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+    	JsonNode commits = jsonPromise.toCompletableFuture().get();
+    	
+    	List<String> shaList = commStatService.getShaList(commits);
+    	
+    	shaList.forEach(sha -> {
+    		WSRequest r = ws.url("https://api.github.com/repos/"+user+"/"+repository+"/commits/"+sha)
+  	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"))
+    		      .setAuth(ConfigFactory.load().getString("git_user"),ConfigFactory.load().getString("git_token"));
+
+    		CompletionStage<JsonNode> jsonCommit = r.get().thenApply(j -> j.getBody(json()));
+    	    try {
+    	    	
+				JsonNode temp = jsonCommit.toCompletableFuture().get();
+				commitList.add(new Commit(temp.get("commit").get("author").get("name").asText(), sha, temp.get("stats").get("additions").asInt(), temp.get("stats").get("deletions").asInt()));
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+    	});
+    	
+    	CommitStat commitStat = new CommitStat(commStatService.getTopCommitter(commitList)
+    			                              ,commStatService.getAvgAddition(commitList)
+    			                              ,commStatService.getAvgDeletion(commitList)
+    			                              ,commStatService.getMaxAddition(commitList)
+    			                              ,commStatService.getMaxDeletion(commitList)
+    			                              ,commStatService.getMinAddition(commitList)
+    			                              ,commStatService.getMinDeletion(commitList)
+    			                              ,repository
+    			                              );
+    	
+    	
+    	return ok(commit.render(commitStat));
     }
     
 }
