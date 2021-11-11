@@ -3,7 +3,7 @@ package controllers;
 import javax.inject.Inject;
 
 import org.w3c.dom.Document;
-
+import play.cache.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
 
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 /**
@@ -39,7 +40,12 @@ import java.util.concurrent.ExecutionException;
  * to the application's home page.
  */
 public class HomeController extends Controller implements WSBodyReadables {
-
+	private AsyncCacheApi cache;
+	@Inject
+	  public HomeController(AsyncCacheApi cache) {
+	    this.cache = cache;
+	  }
+	
     /**
      * An action that renders an HTML page with a welcome message.
      * The configuration in the <code>routes</code> file means that
@@ -56,7 +62,8 @@ public class HomeController extends Controller implements WSBodyReadables {
         return ok(index.render(repoList));
     }
     
-    public Result search(String query) throws InterruptedException, ExecutionException {
+    @SuppressWarnings("deprecation")
+	public Result search(String query) throws InterruptedException, ExecutionException {
     	
     	RepositorySearchService repoService = new RepositorySearchService();
     	List<Repository> repoList = new ArrayList<Repository>();
@@ -66,10 +73,13 @@ public class HomeController extends Controller implements WSBodyReadables {
     			              .addQueryParameter(GIT_PARAM.QUERY.value, query)
     			              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
     			              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"));
-    	
-    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+    	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(query, 
+    			new Callable<CompletionStage<JsonNode>>() {
+    				public CompletionStage<JsonNode> call() {
+    					return request.get().thenApply(r -> r.getBody(json()));
+    				};
+    	}, 3600);	// caching response for 1 hour
     	repoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
-    	
 		return ok(index.render(repoList));
     }
     
