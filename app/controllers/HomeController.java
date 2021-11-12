@@ -11,12 +11,15 @@ import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 import model.GIT_HEADER;
 import model.GIT_PARAM;
+import model.Issues;
 import model.Repository;
 import play.mvc.*;
 import play.mvc.Http.Cookie;
 import play.mvc.Http.MultipartFormData.Part;
+import service.IssueService;
+import service.IssueStatService;
 import service.RepositorySearchService;
-import views.html.index;
+import views.html.*;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.ws.*;
@@ -51,6 +54,7 @@ public class HomeController extends Controller implements WSBodyReadables {
     	
     	List<Repository> repoList = new ArrayList<Repository>();
         return ok(index.render(repoList));
+  
     }
     
     public Result fetch(String query) throws InterruptedException, ExecutionException {
@@ -66,8 +70,37 @@ public class HomeController extends Controller implements WSBodyReadables {
     	
     	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
     	repoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
-    	
 		return ok(index.render(repoList));
     }
     
+	
+	  public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
+	  
+	  IssueService issueService=new IssueService();
+	  
+	  IssueStatService issueStatService=new IssueStatService();
+	  List<Issues> issuesList=new ArrayList<Issues>();
+	  
+	  WSRequest request =
+	  ws.url("https://api.github.com/repos/"+user+"/"+repository+"/issues")
+	  .addHeader(GIT_HEADER.CONTENT_TYPE.value,
+	  ConfigFactory.load().getString("git_header.Content-Type"))
+	  .addQueryParameter(GIT_PARAM.PER_PAGE.value,
+	  ConfigFactory.load().getString("issues_per_page"))
+	  .addQueryParameter(GIT_PARAM.PAGE.value,
+	  ConfigFactory.load().getString("issues_page") );
+	  
+	  CompletionStage<JsonNode>
+	  jsonPromise=request.get().thenApply(r->r.getBody(json()));
+	  
+	  JsonNode repoIssues=jsonPromise.toCompletableFuture().get();
+	  
+	  issuesList=issueService.getTitleList(repoIssues);
+	  
+	  Map<String,Long> test=issueStatService.wordCountDescening(issuesList);
+	  
+	  System.out.println(test);
+	  
+	  return ok(issues.render(issuesList)); }
+	 
 }

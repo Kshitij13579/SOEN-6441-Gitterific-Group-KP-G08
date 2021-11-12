@@ -52,3 +52,4 @@ public class Repository {
 		this.commits_url = commits_url;
 	}
 }
+

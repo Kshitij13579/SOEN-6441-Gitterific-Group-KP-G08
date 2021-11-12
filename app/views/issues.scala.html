@@ -1,0 +1,21 @@
+@(issues: List[model.Issues])
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Repository Issues</title>
+</head>
+
+<body>
+    
+    <ul>
+    @for(issue<- issues){
+    <li >@issue.title</li>
+    }
+    </ul>
+    
+</body>
+
+</html>
+
