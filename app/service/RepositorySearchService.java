@@ -30,10 +30,10 @@ public class RepositorySearchService {
 		List<Repository> repos= new ArrayList<Repository>();
 		
         json.get("items").forEach(items ->{
-        	String login = items.get("owner").get("login").toString();
-        	String name = items.get("name").toString();
-        	String issues_url = items.get("issues_url").toString();
-        	String commits_url = items.get("commits_url").toString();
+        	String login = items.get("owner").get("login").asText();
+        	String name = items.get("name").asText();
+        	String issues_url = items.get("issues_url").asText();
+        	String commits_url = items.get("commits_url").asText();
         	repos.add(new Repository(login,name,issues_url,commits_url));
         });
 
