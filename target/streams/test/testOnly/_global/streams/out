@@ -1,0 +1,5 @@
+[debug] javaOptions: Vector(-Djacoco-agent.destfile=D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\jacoco\data\jacoco.exec)
+[debug] Forking tests - parallelism = false
+[debug] Summary for JUnit not available.
+[info] Passed: Total 0, Failed 0, Errors 0, Passed 0
+[info] No tests to run for Test / testOnly

@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:D:/University/Concordia University/Fall 2021/APP/APP_Project/SOEN-6441-Gitterific-Group-KP-G08/conf/routes
-// @DATE:Sun Nov 07 22:22:31 EST 2021
+// @DATE:Wed Nov 10 02:53:47 EST 2021
 
 package controllers;
 

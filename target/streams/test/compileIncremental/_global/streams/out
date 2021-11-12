@@ -2,22 +2,28 @@
 [debug] Initial source changes: 
 [debug] 	removed:Set()
 [debug] 	added: Set()
-[debug] 	modified: Set(D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\test\controllers\HomeControllerTest.java)
+[debug] 	modified: Set(D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\test\service\ReporitorySearchServiceTest.java)
 [debug] Invalidated products: Set()
 [debug] External API changes: API Changes: Set()
 [debug] Modified binary dependencies: Set()
-[debug] Initial directly invalidated classes: Set(controllers.HomeControllerTest)
+[debug] Initial directly invalidated classes: Set(service.ReporitorySearchServiceTest)
 [debug] 
 [debug] Sources indirectly invalidated by:
 [debug] 	product: Set()
 [debug] 	binary dep: Set()
 [debug] 	external source: Set()
-[debug] All sources are invalidated.
-[debug] Initial set of included nodes: controllers.HomeControllerTest
-[debug] Recompiling all sources: number of invalidated sources > 50.0% of all sources
+[debug] All initially invalidated classes: Set(service.ReporitorySearchServiceTest)
+[debug] All initially invalidated sources:Set(D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\test\service\ReporitorySearchServiceTest.java)
+[debug] Initial set of included nodes: service.ReporitorySearchServiceTest
 [info] Compiling 1 Java source to D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\test-classes ...
-[debug] Attempting to call com.sun.tools.javac.api.JavacTool@6fd45ccf directly...
-[debug] Java compilation took 0.9976379 s
-[debug] Java analysis took 0.060995 s
-[debug] Java compilation + analysis took 1.0662243 s
+[debug] Attempting to call com.sun.tools.javac.api.JavacTool@28954ea6 directly...
+[debug] Java compilation took 0.4536066 s
+[debug] Java analysis took 0.0067216 s
+[debug] Java compilation + analysis took 0.4641153 s
 [info] Done compiling.
+[debug] New invalidations:
+[debug] 	Set()
+[debug] Initial set of included nodes: 
+[debug] Previously invalidated, but (transitively) depend on new invalidations:
+[debug] 	Set()
+[debug] No classes were invalidated.

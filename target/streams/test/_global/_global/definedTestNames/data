@@ -1,1 +1,1 @@
-["controllers.HomeControllerTest"]
+["controllers.HomeControllerTest","service.ReporitorySearchServiceTest"]

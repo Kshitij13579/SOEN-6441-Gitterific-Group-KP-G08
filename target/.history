@@ -8,3 +8,16 @@ test
 jacoco
 test
 run
+sbt
+test
+run
+compile
+clean
+test
+testonly
+testOnly BrowserFunctionalTest
+testOnly BrowserFunctiona.javalTest
+compile
+test
+teste
+test

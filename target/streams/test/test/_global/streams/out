@@ -1,18 +1,37 @@
 [debug] javaOptions: Vector(-Djacoco-agent.destfile=D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\jacoco\data\jacoco.exec)
 [debug] Forking tests - parallelism = false
 [debug] Create a single-thread test executor
-[debug] Runner for com.novocode.junit.JUnitFramework produced 1 initial tasks for 1 tests.
-[debug]   Running TaskDef(controllers.HomeControllerTest, sbt.ForkMain$AnnotatedFingerscan@3de6b562, false, [SuiteSelector])
+[debug] Runner for com.novocode.junit.JUnitFramework produced 2 initial tasks for 2 tests.
+[debug]   Running TaskDef(controllers.HomeControllerTest, sbt.ForkMain$AnnotatedFingerscan@656e8a77, false, [SuiteSelector])
 [debug] Test run started
 [debug] Test controllers.HomeControllerTest.testIndex started
-[debug] Test controllers.HomeControllerTest.testIndex finished, took 3.551 sec
-[debug] Test controllers.HomeControllerTest.testRepositoryFalse started
-[error] Test controllers.HomeControllerTest.testRepositoryFalse failed: null, took 0.135 sec
-[debug] Test controllers.HomeControllerTest.testRepositoryFalse finished, took 0.136 sec
-[debug] Test run finished: 1 failed, 0 ignored, 2 total, 3.692s
-[debug]     Produced 0 nested tasks and 2 events.
+[debug] Test controllers.HomeControllerTest.testIndex finished, took 1.012 sec
+[debug] Test controllers.HomeControllerTest.testGoodRouteCallForIndex started
+[debug] Test controllers.HomeControllerTest.testGoodRouteCallForIndex finished, took 0.132 sec
+[debug] Test controllers.HomeControllerTest.testIndex1 started
+[debug] Test controllers.HomeControllerTest.testIndex1 finished, took 0.092 sec
+[debug] Test controllers.HomeControllerTest.testBadRouteForIndex started
+[debug] Test controllers.HomeControllerTest.testBadRouteForIndex finished, took 0.139 sec
+[debug] Test run finished: 0 failed, 0 ignored, 4 total, 4.373s
+[debug]     Produced 0 nested tasks and 4 events.
+[debug]   Running TaskDef(service.ReporitorySearchServiceTest, sbt.ForkMain$AnnotatedFingerscan@2326b07f, false, [SuiteSelector])
+[debug] Test run started
+[debug] Test service.ReporitorySearchServiceTest.test started
+[error] Test service.ReporitorySearchServiceTest.test failed: java.lang.NullPointerException: null, took 0.021 sec
+[error]     at service.RepositorySearchService.getRepoList(RepositorySearchService.java:32)
+[error]     at service.ReporitorySearchServiceTest.test(ReporitorySearchServiceTest.java:35)
+[error]     at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+[error]     at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+[error]     at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[error]     at java.lang.reflect.Method.invoke(Method.java:566)
+[error]     ...
+[debug] Test service.ReporitorySearchServiceTest.test finished, took 0.022 sec
+[debug] Test run finished: 1 failed, 0 ignored, 1 total, 0.022s
+[debug]     Produced 0 nested tasks and 1 events.
 [debug] Summary for JUnit not available.
-[error] Failed: Total 2, Failed 1, Errors 0, Passed 1
+[error] Failed: Total 5, Failed 1, Errors 0, Passed 4
+[debug] Passed tests:
+[debug] 	controllers.HomeControllerTest
 [error] Failed tests:
-[error] 	controllers.HomeControllerTest
+[error] 	service.ReporitorySearchServiceTest
 [error] (Test / test) sbt.TestsFailedException: Tests unsuccessful

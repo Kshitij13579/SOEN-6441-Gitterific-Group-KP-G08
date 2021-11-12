@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Repository {
     public String login;
     public String name;
@@ -18,6 +21,13 @@ public class Repository {
     	this.name = name;
     	this.commits_url = commits_url;
     	this.issues_url = issues_url;
+    }
+    
+    
+    public ArrayList<Repository> Repository(String login,String name,String issues_url,String commits_url){
+    	ArrayList<Repository> repos= new ArrayList<Repository>();
+    	repos.add(new Repository(login,name,issues_url,commits_url));
+		return repos ;
     }
 
 	public String getLogin() {
