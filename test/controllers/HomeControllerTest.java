@@ -73,7 +73,9 @@ public class HomeControllerTest extends WithApplication {
     // Test Index Page to return a HTML Response with expected status code,content type and character set
     @Test
     public void testIndex1()   throws InterruptedException, ExecutionException  {
-        Result result = new HomeController().index();
+      //  Result result = new HomeController.index();
+    	RequestBuilder request = Helpers.fakeRequest(routes.HomeController.index());
+    	Result result = route(app, request);
         assertEquals(OK, result.status());
         assertEquals("text/html", result.contentType().get());
         assertEquals("utf-8", result.charset().get());
