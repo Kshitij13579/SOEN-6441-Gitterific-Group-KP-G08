@@ -24,8 +24,9 @@ table, th, td {
              </tr>
 	    @for(repo <- repos){
 	      <tr>
-			    <td>@repo.login</td>
-			    <td>@repo.name</td>
+	      		<td><a href=/users/@repo.login>@repo.login</a>
+<!--  			<td>@repo.login</td> -->
+ 			    <td>@repo.name</td>
 			    <td>@repo.issues_url</td>
 			    <td>Topic</td>
 			    <td><a href=@repo.commits_url>Link</a></td>
