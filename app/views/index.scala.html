@@ -8,7 +8,7 @@ table, th, td {
 <center><h2 class="center">Gitterific</h2></center>
 <body>
 	<center>
-		<form method="GET" action="fetch">
+		<form method="GET" action="search">
 		 Search : <input type="text" name="query"></input>
 		 <input type="submit" value="Go"></input>
 		</form>
@@ -29,7 +29,7 @@ table, th, td {
  			    <td>@repo.name</td>
 			    <td>@repo.issues_url</td>
 			    <td>Topic</td>
-			    <td><a href=@repo.commits_url>Link</a></td>
+			    <td><a href=search/@repo.login/@repo.name/commits target="_blank">Link</a></td>
           </tr>
 	    }
 	   </table>
