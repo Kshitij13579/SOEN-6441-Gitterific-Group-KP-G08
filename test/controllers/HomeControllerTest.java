@@ -27,6 +27,7 @@ public class HomeControllerTest extends WithApplication {
 
         Result result = route(app, request);
         assertEquals(OK, result.status());
+        
     }
 
 }
