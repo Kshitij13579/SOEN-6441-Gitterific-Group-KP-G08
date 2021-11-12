@@ -1,0 +1,42 @@
+@(repos: model.UserProfile)
+<html>
+<body>
+<center><h2 class="center">User Profile</h2></center>
+<!-- <center><h3>Welcome </h3></center> -->
+<center>
+
+<table id="UP">
+            <tr>
+                <th> Name </th>
+                <td>@repos.login</td>
+            </tr>
+            <tr>
+                <th>ID</th>
+                <td>@repos.id</td>
+            </tr>
+            <tr>
+                <th>Node ID</th>
+                <td>@repos.node_id</td>
+            </tr>
+            <tr>
+                <th>Avatar URL</th>
+                <td>@repos.avatar_url</td>
+            </tr>
+            <tr>
+                <th>Repos URL</th>
+                <td><a href=@repos.login/repos>@repos.repos_url</a></td>
+            </tr>
+        </table>
+        
+
+
+<!-- <br>Name: @repos.login -->
+<!-- <br>ID: @repos.id -->
+<!-- <br>Node ID: @repos.node_id</td> -->
+<!-- <br>Avatar URL: @repos.avatar_url -->
+<!-- <br>Repos URL: @repos.repos_url -->
+
+</center>
+
+</body>
+</html>

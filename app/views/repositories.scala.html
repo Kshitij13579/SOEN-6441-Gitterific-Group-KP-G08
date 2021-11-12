@@ -1,0 +1,27 @@
+@(repos: List[model.UserRepository])
+<html>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+<center><h2 class="center">Reositories</h2></center>
+<body>
+	<center>
+	    <table>
+	         <tr>
+			    <th>User</th>
+			    <th>Id</th>
+			    <th>Repository</th>
+			 </tr>
+	    @for(repo <- repos){
+	      <tr>
+    			<td>@repo.login</td> 
+    			<td>@repo.id</td> 
+ 			    <td>@repo.name</td>
+	      </tr>
+	    }
+	   </table>
+	</center>
+</body>
+</html>
