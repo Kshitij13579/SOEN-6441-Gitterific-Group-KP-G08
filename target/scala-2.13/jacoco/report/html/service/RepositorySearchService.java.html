@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RepositorySearchService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=2;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Jacoco Coverage Report</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">RepositorySearchService.java</span></div><h1>RepositorySearchService.java</h1><pre class="source lang-java linenums">package service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.typesafe.config.ConfigFactory;
+
+import model.GIT_PARAM;
+import model.Repository;
+
+public class RepositorySearchService {
+   
+	Repository repository;
+	ConfigFactory config;
+	
+<span class="nc" id="L19">	public RepositorySearchService() {</span>
+<span class="nc" id="L20">		this.repository = new Repository();</span>
+<span class="nc" id="L21">	}</span>
+	
+<span class="nc" id="L23">	public RepositorySearchService(Repository repository) {</span>
+<span class="nc" id="L24">		this.repository = repository;</span>
+<span class="nc" id="L25">	}</span>
+	
+	
+    public List&lt;Repository&gt; getRepoList(JsonNode json) throws InterruptedException, ExecutionException {
+		
+<span class="nc" id="L30">		List&lt;Repository&gt; repos= new ArrayList&lt;Repository&gt;();</span>
+		
+<span class="nc" id="L32">        json.get(&quot;items&quot;).forEach(items -&gt;{</span>
+<span class="nc" id="L33">        	String login = items.get(&quot;owner&quot;).get(&quot;login&quot;).toString();</span>
+<span class="nc" id="L34">        	String name = items.get(&quot;name&quot;).toString();</span>
+<span class="nc" id="L35">        	String issues_url = items.get(&quot;issues_url&quot;).toString();</span>
+<span class="nc" id="L36">        	String commits_url = items.get(&quot;commits_url&quot;).toString();</span>
+<span class="nc" id="L37">        	repos.add(new Repository(login,name,issues_url,commits_url));</span>
+<span class="nc" id="L38">        });</span>
+
+<span class="nc" id="L40">		return repos;</span>
+		
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
