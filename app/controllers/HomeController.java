@@ -74,12 +74,15 @@ public class HomeController extends Controller implements WSBodyReadables {
     			              .addQueryParameter(GIT_PARAM.QUERY.value, query)
     			              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
     			              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"));
-    	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(query, 
+    	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(request.getUrl()
+    			+ GIT_PARAM.QUERY.value + query 
+    			+ GIT_PARAM.PER_PAGE.value + ConfigFactory.load().getString("repo_per_page")
+    			+ GIT_PARAM.PAGE.value + ConfigFactory.load().getString("repo_page"), 
     			new Callable<CompletionStage<JsonNode>>() {
     				public CompletionStage<JsonNode> call() {
     					return request.get().thenApply(r -> r.getBody(json()));
     				};
-    	}, 3600);	// caching response for 1 hour
+    	}, Integer.parseInt(ConfigFactory.load().getString("CACHE_EXPIRY_TIME")));
     	repoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
 		return ok(index.render(repoList));
     }
@@ -166,4 +169,29 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(repositories.render(repoList));
     }
     
+	public Result topics(String topic) throws InterruptedException, ExecutionException {
+		RepositorySearchService repoService = new RepositorySearchService();
+    	List<Repository> repoList = new ArrayList<Repository>();
+    	
+    	WSRequest request = ws.url(ConfigFactory.load().getString("git_search_repo_url"))
+    			              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"))
+    			              .addQueryParameter(GIT_PARAM.QUERY.value, "topic:" + topic)
+    			              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
+    			              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
+    						  .addQueryParameter(GIT_PARAM.SORT.value, "updated");
+    	System.out.println(request.getUrl());
+    	System.out.println(request.getQueryParameters());
+    	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(request.getUrl()
+    			+ GIT_PARAM.QUERY.value + "topic:" + topic 
+    			+ GIT_PARAM.PER_PAGE.value + ConfigFactory.load().getString("repo_per_page")
+    			+ GIT_PARAM.PAGE.value + ConfigFactory.load().getString("repo_page")
+    			+ GIT_PARAM.SORT.value + "updated", 
+    			new Callable<CompletionStage<JsonNode>>() {
+    				public CompletionStage<JsonNode> call() {
+    					return request.get().thenApply(r -> r.getBody(json()));
+    				};
+    	}, Integer.parseInt(ConfigFactory.load().getString("CACHE_EXPIRY_TIME")));
+    	repoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
+    	return ok(topicPage.render(repoList, topic));
+	}
 }
