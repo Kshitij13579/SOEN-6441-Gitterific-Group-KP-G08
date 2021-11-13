@@ -8,3 +8,11 @@ run
 cls
 eclipse
 run
+compile
+run
+eclipse
+run
+cls
+clean
+compile
+run
