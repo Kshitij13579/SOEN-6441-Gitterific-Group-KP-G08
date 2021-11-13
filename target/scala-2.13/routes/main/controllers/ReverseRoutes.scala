@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:D:/University/Concordia University/Fall 2021/APP/APP_Project/SOEN-6441-Gitterific-Group-KP-G08/conf/routes
-// @DATE:Sat Nov 06 15:20:43 EDT 2021
+// @SOURCE:D:/Concordia/SOEN 6441 W 2212/Project/SOEN-6441-Gitterific-Group-KP-G08/conf/routes
+// @DATE:Sat Nov 13 14:59:03 EST 2021
 
 import play.api.mvc.Call
 
@@ -8,47 +8,50 @@ import play.api.mvc.Call
 import _root_.controllers.Assets.Asset
 import _root_.play.libs.F
 
-// @LINE:6
+// @LINE:7
 package controllers {
 
-  // @LINE:6
+  // @LINE:7
   class ReverseHomeController(_prefix: => String) {
     def _defaultPrefix: String = {
       if (_prefix.endsWith("/")) "" else "/"
     }
 
   
-    // @LINE:7
-    def save(query:String): Call = {
+    // @LINE:12
+    def topics(topic:String): Call = {
       
-      Call("GET", _prefix + { _defaultPrefix } + "save" + play.core.routing.queryString(List(Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("query", query)))))
+      Call("GET", _prefix + { _defaultPrefix } + "topics/" + play.core.routing.dynamicString(implicitly[play.api.mvc.PathBindable[String]].unbind("topic", topic)))
     }
   
     // @LINE:8
-    def create(): Call = {
+    def search(query:String): Call = {
       
-      Call("GET", _prefix + { _defaultPrefix } + "create")
+      Call("GET", _prefix + { _defaultPrefix } + "search" + play.core.routing.queryString(List(Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("query", query)))))
     }
   
-    // @LINE:6
+    // @LINE:10
+    def user_profile(username:String): Call = {
+      
+      Call("GET", _prefix + { _defaultPrefix } + "users/" + play.core.routing.dynamicString(implicitly[play.api.mvc.PathBindable[String]].unbind("username", username)))
+    }
+  
+    // @LINE:11
+    def user_repository(username:String): Call = {
+      
+      Call("GET", _prefix + { _defaultPrefix } + "users/" + play.core.routing.dynamicString(implicitly[play.api.mvc.PathBindable[String]].unbind("username", username)) + "/repos")
+    }
+  
+    // @LINE:9
+    def commits(user:String, repository:String): Call = {
+      
+      Call("GET", _prefix + { _defaultPrefix } + "search/" + play.core.routing.dynamicString(implicitly[play.api.mvc.PathBindable[String]].unbind("user", user)) + "/" + play.core.routing.dynamicString(implicitly[play.api.mvc.PathBindable[String]].unbind("repository", repository)) + "/commits")
+    }
+  
+    // @LINE:7
     def index(): Call = {
       
       Call("GET", _prefix)
-    }
-  
-  }
-
-  // @LINE:12
-  class ReverseAssets(_prefix: => String) {
-    def _defaultPrefix: String = {
-      if (_prefix.endsWith("/")) "" else "/"
-    }
-
-  
-    // @LINE:12
-    def versioned(file:Asset): Call = {
-      implicit lazy val _rrc = new play.core.routing.ReverseRouteContext(Map(("path", "/public"))); _rrc
-      Call("GET", _prefix + { _defaultPrefix } + "assets/" + implicitly[play.api.mvc.PathBindable[Asset]].unbind("file", file))
     }
   
   }

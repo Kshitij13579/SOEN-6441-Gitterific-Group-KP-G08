@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
@@ -34,7 +36,11 @@ public class RepositorySearchService {
         	String name = items.get("name").asText();
         	String issues_url = items.get("issues_url").asText();
         	String commits_url = items.get("commits_url").asText();
-        	repos.add(new Repository(login,name,issues_url,commits_url));
+        	ArrayList<String> topics = StreamSupport.stream(items.get("topics").spliterator(), true)
+                    .map( num -> num.asText())
+                    .collect(Collectors
+                    		.toCollection(ArrayList::new));
+        	repos.add(new Repository(login,name,issues_url,commits_url, topics));
         });
 
 		return repos;

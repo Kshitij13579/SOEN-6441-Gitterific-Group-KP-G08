@@ -3,3 +3,8 @@ jacoco
 run
 test
 jacoco
+compile
+run
+cls
+eclipse
+run

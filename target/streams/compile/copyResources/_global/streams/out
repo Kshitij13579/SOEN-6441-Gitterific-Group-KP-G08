@@ -1,4 +1,4 @@
-[debug] Copy resource mappings: 
-[debug] 	(D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\conf\application.conf,D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\classes\application.conf)
-[debug] 	(D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\conf\logback.xml,D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\classes\logback.xml)
-[debug] 	(D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\conf\routes,D:\University\Concordia University\Fall 2021\APP\APP_Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\classes\routes)
+[0m[[0m[0mdebug[0m] [0m[0mCopy resource mappings: [0m
+[0m[[0m[0mdebug[0m] [0m[0m	(D:\Concordia\SOEN 6441 W 2212\Project\SOEN-6441-Gitterific-Group-KP-G08\conf\application.conf,D:\Concordia\SOEN 6441 W 2212\Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\classes\application.conf)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(D:\Concordia\SOEN 6441 W 2212\Project\SOEN-6441-Gitterific-Group-KP-G08\conf\logback.xml,D:\Concordia\SOEN 6441 W 2212\Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\classes\logback.xml)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(D:\Concordia\SOEN 6441 W 2212\Project\SOEN-6441-Gitterific-Group-KP-G08\conf\routes,D:\Concordia\SOEN 6441 W 2212\Project\SOEN-6441-Gitterific-Group-KP-G08\target\scala-2.13\classes\routes)[0m

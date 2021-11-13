@@ -3,7 +3,8 @@ package model;
 public enum GIT_PARAM {
 	QUERY("q"),
 	PER_PAGE("per_page"),
-	PAGE("page");
+	PAGE("page"),
+	SORT("sort");
 	
     public final String value;
 	
