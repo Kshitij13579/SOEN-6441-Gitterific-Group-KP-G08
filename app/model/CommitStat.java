@@ -3,7 +3,7 @@ package model;
 import java.util.List;
 
 public class CommitStat {
-    public List<String> top_committers;
+    public List<Author> top_committers;
     public double avg_additions;
     public double avg_deletions;
     public int max_additions;
@@ -14,7 +14,7 @@ public class CommitStat {
     
 	
 
-	public CommitStat(List<String> top_committers, double avg_additions, double avg_deletions, int max_additions,
+	public CommitStat(List<Author> top_committers, double avg_additions, double avg_deletions, int max_additions,
 			int max_deletions,int min_additions,int min_deletions,String repository) {
 
 		this.top_committers = top_committers;
@@ -25,6 +25,14 @@ public class CommitStat {
 		this.min_additions = min_additions;
 		this.min_deletions = min_deletions;
 		this.repository    = repository;
+	}
+	
+	public int getMin_additions() {
+		return min_additions;
+	}
+
+	public void setMin_additions(int min_additions) {
+		this.min_additions = min_additions;
 	}
 	
 	public int getMin_deletions() {
@@ -38,16 +46,16 @@ public class CommitStat {
 	public String getRepository() {
 		return repository;
 	}
-
-	public void seRepository(String repository) {
+	
+	public void setRepository(String repository) {
 		this.repository = repository;
 	}
 
-	public List<String> getTop_committers() {
+	public List<Author> getTop_committers() {
 		return top_committers;
 	}
 
-	public void setTop_committers(List<String> top_committers) {
+	public void setTop_committers(List<Author> top_committers) {
 		this.top_committers = top_committers;
 	}
 

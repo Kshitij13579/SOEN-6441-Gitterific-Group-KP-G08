@@ -7,6 +7,7 @@ import com.typesafe.config.ConfigFactory;
 
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
+import model.Author;
 import model.Commit;
 import model.CommitStat;
 import model.GIT_HEADER;
@@ -56,10 +57,12 @@ public class HomeController extends Controller implements WSBodyReadables {
 	
 	@Inject
 	WSClient ws;
+	List<Repository> globalRepoList = new ArrayList<Repository>();  
 	
     public Result index() throws InterruptedException, ExecutionException {
     	
     	List<Repository> repoList = new ArrayList<Repository>();
+    	globalRepoList = new ArrayList<Repository>();
         return ok(index.render(repoList));
     }
     
@@ -67,21 +70,30 @@ public class HomeController extends Controller implements WSBodyReadables {
 	public Result search(String query) throws InterruptedException, ExecutionException {
     	
     	RepositorySearchService repoService = new RepositorySearchService();
-    	List<Repository> repoList = new ArrayList<Repository>();
     	
     	WSRequest request = ws.url(ConfigFactory.load().getString("git_search_repo_url"))
     			              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"))
     			              .addQueryParameter(GIT_PARAM.QUERY.value, query)
     			              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
     			              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"));
-    	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(query, 
+
+    	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(request.getUrl()
+    			+ GIT_PARAM.QUERY.value + query 
+    			+ GIT_PARAM.PER_PAGE.value + ConfigFactory.load().getString("repo_per_page")
+    			+ GIT_PARAM.PAGE.value + ConfigFactory.load().getString("repo_page"), 
     			new Callable<CompletionStage<JsonNode>>() {
     				public CompletionStage<JsonNode> call() {
     					return request.get().thenApply(r -> r.getBody(json()));
     				};
-    	}, 3600);	// caching response for 1 hour
-    	repoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
-		return ok(index.render(repoList));
+    	}, Integer.parseInt(ConfigFactory.load().getString("CACHE_EXPIRY_TIME")));
+    	
+    	if(globalRepoList.isEmpty()) {
+    		globalRepoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
+    	}else {
+    		globalRepoList.addAll(repoService.getRepoList(jsonPromise.toCompletableFuture().get()));
+    	}
+    	
+		return ok(index.render(globalRepoList));
     }
     
 
@@ -96,7 +108,13 @@ public class HomeController extends Controller implements WSBodyReadables {
 	              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("commits_page"))
 	              .setAuth(ConfigFactory.load().getString("git_user"),ConfigFactory.load().getString("git_token"));
 
-        CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+    	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(user+"-"+repository+"-list", 
+    			new Callable<CompletionStage<JsonNode>>() {
+    				public CompletionStage<JsonNode> call() {
+    					return request.get().thenApply(r -> r.getBody(json()));
+    				};
+    	}, 3600);
+    	
     	JsonNode commits = jsonPromise.toCompletableFuture().get();
     	
     	List<String> shaList = commStatService.getShaList(commits);
@@ -106,11 +124,24 @@ public class HomeController extends Controller implements WSBodyReadables {
   	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"))
     		      .setAuth(ConfigFactory.load().getString("git_user"),ConfigFactory.load().getString("git_token"));
 
-    		CompletionStage<JsonNode> jsonCommit = r.get().thenApply(j -> j.getBody(json()));
+    		CompletionStage<JsonNode> jsonCommit = this.cache.getOrElseUpdate(sha, 
+        			new Callable<CompletionStage<JsonNode>>() {
+        				public CompletionStage<JsonNode> call() {
+        					return r.get().thenApply(r -> r.getBody(json()));
+        				};
+        	}, 3600);
+    		
     	    try {
     	    	
 				JsonNode temp = jsonCommit.toCompletableFuture().get();
-				commitList.add(new Commit(temp.get("commit").get("author").get("name").asText(), sha, temp.get("stats").get("additions").asInt(), temp.get("stats").get("deletions").asInt()));
+				commitList.add(new Commit(
+						       new Author(temp.get("commit").get("author").get("name").asText(), 
+						                  (temp.get("author").has("login")) ? temp.get("author").get("login").asText() : "null",
+						                  0
+						       ),
+						       sha,
+						       (temp.has("stats")) ? temp.get("stats").get("additions").asInt() : 0 , 
+						       (temp.has("stats")) ? temp.get("stats").get("deletions").asInt() : 0 ));
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -121,7 +152,9 @@ public class HomeController extends Controller implements WSBodyReadables {
 
     	});
     	
-    	CommitStat commitStat = new CommitStat(commStatService.getTopCommitter(commitList)
+    	
+    	
+    	CommitStat commitStat = new CommitStat(commStatService.getTopCommitterList(commitList)
     			                              ,commStatService.getAvgAddition(commitList)
     			                              ,commStatService.getAvgDeletion(commitList)
     			                              ,commStatService.getMaxAddition(commitList)
@@ -166,4 +199,28 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(repositories.render(repoList));
     }
     
+	public Result topics(String topic) throws InterruptedException, ExecutionException {
+		RepositorySearchService repoService = new RepositorySearchService();
+    	List<Repository> repoList = new ArrayList<Repository>();
+    	
+    	WSRequest request = ws.url(ConfigFactory.load().getString("git_search_repo_url"))
+    			              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"))
+    			              .addQueryParameter(GIT_PARAM.QUERY.value, "topic:" + topic)
+    			              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
+    			              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
+    						  .addQueryParameter(GIT_PARAM.SORT.value, "updated");
+    	
+    	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(request.getUrl()
+    			+ GIT_PARAM.QUERY.value + "topic:" + topic 
+    			+ GIT_PARAM.PER_PAGE.value + ConfigFactory.load().getString("repo_per_page")
+    			+ GIT_PARAM.PAGE.value + ConfigFactory.load().getString("repo_page")
+    			+ GIT_PARAM.SORT.value + "updated", 
+    			new Callable<CompletionStage<JsonNode>>() {
+    				public CompletionStage<JsonNode> call() {
+    					return request.get().thenApply(r -> r.getBody(json()));
+    				};
+    	}, Integer.parseInt(ConfigFactory.load().getString("CACHE_EXPIRY_TIME")));
+    	repoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
+    	return ok(topicPage.render(repoList, topic));
+	}
 }

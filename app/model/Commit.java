@@ -1,23 +1,27 @@
 package model;
 
 public class Commit {
-   public String author;
+   public Author author;
    public String sha;
    public int additions;
    public int deletions;
    
-   public Commit(String author,String sha,int additions,int deletions) {
+   public Commit(Author author,String sha,int additions,int deletions) {
 	   this.author = author;
 	   this.sha = sha;
 	   this.additions = additions;
 	   this.deletions = deletions;
    }
+   
+   public Commit() {
+	   
+   }
 
-	public String getAuthor() {
+	public Author getAuthor() {
 		return author;
 	}
 	
-	public void setAuthor(String author) {
+	public void setAuthor(Author author) {
 		this.author = author;
 	}
 	

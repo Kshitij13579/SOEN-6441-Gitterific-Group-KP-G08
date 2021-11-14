@@ -1,0 +1,50 @@
+@(repos: List[model.Repository], title: String)
+<html>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+<center>
+	<h2>
+		@title
+	</h2>
+</center>
+<body>
+	<center>
+	    <table>
+	         <tr>
+			    <th>User</th>
+			    <th>Repository</th>
+			    <th>Issues</th>
+			    <th>Topics</th>
+			    <th>Commit Statistics</th>
+             </tr>
+	    @for(repo <- repos){
+	      <tr>
+	      		<td><a href=/users/@repo.login style="text-decoration: none;">@repo.login</a>
+<!--  			<td>@repo.login</td> -->
+ 			    <td>@repo.name</td>
+			    <td>@repo.issues_url</td>
+			    <td>
+			    	<table style="border:none">
+			    		<tr>
+			    		@for(topic <- repo.topics) {
+			    			<tr>
+			    				<td style="border:none">
+						        	<a href="/topics/@topic" style="text-decoration: none;" target="_blank">
+						        		@topic
+						        	</a>
+			    				</td>
+						    </tr>
+			    		}
+					   </tr>
+					</table>
+			    </td>
+			    <td><a href=/search/@repo.login/@repo.name/commits style="text-decoration: none;" target="_blank">Link</a></td>
+          </tr>
+	    }
+	   </table>
+	</center>
+</body>
+</html>
