@@ -14,12 +14,19 @@ import model.GIT_PARAM;
 import model.Repository;
 import model.UserProfile;
 import model.UserRepository;
+import model.RepositoryProfile;
+import model.RepositoryProfileCollaborators;
+import model.RepositoryProfileIssues;
+
 import play.mvc.*;
 import play.mvc.Http.Cookie;
 import play.mvc.Http.MultipartFormData.Part;
+
 import service.CommitStatService;
 import service.RepositorySearchService;
 import service.UserService;
+import service.RepositoryProfileService;
+
 import views.html.*;
 import play.data.Form;
 import play.data.FormFactory;
@@ -134,6 +141,7 @@ public class HomeController extends Controller implements WSBodyReadables {
     	
     	return ok(commit.render(commitStat));
    }
+    
     public Result user_profile(String username) throws InterruptedException, ExecutionException{
     	
     	UserService repoService = new UserService();
@@ -150,6 +158,7 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(users.render(repoList));
     }
     
+    
     public Result user_repository(String username) throws InterruptedException, ExecutionException{
     	
     	UserService repoService = new UserService();
@@ -165,5 +174,58 @@ public class HomeController extends Controller implements WSBodyReadables {
     	repoList = repoService.getUser_repository(jsonPromise.toCompletableFuture().get());
     	return ok(repositories.render(repoList));
     }
+    
+    public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
+    	RepositoryProfileService rps = new RepositoryProfileService();
+    	RepositoryProfile rp = new RepositoryProfile();
+    	
+    	WSRequest request = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository)
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"));
+	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
+	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
+	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
+  	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+  	System.out.println("Hello World");
+  	System.out.println(jsonPromise.toCompletableFuture().get());
+  	rp = rps.getRepositoryProfile(jsonPromise.toCompletableFuture().get());
+  	return ok(repositoryprofile.render(rp));
+    }
+    
+   /* 
+    public Result repositoryprofile_issues(String username, String repository) throws InterruptedException, ExecutionException{
+    	RepositoryProfileService rps = new RepositoryProfileService();
+    	List<RepositoryProfileIssues> rpi = new ArrayList<>();
+    	WSRequest request = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository + "/issues")
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"));
+	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
+	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
+	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
+	
+
+	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+	rpi = rps.getRepositoryProfile_Issue(jsonPromise.toCompletableFuture().get());
+	return ok(repositoryprofile_issues.render(rpi));
+	
+    }
+    */
+    /*
+    public Result repositoryprofile_collaborators(String username, String repository) throws InterruptedException, ExecutionException{
+    	RepositoryProfileService rps = new RepositoryProfileService();
+    	List<RepositoryProfileCollaborators> rpi = new ArrayList<>();
+    	WSRequest request = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository + "/collaborators")
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"));
+	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
+	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
+	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
+	
+
+	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+	rpi = rps.getRepositoryProfile_Collaborators(jsonPromise.toCompletableFuture().get());
+	return ok(repositoryprofile_collaborators.render(rpi));
+	
+    }
+    */
+        
+    
     
 }

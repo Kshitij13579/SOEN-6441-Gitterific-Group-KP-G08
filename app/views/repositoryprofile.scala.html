@@ -1,0 +1,51 @@
+@(rp: model.RepositoryProfile)
+<html>
+<body>
+<center><h2 class="center">Repository Profile</h2></center>
+<!-- <center><h3>Welcome </h3></center> -->
+<center>
+
+<table id="UP">
+            <tr>
+                <th> Name </th>
+                <td>@rp.login</td>
+            </tr>
+            <tr>
+                <th>ID</th>
+                <td>@rp.id</td>
+            </tr>
+            <tr>
+                <th>Node ID</th>
+                <td>@rp.node_id</td>
+            </tr>
+            <tr>
+                <th>Avatar URL</th>
+                <td>@rp.avatar_url</td>
+            </tr>            
+            <tr>
+                <th>Open Issues Count</th>
+                <td>@rp.open_issues</td>
+            </tr>
+            <tr>
+                <th>Repository Issues</th>
+                <td>@rp.issues_url</td>
+            </tr>
+            <tr>
+                <th>Collaborations </th>
+                <td>@rp.collaborators_url</td>
+            </tr>                        
+            
+</table>
+        
+<!-- <br>Name: @rp.login -->
+<!-- <br>ID: @rp.id -->
+<!-- <br>Node ID: @rp.node_id</td> -->
+<!-- <br>Avatar URL: @rp.avatar_url -->
+<!-- <br>Open Issues Count : @rp.open_issues-->
+<!-- <br>Repository Issues : @rp.issues_url-->
+<!-- <br>Collaborations : @rp.collaborators_url-->
+
+</center>
+
+</body>
+</html>
