@@ -1,4 +1,4 @@
-@(repos: List[model.Repository])
+@(repos: List[model.Repository], title: String)
 <html>
 <style>
 table, th, td {
@@ -7,16 +7,10 @@ table, th, td {
 </style>
 <center>
 	<h2>
-		Gitterific
+		@title
 	</h2>
 </center>
 <body>
-	<center>
-		<form method="GET" action="search">
-		 Search : <input type="text" name="query"></input>
-		 <input type="submit" value="Go"></input>
-		</form>
-	</center>
 	<center>
 	    <table>
 	         <tr>
