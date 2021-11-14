@@ -2,6 +2,9 @@ package model;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 public class RepositoryTest {
@@ -9,8 +12,9 @@ public class RepositoryTest {
 	@Test
 	public void testGetters() {
 		
-	
-		Repository repository=new Repository("er1","s228","https://api.github.com/repos/er1/s228/issues{/number}","https://api.github.com/repos/er1/s228/commits%7B/sha%7D%22");
+	    ArrayList<String> topics = new ArrayList<String>();
+	    topics.add("java");
+		Repository repository=new Repository("er1","s228","https://api.github.com/repos/er1/s228/issues{/number}","https://api.github.com/repos/er1/s228/commits%7B/sha%7D%22",topics);
 		
 		//assertFalse(repository.login.isEmpty());
 		assertEquals("er1",repository.getLogin());

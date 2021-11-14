@@ -23,10 +23,12 @@ public class ReporitorySearchServiceTest {
 	public void test() throws InterruptedException, ExecutionException {
 		
 		List<Repository> repos= new ArrayList<Repository>();
+		ArrayList<String> topics = new ArrayList<String>();
+		topics.add("java");
 		RepositorySearchService rss=new RepositorySearchService();
 		JsonNode json = Json.parse("{\"login\":\"abc\", \"name\":\"def\", \"issues_url\":\"mno\",\"commits_url\":\"pqr\" }");
 		repos = rss.getRepoList(json);
-		List<Repository> expected = rss.repository.Repository("abc","def","mno","pqr");
+		List<Repository> expected = rss.repository.Repository("abc","def","mno","pqr",topics);
 		assertTrue(expected.equals(repos));
 		
 	}

@@ -25,13 +25,13 @@ public class CommitTest{
     
     @Test
     public void testSetters() {
-    	
-    	commit.setAuthor("Kshitij");
+    	Author a = new Author("Kshitij","kyerande",100);
+    	commit.setAuthor(a);
     	commit.setAdditions(10);
     	commit.setDeletions(2);
     	commit.setSha("c5b97d5ae6c19d5c5df71a34c7fbeeda2479ccbc");
     	
-    	verify(commit).setAuthor("Kshitij");
+    	verify(commit).setAuthor(a);
     	verify(commit).setAdditions(10);
     	verify(commit).setDeletions(2);
     	verify(commit).setSha("c5b97d5ae6c19d5c5df71a34c7fbeeda2479ccbc");
@@ -42,12 +42,14 @@ public class CommitTest{
     public void testGetters() {
     	
     	Commit c = new Commit();
-    	c.setAuthor("Kshitij");
+    	c.setAuthor(new Author("Kshitij","kyerande",100));
     	c.setAdditions(10);
     	c.setDeletions(2);
     	c.setSha("c5b97d5ae6c19d5c5df71a34c7fbeeda2479ccbc");
     	
-    	assertEquals("Kshitij", c.getAuthor());
+    	assertEquals("Kshitij", c.getAuthor().getName());
+    	assertEquals("kyerande", c.getAuthor().getLogin());
+    	assertEquals(100, c.getAuthor().getCommits());
     	assertEquals(10, c.getAdditions());
     	assertEquals(2, c.getDeletions());
     	assertEquals("c5b97d5ae6c19d5c5df71a34c7fbeeda2479ccbc", c.getSha());
