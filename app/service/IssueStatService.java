@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.function.Function;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 
 import model.Issues;
 
@@ -15,7 +17,7 @@ public class IssueStatService {
 	
 	public List<String> freqList;
 	
-	public List<String> wordCountDescening(List<Issues> issueList){
+	public List[] wordCountDescening(List<Issues> issueList){
 		
 
 	
@@ -28,10 +30,17 @@ public class IssueStatService {
 		
 		Map<String, Long> wordFreq=stream.collect(Collectors.groupingBy(String::toString,Collectors.counting()));
 		
-		freqList=new ArrayList(wordFreq.entrySet());
-		System.out.println(freqList);
+		Map<String,Long> sortedMapDescending=wordFreq.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).
+											collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2)->e1,LinkedHashMap::new));
 		
-		return freqList;
+		
+		List<String> wordList=new ArrayList<String>(sortedMapDescending.keySet());
+		List<Long>   wordCount=new ArrayList<Long>(sortedMapDescending.values());
+		
+		//freqList=new ArrayList(sortedMapDescending.entrySet());
+		//System.out.println(freqList);
+		
+		return new List[] {wordList,wordCount};
 		
 		
 	}

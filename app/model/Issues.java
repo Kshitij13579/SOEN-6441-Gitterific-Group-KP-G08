@@ -4,6 +4,11 @@ public class Issues {
 	
 	public String title;
 	
+	public Issues() {
+		
+		
+	}
+	
 	public Issues(String title)
 	{
 		this.title=title;
