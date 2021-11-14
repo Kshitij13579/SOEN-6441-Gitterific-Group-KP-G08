@@ -1,10 +1,18 @@
-@(rp: model.RepositoryProfile)
+@(rp:  model.RepositoryProfile,list: List[model.RepositoryProfileIssues], listcollab :  List[model.RepositoryProfileCollaborators] )
 <html>
+<head>
+<style>
+.section {
+            width: 100vw;
+            height: 40vh;
+        }
+</style></head>
 <body>
 <center><h2 class="center">Repository Profile</h2></center>
 <!-- <center><h3>Welcome </h3></center> -->
 <center>
 
+<div>
 <table id="UP">
             <tr>
                 <th> Name </th>
@@ -25,18 +33,14 @@
             <tr>
                 <th>Open Issues Count</th>
                 <td>@rp.open_issues</td>
-            </tr>
-            <tr>
-                <th>Repository Issues</th>
-                <td>@rp.issues_url</td>
-            </tr>
-            <tr>
-                <th>Collaborations </th>
-                <td>@rp.collaborators_url</td>
-            </tr>                        
+            </tr>                     
             
 </table>
-        
+<div>
+<div>
+</div>
+<div>
+</div>        
 <!-- <br>Name: @rp.login -->
 <!-- <br>ID: @rp.id -->
 <!-- <br>Node ID: @rp.node_id</td> -->
@@ -45,6 +49,50 @@
 <!-- <br>Repository Issues : @rp.issues_url-->
 <!-- <br>Collaborations : @rp.collaborators_url-->
 
+</center>
+
+</br>
+<center>
+<center><h2 class="center">Latest 20 Repository Issues</h2></center>
+	    <table>
+	         <tr>
+			    <th>Repository Issue</th>
+			    <th>Repository Issue Number</th>
+			    <th>Issue State</th>
+			    <th>Issue Created At</th>
+			    <th>Issue Last Updated At</th>
+             </tr>
+	    @for(repo <- list){
+	      <tr>
+	      		<td>@repo.issue_title</a>
+				<td>@repo.issue_number</td>
+			     <td>@repo.state</td>
+	      		<td>@repo.created_at</a>
+			    <td>@repo.updated_at</td>
+          </tr>
+	    }
+	   </table>
+</center>
+
+</br>
+<center>
+<center><h2 class="center">Collaborators</h2></center>
+	    <table>
+	         <tr>
+			    <th>Login</th>
+			    <th>ID</th>
+			    <th>Role Name</th>
+			    <th>User Url</th>
+             </tr>
+	    @for(repo <- listcollab){
+	      <tr>
+	      		<td>@repo.login</a>
+				<td>@repo.id</td>
+			     <td>@repo.role_name</td>
+			    <td>@repo.user_url</td>
+          </tr>
+	    }
+	   </table>
 </center>
 
 </body>

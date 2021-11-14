@@ -178,53 +178,48 @@ public class HomeController extends Controller implements WSBodyReadables {
     public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
     	RepositoryProfileService rps = new RepositoryProfileService();
     	RepositoryProfile rp = new RepositoryProfile();
+    	List<RepositoryProfileIssues> rpi = new ArrayList<>();
+    	List<RepositoryProfileCollaborators> rpc = new ArrayList<>();
     	
     	WSRequest request = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository)
 	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"));
 	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
 	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
 	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
-  	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
-  	System.out.println("Hello World");
-  	System.out.println(jsonPromise.toCompletableFuture().get());
-  	rp = rps.getRepositoryProfile(jsonPromise.toCompletableFuture().get());
-  	return ok(repositoryprofile.render(rp));
+    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+
+    	WSRequest req = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository + "/issues?sort=created&direction=desc&per_page=20&page=1")
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"));
+	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
+	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
+	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
+  		CompletionStage<JsonNode> json_issues = req.get().thenApply(r -> r.getBody(json()));
+
+  		WSRequest req_collab = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository + "/collaborators")
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"))
+	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
+	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
+	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
+	              .setAuth(ConfigFactory.load().getString("git_user"),ConfigFactory.load().getString("git_token"));
+		CompletionStage<JsonNode> json_collab = req_collab.get().thenApply(r -> r.getBody(json()));
+		System.out.println(json_collab.toCompletableFuture().get());
+  		rp =  rps.getRepositoryProfile(jsonPromise.toCompletableFuture().get());	
+  		rpi = rps.getRepositoryProfile_Issue(json_issues.toCompletableFuture().get());
+  		
+  		//System.out.println(json_collab.toCompletableFuture().get());
+  		try {
+	    	
+  			rpc = rps.getRepositoryProfile_Collaborators(json_collab.toCompletableFuture().get());
+		} catch (Exception e) {
+			e.printStackTrace();
+        }
+
+  		
+  		return ok(repositoryprofile.render(rp,rpi,rpc));
+    	
     }
     
-   /* 
-    public Result repositoryprofile_issues(String username, String repository) throws InterruptedException, ExecutionException{
-    	RepositoryProfileService rps = new RepositoryProfileService();
-    	List<RepositoryProfileIssues> rpi = new ArrayList<>();
-    	WSRequest request = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository + "/issues")
-	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"));
-	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
-	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
-	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
-	
-
-	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
-	rpi = rps.getRepositoryProfile_Issue(jsonPromise.toCompletableFuture().get());
-	return ok(repositoryprofile_issues.render(rpi));
-	
-    }
-    */
-    /*
-    public Result repositoryprofile_collaborators(String username, String repository) throws InterruptedException, ExecutionException{
-    	RepositoryProfileService rps = new RepositoryProfileService();
-    	List<RepositoryProfileCollaborators> rpi = new ArrayList<>();
-    	WSRequest request = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository + "/collaborators")
-	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"));
-	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
-	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
-	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
-	
-
-	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
-	rpi = rps.getRepositoryProfile_Collaborators(jsonPromise.toCompletableFuture().get());
-	return ok(repositoryprofile_collaborators.render(rpi));
-	
-    }
-    */
+   
         
     
     

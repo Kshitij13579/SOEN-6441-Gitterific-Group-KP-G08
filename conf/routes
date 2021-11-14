@@ -11,9 +11,7 @@ GET     /users/:username                          controllers.HomeController.use
 GET     /users/:username/repos       	          controllers.HomeController.user_repository(username:String)
 
 ## Repository Profile,Issues and Collaborators
-GET     /repository/:username/:repository         controllers.HomeController.repository_profile(username:String,repository:String)
-##GET     /repository/:username/:repository         controllers.HomeController.repositoryprofile_issues(username:String,repository:String)
-##GET     /repository/:username/:repository         controllers.HomeController.repositoryprofile_collaborators(username:String,repository:String)
+GET       /repository/:username/:repository         controllers.HomeController.repository_profile(username:String,repository:String)
 ##
 
 # Map static resources from the /public folder to the /assets URL path

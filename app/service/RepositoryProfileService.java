@@ -48,6 +48,14 @@ public class RepositoryProfileService {
 		 return rpi;
 	}
 	
+
+	public List<String> getissuesList(JsonNode json){
+		List<String> issues = new ArrayList<String>();
+		json.forEach(items -> {
+			issues.add(items.get("title").asText());
+		});
+		return issues;
+	}
 	public List<RepositoryProfileCollaborators> getRepositoryProfile_Collaborators(JsonNode json) throws InterruptedException, ExecutionException  {
 		 List<RepositoryProfileCollaborators> rpc = new ArrayList<>();
 		 json.forEach(items -> {
