@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -12,24 +13,25 @@ import model.Issues;
 
 public class IssueStatService {
 	
-	public Map<String,Long> wordCountDescening(List<Issues> issueList){
+	public List<String> freqList;
+	
+	public List<String> wordCountDescening(List<Issues> issueList){
 		
 
-	//return issueList.stream().map(Issues::getTitle).collect(Collectors.groupingBy(w->w,Collectors.counting())).
-	//entrySet().stream().filter(e->e.getValue()==1).count();
+	
 		List<String> titles=issueList.stream().map(Issues::getTitle).collect(Collectors.toList());
 		
 		//List<String> to String
-		String joined = titles.stream().map(Object::toString).collect(Collectors.joining(" "));
+		String joined = titles.stream().map(Object::toString).collect(Collectors.joining(" "));		
 		
-		 Map<String, Long> strFrequency = Stream.of(joined).map(str->str.split(" ")).map(Object::toString)
-				    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-				   System.out.println(strFrequency);
-			
-		//Map<String, Long>strfrq=titles.stream().map(s->s.split("")).
-		//collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+		Stream<String> stream=Stream.of(joined.toLowerCase().split(" "));
 		
-		return strFrequency;
+		Map<String, Long> wordFreq=stream.collect(Collectors.groupingBy(String::toString,Collectors.counting()));
+		
+		freqList=new ArrayList(wordFreq.entrySet());
+		
+		
+		return freqList;
 		
 		
 	}

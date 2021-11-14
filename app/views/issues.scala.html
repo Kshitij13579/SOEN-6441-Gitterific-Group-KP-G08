@@ -1,8 +1,8 @@
-@(issues: List[model.Issues])
+@(issues: List[model.Issues], freqs: List[String], repository:String)
 
 <!DOCTYPE html>
 <html lang="en">
-
+<center><h2 class="center">@repository Issues</h2></center>
 <head>
     <title>Repository Issues</title>
 </head>
@@ -14,6 +14,14 @@
     <li >@issue.title</li>
     }
     </ul>
+    
+    
+    <h3>Issue Title Word Statistics</h3>
+    
+<ul>
+    @freqs
+    </ul>
+    
     
 </body>
 

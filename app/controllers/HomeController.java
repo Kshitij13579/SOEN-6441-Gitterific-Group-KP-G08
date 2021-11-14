@@ -96,11 +96,11 @@ public class HomeController extends Controller implements WSBodyReadables {
 	  JsonNode repoIssues=jsonPromise.toCompletableFuture().get();
 	  
 	  issuesList=issueService.getTitleList(repoIssues);
+	 
+	  List<String> frequencyList=issueStatService.wordCountDescening(issuesList);
 	  
-	  Map<String,Long> test=issueStatService.wordCountDescening(issuesList);
+	  return ok(issues.render(issuesList,frequencyList,repository));
 	  
-	  System.out.println(test);
-	  
-	  return ok(issues.render(issuesList)); }
+	  }
 	 
 }
