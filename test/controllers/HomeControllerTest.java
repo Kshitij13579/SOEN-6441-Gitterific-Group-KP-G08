@@ -68,6 +68,7 @@ public class HomeControllerTest extends WithApplication {
 
         Result result = route(app, request);
         assertEquals(OK, result.status());
+        
     }
     
     // Test Index Page to return a HTML Response with expected status code,content type and character set
