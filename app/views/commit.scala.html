@@ -10,7 +10,7 @@ table, th, td {
 <h3>Top 10 Committers</h3>
 <ul>
 @for(comm <- commStat.top_committers){
-  <li>@comm</li>
+  <li><a href="/users/@comm.login">@comm.name</a> Commits:@comm.commits</li>
 }
 </ul>
 <h3>Addition and Deletion Statistics</h3>

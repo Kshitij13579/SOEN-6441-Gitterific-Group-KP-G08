@@ -29,7 +29,7 @@ public class IssueStatService {
 		Map<String, Long> wordFreq=stream.collect(Collectors.groupingBy(String::toString,Collectors.counting()));
 		
 		freqList=new ArrayList(wordFreq.entrySet());
-		
+		System.out.println(freqList);
 		
 		return freqList;
 		

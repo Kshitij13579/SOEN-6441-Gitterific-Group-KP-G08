@@ -6,11 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Collections;
+
+import model.Author;
 import model.Commit;
 
 public class CommitStatService {
@@ -24,7 +29,9 @@ public class CommitStatService {
 	   List<String> shaList = new ArrayList<String>();
 	   
 	   json.forEach(j ->{
-		   shaList.add(j.get("sha").asText());
+		   if(j.has("sha")) {
+		     shaList.add(j.get("sha").asText());
+		   }
 	   });
 	   
 	   return shaList;
@@ -72,11 +79,35 @@ public class CommitStatService {
 				  .orElse(Double.NaN);
    }
    
-   public List<String> getTopCommitter(List<Commit> commList){
-	   List<String> topCommitterList = new ArrayList<String>();
+   public int getCommitsByAuthor(String name,List<Commit> commList) {
+	   int total = 0;
 	   
-	   topCommitterList = commList.stream()
-			             .collect(Collectors.groupingBy(Commit::getAuthor,Collectors.counting()))
+	   Long l  =  commList.stream()
+			   .map(Commit::getAuthor)
+			   .collect(Collectors.groupingBy(Author::getName,Collectors.counting()))
+			   .entrySet()
+			   .stream()
+			   .filter(map -> name.equals(map.getKey()))
+			   .mapToLong(Map.Entry::getValue)
+			   .findFirst().getAsLong();
+	   
+	   total = l.intValue();
+	   
+	   return total;
+   }
+   
+   public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) 
+   {
+       Map<Object, Boolean> map = new ConcurrentHashMap<>();
+       return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+   }
+   
+   public List<Author> getTopCommitterList(List<Commit> commList){
+	   List<Author> topCommitterList = new ArrayList<Author>();
+	   
+	  final List<String> topcommitter = commList.stream()
+			             .map(Commit::getAuthor)
+			             .collect(Collectors.groupingBy(Author::getName,Collectors.counting()))
 			             .entrySet()
 			             .stream()
 			             .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
@@ -84,6 +115,21 @@ public class CommitStatService {
 			             .map(Map.Entry::getKey)
 			             .collect(Collectors.toList());
 	   
+	   topCommitterList = commList.stream()
+			               .map(Commit::getAuthor)
+			              .filter(a -> topcommitter.contains(a.getName()))
+			              .filter(distinctByKey(a -> a.getName()))
+			              .collect(Collectors.toList());
+	   
+	   topCommitterList.forEach( author ->{
+		   author.setCommits(getCommitsByAuthor(author.getName(), commList));
+	   });
+	   
+	   topCommitterList = topCommitterList.stream()
+			              .sorted(Collections.reverseOrder(Comparator.comparing(Author::getCommits)))
+	                      .collect(Collectors.toList());
+	   
 	   return topCommitterList;
    }
+   
 }
