@@ -57,10 +57,12 @@ public class HomeController extends Controller implements WSBodyReadables {
 	
 	@Inject
 	WSClient ws;
+	List<Repository> globalRepoList = new ArrayList<Repository>();  
 	
     public Result index() throws InterruptedException, ExecutionException {
     	
     	List<Repository> repoList = new ArrayList<Repository>();
+    	globalRepoList = new ArrayList<Repository>();
         return ok(index.render(repoList));
     }
     
@@ -68,7 +70,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 	public Result search(String query) throws InterruptedException, ExecutionException {
     	
     	RepositorySearchService repoService = new RepositorySearchService();
-    	List<Repository> repoList = new ArrayList<Repository>();
     	
     	WSRequest request = ws.url(ConfigFactory.load().getString("git_search_repo_url"))
     			              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"))
@@ -85,8 +86,15 @@ public class HomeController extends Controller implements WSBodyReadables {
     					return request.get().thenApply(r -> r.getBody(json()));
     				};
     	}, Integer.parseInt(ConfigFactory.load().getString("CACHE_EXPIRY_TIME")));
-    	repoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
-		return ok(index.render(repoList));
+    	
+    	if(globalRepoList.isEmpty()) {
+    		globalRepoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
+    	}else {
+    		System.out.println(globalRepoList.size());
+    		globalRepoList.addAll(repoService.getRepoList(jsonPromise.toCompletableFuture().get()));
+    	}
+    	
+		return ok(index.render(globalRepoList));
     }
     
 
@@ -202,8 +210,7 @@ public class HomeController extends Controller implements WSBodyReadables {
     			              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
     			              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
     						  .addQueryParameter(GIT_PARAM.SORT.value, "updated");
-    	System.out.println(request.getUrl());
-    	System.out.println(request.getQueryParameters());
+    	
     	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(request.getUrl()
     			+ GIT_PARAM.QUERY.value + "topic:" + topic 
     			+ GIT_PARAM.PER_PAGE.value + ConfigFactory.load().getString("repo_per_page")
