@@ -6,9 +6,12 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CommitStatTest {
@@ -16,14 +19,14 @@ public class CommitStatTest {
 	@Mock
 	CommitStat commStat;
 	
-	List<String> top_committers;
+	List<Author> top_committers;
 	
 	@Before
 	public void setup() {
 		commStat = mock(CommitStat.class);
-		top_committers = new ArrayList<String>();
-		top_committers.add("Chang");
-		top_committers.add("javaguy");
+		top_committers = new ArrayList<Author>();
+		top_committers.add(new Author("Chang","chvin",50));
+		top_committers.add(new Author("javaguy","jg",50));
 	}
 	
 	@Test
@@ -55,11 +58,11 @@ public class CommitStatTest {
 	public void testGetters() {
 		
 		CommitStat com = new CommitStat(top_committers, 10, 5, 10, 5, 10, 5, "Java");
-		String[] expected_top_committers = new String[] {"Chang","javaguy"};
-		String[] actual_top_committers = new String[top_committers.size()];
+		Author[] expected_top_committers = new Author[] {new Author("Chang","chvin",50),new Author("javaguy","jg",50)};
+		Author[] actual_top_committers = new Author[top_committers.size()];
 		com.getTop_committers().toArray(actual_top_committers);
 		
-		assertArrayEquals(expected_top_committers, actual_top_committers);
+		assertTrue(Arrays.deepEquals(expected_top_committers, actual_top_committers));
 		assertEquals(10.0, com.getAvg_additions(),2);
 		assertEquals(5.0, com.getAvg_deletions(),2);
 		assertEquals(10, com.getMax_additions(),2);

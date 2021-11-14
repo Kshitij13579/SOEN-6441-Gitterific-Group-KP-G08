@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Author {
     public String name;
     public String login;
@@ -33,6 +35,21 @@ public class Author {
 
 	public void setLogin(String login) {
 		this.login = login;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+	    if (this == o)
+	        return true;
+	    if (o == null || getClass() != o.getClass())
+	        return false;
+	    Author a = (Author) o;
+	    return Objects.equals(name, a.name) && Objects.equals(login, a.login) && Objects.equals(commits, a.commits);
+	}
+
+	@Override
+	public int hashCode() {
+	    return Objects.hash(name, login,commits);
 	}
 
 	

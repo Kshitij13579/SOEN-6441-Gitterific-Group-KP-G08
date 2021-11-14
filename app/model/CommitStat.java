@@ -46,6 +46,10 @@ public class CommitStat {
 	public String getRepository() {
 		return repository;
 	}
+	
+	public void setRepository(String repository) {
+		this.repository = repository;
+	}
 
 	public List<Author> getTop_committers() {
 		return top_committers;

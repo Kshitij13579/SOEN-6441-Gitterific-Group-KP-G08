@@ -90,7 +90,6 @@ public class HomeController extends Controller implements WSBodyReadables {
     	if(globalRepoList.isEmpty()) {
     		globalRepoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
     	}else {
-    		System.out.println(globalRepoList.size());
     		globalRepoList.addAll(repoService.getRepoList(jsonPromise.toCompletableFuture().get()));
     	}
     	
