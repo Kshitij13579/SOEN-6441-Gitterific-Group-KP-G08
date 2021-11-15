@@ -18,8 +18,10 @@ public class IssueService {
 		List<Issues> titleList=new ArrayList<Issues>();
 		
 		
-		 json.forEach(t->{ String
-		 title=t.get("title").asText(); titleList.add(new Issues(title)); });
+		 json.forEach(t->{ 
+			 String title=t.get("title").asText(); 
+			 titleList.add(new Issues(title));
+			 });
 		 
 		 return titleList;
 		
