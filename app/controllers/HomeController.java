@@ -17,7 +17,7 @@ import model.UserRepository;
 import model.RepositoryProfile;
 import model.RepositoryProfileCollaborators;
 import model.RepositoryProfileIssues;
-
+import model.GithubApi;
 import play.mvc.*;
 import play.mvc.Http.Cookie;
 import play.mvc.Http.MultipartFormData.Part;
@@ -218,6 +218,11 @@ public class HomeController extends Controller implements WSBodyReadables {
   		return ok(repositoryprofile.render(rp,rpi,rpc));
     	
     }
+    
+	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
+		List<Repository> repoList = this.ghApi.getRepositoryInfo(topic, true, this.cache);
+    	return ok(topicPage.render(repoList, topic));
+	}
     
    
         

@@ -32,6 +32,36 @@ table, th, td {
 			    <td>Topic</td>
 			    <td><a href=search/@repo.login/@repo.name/commits target="_blank">Link</a></td>
           </tr>
+          
+           @if(i%10 != 0) {
+		      <tr>
+		      		<td><a href="/users/@repo.login" style="text-decoration: none;">@repo.login</a>
+	 			    <td>@repo.name</td>
+				    <td>@repo.issues_url</td>
+				    <td>
+				    	<table style="border:none">
+				    		<tr>
+				    		@for(topic <- repo.topics) {
+				    			<tr>
+				    				<td style="border:none">
+							        	<a href="/topics/@topic" style="text-decoration: none;" target="_blank">
+							        		@topic
+							        	</a>
+				    				</td>
+							    </tr>
+				    		}
+						   </tr>
+						</table>
+				    </td>
+				    <td><a href="search/@repo.login/@repo.name/commits" style="text-decoration: none;" target="_blank">Link</a></td>
+	          </tr>
+	          } else {
+	              <tr>
+	                <td colspan="5" bgcolor="#00ff00" style="height:20"></td>
+	              </tr>
+	          }
+	          
+	          @{i = i+1}
 	    }
 	   </table>
 	</center>
