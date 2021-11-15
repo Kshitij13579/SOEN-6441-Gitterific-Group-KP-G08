@@ -11,6 +11,7 @@ GET     /topics/search/:user/:repository/commits controllers.HomeController.comm
 GET     /users/:username                  controllers.HomeController.user_profile(username:String)
 GET     /users/:username/repos       	    controllers.HomeController.user_repository(username:String)
 GET     /topics/:topic       	    controllers.HomeController.topics(topic: String)
+GET     /repository/:username/:repository         controllers.HomeController.repository_profile(username:String,repository:String)
 
 # Map static resources from the /public folder to the /assets URL path
 #GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
