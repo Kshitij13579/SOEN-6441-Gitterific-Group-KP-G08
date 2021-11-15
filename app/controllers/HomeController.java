@@ -222,11 +222,11 @@ public class HomeController extends Controller implements WSBodyReadables {
 	  WSRequest request =
 	  ws.url("https://api.github.com/repos/"+user+"/"+repository+"/issues")
 	  .addHeader(GIT_HEADER.CONTENT_TYPE.value,
-	  ConfigFactory.load().getString("git_header.Content-Type"))
+	  ConfigFactory.load().getString("constants.git_header.Content-Type"))
 	  .addQueryParameter(GIT_PARAM.PER_PAGE.value,
-	  ConfigFactory.load().getString("issues_per_page"))
+	  ConfigFactory.load().getString("constants.issues_per_page"))
 	  .addQueryParameter(GIT_PARAM.PAGE.value,
-	  ConfigFactory.load().getString("issues_page") );
+	  ConfigFactory.load().getString("constants.issues_page") );
 	  
 	  CompletionStage<JsonNode>
 	  jsonPromise=request.get().thenApply(r->r.getBody(json()));
