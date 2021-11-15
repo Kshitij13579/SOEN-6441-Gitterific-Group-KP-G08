@@ -12,6 +12,7 @@ import model.Commit;
 import model.CommitStat;
 import model.GIT_HEADER;
 import model.GIT_PARAM;
+import model.Issues;
 import model.Repository;
 import model.UserProfile;
 import model.UserRepository;
@@ -24,6 +25,8 @@ import play.mvc.Http.Cookie;
 import play.mvc.Http.MultipartFormData.Part;
 
 import service.CommitStatService;
+import service.IssueService;
+import service.IssueStatService;
 import service.RepositorySearchService;
 import service.UserService;
 import service.RepositoryProfileService;										
@@ -75,6 +78,7 @@ public class HomeController extends Controller implements WSBodyReadables {
     	List<Repository> repoList = new ArrayList<Repository>();
     	globalRepoList = new ArrayList<Repository>();
         return ok(index.render(repoList));
+  
     }
     
     @SuppressWarnings("deprecation")
@@ -198,7 +202,6 @@ public class HomeController extends Controller implements WSBodyReadables {
     
 	
     public Result user_repository(String username) throws InterruptedException, ExecutionException{
-    	
     	UserService repoService = new UserService();
     	List<UserRepository> repoList = new ArrayList<>();
     	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username+"/repos")
@@ -261,8 +264,33 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(topicPage.render(repoList, topic));
 	}
 	
-   
-		
-	
-	
+	  public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
+	  
+	  IssueService issueService=new IssueService();
+	  
+	  IssueStatService issueStatService=new IssueStatService();
+	  List<Issues> issuesList=new ArrayList<Issues>();
+	  
+	  WSRequest request =
+	  ws.url("https://api.github.com/repos/"+user+"/"+repository+"/issues")
+	  .addHeader(GIT_HEADER.CONTENT_TYPE.value,
+	  ConfigFactory.load().getString("constants.git_header.Content-Type"))
+	  .addQueryParameter(GIT_PARAM.PER_PAGE.value,
+	  ConfigFactory.load().getString("constants.issues_per_page"))
+	  .addQueryParameter(GIT_PARAM.PAGE.value,
+	  ConfigFactory.load().getString("constants.issues_page") );
+	  
+	  CompletionStage<JsonNode>
+	  jsonPromise=request.get().thenApply(r->r.getBody(json()));
+	  
+	  JsonNode repoIssues=jsonPromise.toCompletableFuture().get();
+	  
+	  issuesList=issueService.getTitleList(repoIssues);
+	 
+	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);
+	  
+	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));
+	  
+	  }
+	 
 }
