@@ -18,7 +18,7 @@ public class viewTest {
 		
 		List<Repository> repoList = new ArrayList<Repository>();	
 		
-		Content html=views.html.index.render(repoList);
+		Content html=views.html.index.render(repoList, "");
 		
 		assertEquals("text/html",html.contentType().toString());
 	}
