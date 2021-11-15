@@ -15,12 +15,11 @@ import model.Issues;
 
 public class IssueStatService {
 	
-	public List<String> freqList;
+	
 	
 	public List[] wordCountDescening(List<Issues> issueList){
 		
-
-	
+		
 		List<String> titles=issueList.stream().map(Issues::getTitle).collect(Collectors.toList());
 		
 		//List<String> to String
@@ -36,6 +35,7 @@ public class IssueStatService {
 		
 		List<String> wordList=new ArrayList<String>(sortedMapDescending.keySet());
 		List<Long>   wordCount=new ArrayList<Long>(sortedMapDescending.values());
+		
 		
 		//freqList=new ArrayList(sortedMapDescending.entrySet());
 		//System.out.println(freqList);
