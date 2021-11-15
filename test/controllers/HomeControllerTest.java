@@ -77,48 +77,70 @@ public class HomeControllerTest extends WithApplication {
 	  
 	  }
 	  
-	  // Test Index Page to return a HTML Response with expected status code,content type and character set
-	  
-	  @Test public void testIndex1() throws InterruptedException,
-	  ExecutionException { // Result result = new HomeController.index();
-	  RequestBuilder request = Helpers.fakeRequest(routes.HomeController.index());
-	  Result result = route(app, request); assertEquals(OK, result.status());
-	  assertEquals("text/html", result.contentType().get()); assertEquals("utf-8",
-	  result.charset().get()); }
-	  
-	  //Testing Controller Action through Routing : Good and Bad Route Testing
-	  
-	  @Test public void testBadRouteForIndex() { RequestBuilder request =
-	  Helpers.fakeRequest().method(GET).uri("/xx/Kiwi");
-	  
-	  Result result = route(app, request); assertEquals(NOT_FOUND,
-	  result.status()); }
-	  
-	  
-	  @Test public void testGoodRouteCallForIndex() { RequestBuilder request =
-	  Helpers.fakeRequest(routes.HomeController.index()); Result result =
-	  route(app, request); // ###replace: assertEquals(OK, result.status());
-	  assertEquals(OK, result.status()); // assertEquals(NOT_FOUND,result.status()); // NOT_FOUND since the routes files aren't used 
-	  }
-	  
-	  //--------------------------------------------------------Topic-START----------
-	  //----------------------------------------------
-	  
-	  @Inject
-	  AsyncCacheApi cache;
-	  
-	  @Test public void testTopicPage() throws InterruptedException,
-	  ExecutionException, FileNotFoundException { GithubApi testApi =
-	  application.injector().instanceOf(GithubApi.class); List<Repository> repoList
-	  = testApi.getRepositoryInfo("play", true, cache); Result result =
-	  play.mvc.Results.ok(topicPage.render(repoList, "play")); assertEquals(OK,
-	  result.status()); assertEquals("text/html", result.contentType().get());
-	  assertEquals("utf-8", result.charset().get());
-	  assertTrue(contentAsString(result).contains("play")); }
-	 // --------------------------------------------------------Topic-END------------
-	 // --------------------------------------------
-	  
-	  @AfterClass public static void stopApp() { Helpers.stop(application); }
-	  
-	 
+    @Override
+    protected Application provideApplication() {
+        return new GuiceApplicationBuilder().build();
+    }
+    // Testing the Index page for HTML Response
+    @Test
+    public void testIndex() {
+        Http.RequestBuilder request = new Http.RequestBuilder()
+                .method(GET)
+                .uri("/");
+
+        Result result = route(app, request);
+        assertEquals(OK, result.status());
+        
+    }
+    
+    // Test Index Page to return a HTML Response with expected status code,content type and character set
+    @Test
+    public void testIndex1()   throws InterruptedException, ExecutionException  {
+      //  Result result = new HomeController.index();
+    	RequestBuilder request = Helpers.fakeRequest(routes.HomeController.index());
+    	Result result = route(app, request);
+        assertEquals(OK, result.status());
+        assertEquals("text/html", result.contentType().get());
+        assertEquals("utf-8", result.charset().get());
+      }
+   
+    //Testing Controller Action through Routing : Good and Bad Route Testing
+    @Test
+    public void testBadRouteForIndex() {
+      RequestBuilder request = Helpers.fakeRequest().method(GET).uri("/xx/Kiwi");
+
+      Result result = route(app, request);
+      assertEquals(NOT_FOUND, result.status());
+    }
+
+    
+    @Test
+    public void testGoodRouteCallForIndex() {
+      RequestBuilder request = Helpers.fakeRequest(routes.HomeController.index());
+      Result result = route(app, request);
+      // ###replace:    assertEquals(OK, result.status());
+      assertEquals(OK, result.status());
+     // assertEquals(NOT_FOUND, result.status()); // NOT_FOUND since the routes files aren't used
+    }
+    
+    /*--------------------------------------------------------Topic-START--------------------------------------------------------*/
+    @Inject AsyncCacheApi cache;
+    @Test
+    public void testTopicPage() throws InterruptedException, ExecutionException, FileNotFoundException  {
+      GithubApi testApi = application.injector().instanceOf(GithubApi.class);
+      List<Repository> repoList = testApi.getRepositoryInfo("play", true, cache);
+      Result result = play.mvc.Results.ok(index.render(repoList, "play"));
+      assertEquals(OK, result.status());
+      assertEquals("text/html", result.contentType().get());
+      assertEquals("utf-8", result.charset().get());
+      assertTrue(contentAsString(result).contains("play"));
+    }    
+    /*--------------------------------------------------------Topic-END--------------------------------------------------------*/
+    
+    @AfterClass
+    public static void stopApp() {
+      Helpers.stop(application);
+    }
+    
+
 }

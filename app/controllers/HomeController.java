@@ -77,7 +77,7 @@ public class HomeController extends Controller implements WSBodyReadables {
     	
     	List<Repository> repoList = new ArrayList<Repository>();
     	globalRepoList = new ArrayList<Repository>();
-        return ok(index.render(repoList));
+        return ok(index.render(repoList, ""));
   
     }
     
@@ -109,7 +109,7 @@ public class HomeController extends Controller implements WSBodyReadables {
     		globalRepoList.addAll(repoService.getRepoList(jsonPromise.toCompletableFuture().get()));
     	}
     	
-		return ok(index.render(globalRepoList));
+		return ok(index.render(globalRepoList, ""));
     }
     
 
@@ -261,7 +261,7 @@ public class HomeController extends Controller implements WSBodyReadables {
     }																																
 	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
 		List<Repository> repoList = this.ghApi.getRepositoryInfo(topic, true, this.cache);
-    	return ok(topicPage.render(repoList, topic));
+    	return ok(index.render(repoList, topic));
 	}
 	
 	  public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
