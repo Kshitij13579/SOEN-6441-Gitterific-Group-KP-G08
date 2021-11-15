@@ -122,7 +122,7 @@ public class HomeControllerTest extends WithApplication {
     public void testTopicPage() throws InterruptedException, ExecutionException, FileNotFoundException  {
       GithubApi testApi = application.injector().instanceOf(GithubApi.class);
       List<Repository> repoList = testApi.getRepositoryInfo("play", true, cache);
-      Result result = play.mvc.Results.ok(topicPage.render(repoList, "play"));
+      Result result = play.mvc.Results.ok(index.render(repoList, "play"));
       assertEquals(OK, result.status());
       assertEquals("text/html", result.contentType().get());
       assertEquals("utf-8", result.charset().get());
