@@ -180,21 +180,21 @@ public class HomeController extends Controller implements WSBodyReadables {
     	RepositoryProfile rp = new RepositoryProfile();
     	List<RepositoryProfileIssues> rpi = new ArrayList<>();
     	List<RepositoryProfileCollaborators> rpc = new ArrayList<>();
-    	
+    	//Repository Profile
     	WSRequest request = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository)
 	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"));
 	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
 	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
 	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
     	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
-
+    	// Repository Issues
     	WSRequest req = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository + "/issues?sort=created&direction=desc&per_page=20&page=1")
 	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"));
 	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
 	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
 	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
   		CompletionStage<JsonNode> json_issues = req.get().thenApply(r -> r.getBody(json()));
-
+  		//Repository Collabs
   		WSRequest req_collab = ws.url(ConfigFactory.load().getString("git_repositoryprofile_url")+"/"+username + "/" + repository + "/collaborators")
 	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("git_header.Content-Type"))
 	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);

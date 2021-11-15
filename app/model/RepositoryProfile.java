@@ -73,3 +73,4 @@ public class RepositoryProfile {
 		this.open_issues = open_issues;
 	}
 }
+
