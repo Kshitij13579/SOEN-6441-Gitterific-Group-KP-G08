@@ -1,4 +1,4 @@
-@(repos: List[model.Repository])
+@(repos: List[model.Repository], topic: String)
 @import java.math.BigInteger; var i=1;
 <html>
 <style>
@@ -8,16 +8,24 @@ table, th, td {
 </style>
 <center>
 	<h2>
-		Gitterific
+		@if(topic == "") {
+			Gitterific
+		}
+		@if(topic != "") {
+			@topic
+		}
 	</h2>
 </center>
 <body>
-	<center>
-		<form method="GET" action="search">
-		 Search : <input type="text" name="query"></input>
-		 <input type="submit" value="Go"></input>
-		</form>
-	</center>
+	@if(topic == "") {
+		<center>
+			<form method="GET" action="search">
+			 Search : <input type="text" name="query"></input>
+			 <input type="submit" value="Go"></input>
+			</form>
+		</center>
+	}
+	
 	<center>
 	    <table>
 	         <tr>
@@ -32,8 +40,8 @@ table, th, td {
 	         @if(i%10 != 0) {
 		      <tr>
 		      		<td><a href="/users/@repo.login" style="text-decoration: none;">@repo.login</a>
-	 			    <td>@repo.name</td>
-				    <td>@repo.issues_url</td>
+	 			   <td><a href=/repository/@repo.login/@repo.name>@repo.name</a>
+				    <td><a href=search/@repo.login/@repo.name/issues target="_blank">Click Here</a></td>
 				    <td>
 				    	<table style="border:none">
 				    		<tr>

@@ -3,13 +3,19 @@ package controllers;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+import play.mvc.*;
+import play.mvc.Http.Cookie;
+import play.mvc.Http.MultipartFormData.Part;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import model.GithubApi;
+import model.GithubApiMock;
 import model.Repository;
 import play.Application;
-//import play.api.test.Helpers;
+import play.cache.AsyncCacheApi;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
 import play.libs.ws.WSClient;
@@ -22,7 +28,10 @@ import play.routing.RoutingDsl;
 import play.server.Server;
 import play.test.Helpers;
 import play.test.WithApplication;
+
+import java.io.FileNotFoundException;
 import java.lang.*;
+import views.html.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -31,14 +40,18 @@ import static play.test.Helpers.GET;
 import static play.test.Helpers.route;
 import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.running;
+import static play.test.Helpers.contentAsString;
+import static play.inject.Bindings.bind;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import javax.inject.Inject;
 
 import java.util.*;
+import java.lang.String;
   
 import play.*;
 import play.mvc.*;
@@ -51,7 +64,9 @@ public class HomeControllerTest extends WithApplication {
 
 	  @BeforeClass
 	  public static void startApp() {
-	    application = Helpers.fakeApplication();
+		application = new GuiceApplicationBuilder()
+				.overrides(bind(GithubApi.class).to(GithubApiMock.class))
+				.build();
 	    Helpers.start(application);
 	  }
 	  
@@ -101,6 +116,19 @@ public class HomeControllerTest extends WithApplication {
      // assertEquals(NOT_FOUND, result.status()); // NOT_FOUND since the routes files aren't used
     }
     
+    /*--------------------------------------------------------Topic-START--------------------------------------------------------*/
+    @Inject AsyncCacheApi cache;
+    @Test
+    public void testTopicPage() throws InterruptedException, ExecutionException, FileNotFoundException  {
+      GithubApi testApi = application.injector().instanceOf(GithubApi.class);
+      List<Repository> repoList = testApi.getRepositoryInfo("play", true, cache);
+      Result result = play.mvc.Results.ok(index.render(repoList, "play"));
+      assertEquals(OK, result.status());
+      assertEquals("text/html", result.contentType().get());
+      assertEquals("utf-8", result.charset().get());
+      assertTrue(contentAsString(result).contains("play"));
+    }    
+    /*--------------------------------------------------------Topic-END--------------------------------------------------------*/
     
     @AfterClass
     public static void stopApp() {
