@@ -33,4 +33,11 @@ public class GithubApiMock implements GithubApi {
 		repoList = repoService.getRepoList(json);
 		return repoList;
 	}
+
+	@Override
+	public CommitStat getCommitStatistics(String user, String repository, AsyncCacheApi cache)
+			throws InterruptedException, ExecutionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
