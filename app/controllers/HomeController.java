@@ -260,8 +260,12 @@ public class HomeController extends Controller implements WSBodyReadables {
     	
     }																																
 	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
-		List<Repository> repoList = this.ghApi.getRepositoryInfo(topic, true, this.cache);
+		List<Repository> repoList = this.fetchRepositoryInfo(topic, true);
     	return ok(index.render(repoList, topic));
+	}
+	
+	public List<Repository> fetchRepositoryInfo(String topic, boolean isTopic) throws InterruptedException, ExecutionException, FileNotFoundException {
+		return this.ghApi.getRepositoryInfo(topic, isTopic, this.cache);
 	}
 	
 	  public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
