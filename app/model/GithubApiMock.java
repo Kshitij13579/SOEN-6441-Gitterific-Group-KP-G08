@@ -56,4 +56,11 @@ public class GithubApiMock implements GithubApi {
 		}
 		return json;
 	}
+
+	@Override
+	public CommitStat getCommitStatistics(String user, String repository, AsyncCacheApi cache)
+			throws InterruptedException, ExecutionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
