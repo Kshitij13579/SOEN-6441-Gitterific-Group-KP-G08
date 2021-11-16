@@ -12,6 +12,7 @@ import model.Repository;
 import play.twirl.api.Content;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static play.test.Helpers.contentAsString;
 
 public class viewTest {
 
