@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import model.Author;
 import model.Commit;
+import play.libs.Json;
 
 public class CommitStatServiceTest {
     
@@ -71,27 +72,20 @@ public class CommitStatServiceTest {
 	
 	@Test
 	public void getShaListTest() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			String jsonString = "[{sha : \"abcdefg#1234\"},{sha : \"abcdefg#1235\"},{sha : \"abcdefg#1236}\"}]";
-			JsonNode json= mapper.readTree(jsonString);
-			
-			String nullJsonString = "[{bha : \"abcdefg#1234\"},{abc : \"abcdefg#1235\"},{xyz : \"abcdefg#1236}\"}]";
-			JsonNode nullJson= mapper.readTree(nullJsonString);
-			
-			
-			List<String> expected_shaList = new ArrayList<String>();
-			expected_shaList.add("abcdefg#1234");
-			expected_shaList.add("abcdefg#1235");
-			expected_shaList.add("abcdefg#1236");
+		String jsonString = "[\n{\n\"sha\" : \"abcdefg#1234\"\n},\n {\n\"sha\" : \"abcdefg#1235\"\n}, \n {\n\"sha\" : \"abcdefg#1236\"\n}\n]";
+		JsonNode json= Json.parse(jsonString);
+		
+		String nullJsonString = "[{\"bha\" : \"abcdefg#1234\"},\n {\"abc\" : \"abcdefg#1235\"},\n {\"xyz\" : \"abcdefg#1236}\"}]";
+		JsonNode nullJson= Json.parse(nullJsonString);
+		
+		
+		List<String> expected_shaList = new ArrayList<String>();
+		expected_shaList.add("abcdefg#1234");
+		expected_shaList.add("abcdefg#1235");
+		expected_shaList.add("abcdefg#1236");
 
-			assertTrue(commStat.getShaList(json).containsAll(expected_shaList));
-			assertTrue(commStat.getShaList(nullJson).isEmpty());
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		assertTrue(commStat.getShaList(json).containsAll(expected_shaList));
+		assertTrue(commStat.getShaList(nullJson).isEmpty());
 		
 	}
 	

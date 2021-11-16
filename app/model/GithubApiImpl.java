@@ -50,7 +50,7 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 		CommitStatService commStatService = new CommitStatService();
     	List<Commit> commitList = new ArrayList<Commit>();
     	
-    	WSRequest request = ws.url("https://api.github.com/repos/"+user+"/"+repository+"/commits")
+    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+user+"/"+repository+"/commits")
 	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
 	              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("constants.commits_per_page"))
 	              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.commits_page"))
@@ -68,7 +68,7 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
     	List<String> shaList = commStatService.getShaList(commits);
     	
     	shaList.forEach(sha -> {
-    		WSRequest r = ws.url("https://api.github.com/repos/"+user+"/"+repository+"/commits/"+sha)
+    		WSRequest r = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+ "/"+user+"/"+repository+"/commits/"+sha)
   	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
     		      .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
 

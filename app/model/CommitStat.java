@@ -12,7 +12,9 @@ public class CommitStat {
     public int min_deletions;
     public String repository;
     
-	
+	public CommitStat() {
+		
+	}
 
 	public CommitStat(List<Author> top_committers, double avg_additions, double avg_deletions, int max_additions,
 			int max_deletions,int min_additions,int min_deletions,String repository) {

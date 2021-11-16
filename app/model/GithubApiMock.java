@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import play.cache.AsyncCacheApi;
+import service.CommitStatService;
 import service.RepositorySearchService;
 
 public class GithubApiMock implements GithubApi {
@@ -37,7 +38,57 @@ public class GithubApiMock implements GithubApi {
 	@Override
 	public CommitStat getCommitStatistics(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		CommitStatService commStatService = new CommitStatService();
+		List<Commit> commitList = new ArrayList<Commit>();
+		
+		String path = System.getProperty("user.dir") +"/test/resources/"+user+"_"+repository+".json";
+		java.io.File file = new java.io.File(path);
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode json = null;
+		try {
+			json = mapper.readTree(file);
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		List<String> shaList = commStatService.getShaList(json);
+		
+		shaList.forEach(sha -> {
+			String tempPath = System.getProperty("user.dir") +"/test/resources/"+user+"_"+repository+"_"+sha+".json";
+			java.io.File tempFile = new java.io.File(tempPath);
+			ObjectMapper tempMapper = new ObjectMapper();
+			JsonNode temp = null;
+			try {
+				temp = tempMapper.readTree(tempFile);
+			}  catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			commitList.add(new Commit(
+				       new Author(temp.get("commit").get("author").get("name").asText(), 
+				                  (temp.get("author").has("login")) ? temp.get("author").get("login").asText() : "null",
+				                  0
+				       ),
+				       sha,
+				       (temp.has("stats")) ? temp.get("stats").get("additions").asInt() : 0 , 
+				       (temp.has("stats")) ? temp.get("stats").get("deletions").asInt() : 0 ));
+		});
+		
+		
+		CommitStat commitStat = new CommitStat(commStatService.getTopCommitterList(commitList)
+                ,commStatService.getAvgAddition(commitList)
+                ,commStatService.getAvgDeletion(commitList)
+                ,commStatService.getMaxAddition(commitList)
+                ,commStatService.getMaxDeletion(commitList)
+                ,commStatService.getMinAddition(commitList)
+                ,commStatService.getMinDeletion(commitList)
+                ,repository
+                );
+		
+		return commitStat;
 	}
 }
