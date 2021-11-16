@@ -193,16 +193,31 @@ public class HomeController extends Controller implements WSBodyReadables {
   		
   		return ok(repositoryprofile.render(rp,rpi,rpc));
     	
-    }																																
+    }	
+	 
 	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
-		List<Repository> repoList = this.ghApi.getRepositoryInfo(topic, true, this.cache);
+		List<Repository> repoList = this.fetchRepositoryInfo(topic, true);
     	return ok(index.render(repoList, topic));
 	}
 	
-	  public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
-	  
-	  IssueService issueService=new IssueService();
-	  
+	public List<Repository> fetchRepositoryInfo(String topic, boolean isTopic) throws InterruptedException, ExecutionException, FileNotFoundException {
+		return this.ghApi.getRepositoryInfo(topic, isTopic, this.cache);
+	}
+	
+	
+	/**
+	 * This method performs repository issues title statistics by taking user and repository name as input
+	 * An API call is made and response is then processed and calculated stats.
+	 * @param user user repository owner
+	 * @param repository repository name
+	 * @return a HTML Response
+	 * @throws InterruptedException InterruptedException Exception during runtime
+	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
+	 * 							  retrieve the result of any task
+	 */
+	public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
+
+	  IssueService issueService=new IssueService();	  
 	  IssueStatService issueStatService=new IssueStatService();
 	  List<Issues> issuesList=new ArrayList<Issues>();
 	  
@@ -213,19 +228,21 @@ public class HomeController extends Controller implements WSBodyReadables {
 	  .addQueryParameter(GIT_PARAM.PER_PAGE.value,
 	  ConfigFactory.load().getString("constants.issues_per_page"))
 	  .addQueryParameter(GIT_PARAM.PAGE.value,
-	  ConfigFactory.load().getString("constants.issues_page") );
+	  ConfigFactory.load().getString("constants.issues_page") );  
 	  
-	  CompletionStage<JsonNode>
-	  jsonPromise=request.get().thenApply(r->r.getBody(json()));
+	  CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
+  			new Callable<CompletionStage<JsonNode>>() {
+  				public CompletionStage<JsonNode> call() {
+  					return request.get().thenApply(r -> r.getBody(json()));
+  				};
+  	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
 	  
 	  JsonNode repoIssues=jsonPromise.toCompletableFuture().get();
 	  
 	  issuesList=issueService.getTitleList(repoIssues);
 	 
 	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);
-	  
-	  System.out.println(frequencyList);
-	  
+	  	  
 	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));
 	  
 	  }

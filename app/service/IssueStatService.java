@@ -13,10 +13,20 @@ import java.util.LinkedHashMap;
 
 import model.Issues;
 
+/**
+ * This class computes Repository Title Statistics
+ * @author Akshay
+ * @version 1
+ *
+ */
 public class IssueStatService {
+
 	
-	
-	
+	/**
+	 * This method accepts list of repository issues and process
+	 * @param issueList list of repository issue titles
+	 * @return	return lists of unique words and their occurrence 
+	 */
 	public List[] wordCountDescening(List<Issues> issueList){
 		
 		
@@ -36,9 +46,6 @@ public class IssueStatService {
 		List<String> wordList=new ArrayList<String>(sortedMapDescending.keySet());
 		List<Long>   wordCount=new ArrayList<Long>(sortedMapDescending.values());
 		
-		
-		//freqList=new ArrayList(sortedMapDescending.entrySet());
-		//System.out.println(freqList);
 		
 		return new List[] {wordList,wordCount};
 		
