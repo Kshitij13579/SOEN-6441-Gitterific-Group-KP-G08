@@ -7,4 +7,6 @@ import play.cache.AsyncCacheApi;
 
 public interface GithubApi {
 	List<Repository> getRepositoryInfo(String query, boolean isTopic, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
+	
+	public CommitStat getCommitStatistics(String user,String repository, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 }

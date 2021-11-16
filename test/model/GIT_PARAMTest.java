@@ -11,7 +11,6 @@ public class GIT_PARAMTest {
 		assertEquals("QUERY",GIT_PARAM.QUERY.toString());
 		assertEquals("PER_PAGE",GIT_PARAM.PER_PAGE.toString());
 		assertEquals("PAGE",GIT_PARAM.PAGE.toString());
-	
 	}
 
 }
