@@ -224,6 +224,8 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 
 	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);
 	  
+	  System.out.println(frequencyList);
+	  
 	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));
 	  
 	  }
