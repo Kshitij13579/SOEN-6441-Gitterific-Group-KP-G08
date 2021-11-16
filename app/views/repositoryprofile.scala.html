@@ -22,7 +22,7 @@ table, th, td {
                 <td>@rp.login</td>
             </tr>
             <tr>
-                <th>ID</th>
+                <th>Repository Name</th>
                 <td>@rp.id</td>
             </tr>
             <tr>
@@ -57,6 +57,7 @@ table, th, td {
 </br>
 <center>
 <center><h2 class="center">Latest 20 Repository Issues</h2></center>
+<center><h2 class="center">Issues Statistics : <a href=/search/@rp.login/@rp.id/issues target="_blank">Link</a></h2></center>
 	    <table>
 	         <tr>
 			    <th>Repository Issue</th>
@@ -92,10 +93,16 @@ table, th, td {
 	      		<td>@repo.login</a>
 				<td>@repo.id</td>
 			     <td>@repo.role_name</td>
-			    <td>@repo.user_url</td>
+			    <td><a href=/users/@repo.login style="text-decoration: none;" target="_blank" >@repo.user_url</td>
           </tr>
 	    }
 	   </table>
+</center>
+</br>
+<center><h2 class="center">Repository Commit Statistics :  <a  href="/search/@rp.login/@rp.id/commits" style="text-decoration: none;" target="_blank" > Link </a> </h2></center>
+</center>
+
+<center><h2 class="center"><a  href="/" style="text-decoration: none;" target="_blank" > GOTO HOME </a> </h2></center>
 </center>
 
 </body>
