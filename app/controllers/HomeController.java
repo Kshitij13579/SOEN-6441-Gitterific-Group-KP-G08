@@ -115,72 +115,7 @@ public class HomeController extends Controller implements WSBodyReadables {
 
     public Result commits(String user, String repository) throws InterruptedException, ExecutionException {
     	
-    	CommitStatService commStatService = new CommitStatService();
-    	List<Commit> commitList = new ArrayList<Commit>();
-    	
-    	WSRequest request = ws.url("https://api.github.com/repos/"+user+"/"+repository+"/commits")
-	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
-	              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("constants.commits_per_page"))
-	              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.commits_page"))
-	              .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
-
-    	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(user+"-"+repository+"-list", 
-    			new Callable<CompletionStage<JsonNode>>() {
-    				public CompletionStage<JsonNode> call() {
-    					return request.get().thenApply(r -> r.getBody(json()));
-    				};
-    	}, 3600);
-    	
-    	JsonNode commits = jsonPromise.toCompletableFuture().get();
-    	
-    	List<String> shaList = commStatService.getShaList(commits);
-    	
-    	shaList.forEach(sha -> {
-    		WSRequest r = ws.url("https://api.github.com/repos/"+user+"/"+repository+"/commits/"+sha)
-  	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
-    		      .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
-
-    		CompletionStage<JsonNode> jsonCommit = this.cache.getOrElseUpdate(sha, 
-        			new Callable<CompletionStage<JsonNode>>() {
-        				public CompletionStage<JsonNode> call() {
-        					return r.get().thenApply(r -> r.getBody(json()));
-        				};
-        	}, 3600);
-    		
-    	    try {
-    	    	
-				JsonNode temp = jsonCommit.toCompletableFuture().get();
-				commitList.add(new Commit(
-						       new Author(temp.get("commit").get("author").get("name").asText(), 
-						                  (temp.get("author").has("login")) ? temp.get("author").get("login").asText() : "null",
-						                  0
-						       ),
-						       sha,
-						       (temp.has("stats")) ? temp.get("stats").get("additions").asInt() : 0 , 
-						       (temp.has("stats")) ? temp.get("stats").get("deletions").asInt() : 0 ));
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-    	});
-    	
-    	
-    	
-    	CommitStat commitStat = new CommitStat(commStatService.getTopCommitterList(commitList)
-    			                              ,commStatService.getAvgAddition(commitList)
-    			                              ,commStatService.getAvgDeletion(commitList)
-    			                              ,commStatService.getMaxAddition(commitList)
-    			                              ,commStatService.getMaxDeletion(commitList)
-    			                              ,commStatService.getMinAddition(commitList)
-    			                              ,commStatService.getMinDeletion(commitList)
-    			                              ,repository
-    			                              );
-    	
-    	
+    	CommitStat commitStat = this.ghApi.getCommitStatistics(user, repository, cache);
     	return ok(commit.render(commitStat));
    }
 	
@@ -261,7 +196,7 @@ public class HomeController extends Controller implements WSBodyReadables {
     }	
 	 
 	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
-		List<Repository> repoList = this.ghApi.getRepositoryInfo(topic, true, this.cache);
+		List<Repository> repoList = this.fetchRepositoryInfo(topic, true);
     	return ok(index.render(repoList, topic));
 	}
 	
