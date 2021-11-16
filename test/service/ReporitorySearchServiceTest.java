@@ -32,7 +32,6 @@ public class ReporitorySearchServiceTest {
 		Repository expectedRepo = new Repository("abc","def","mno","pqr",topics);
 		List<Repository> expectedRepos = new ArrayList<Repository>();
 		expectedRepos.add(expectedRepo);
-		// assertTrue(expectedRepos.get(0).getTopics().equals(repos.get(0).getTopics()));
 		assertTrue(EqualsBuilder.reflectionEquals(expectedRepos.get(0),repos.get(0)));
 	}
 
