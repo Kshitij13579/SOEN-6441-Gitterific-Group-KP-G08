@@ -36,7 +36,14 @@ public class IssueStatServiceTest {
 			test[1]=count;
 		
 		assertEquals(test[0],word);
-		assertEquals(test[1],count);		
+		assertEquals(test[1],count);	
+		
+		//test nulls
+		test[0]=null;
+		test[1]=null;
+		
+		assertNull(count);
+		assertNull(word);
 		
 	}
 	
