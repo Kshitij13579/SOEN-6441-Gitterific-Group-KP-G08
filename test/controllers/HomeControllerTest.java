@@ -11,6 +11,7 @@ import play.mvc.Http.MultipartFormData.Part;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import model.CommitStat;
 import model.GithubApi;
 import model.GithubApiMock;
 import model.Repository;
@@ -134,10 +135,22 @@ public class HomeControllerTest extends WithApplication {
 		assertEquals("utf-8", result.charset().get());
 		assertTrue(contentAsString(result).contains("play"));
 	}
+	
+    
+    @Test
+    public void testCommitPage() throws InterruptedException, ExecutionException, FileNotFoundException  {
+      GithubApi testApi = application.injector().instanceOf(GithubApi.class);
+      CommitStat commStat = testApi.getCommitStatistics("test", "repo", cache);
+      Result result = play.mvc.Results.ok(commit.render(commStat));
+      assertEquals(OK, result.status());
+      assertEquals("text/html", result.contentType().get());
+      assertEquals("utf-8", result.charset().get());
+    } 
 
 	@AfterClass
 	public static void stopApp() {
 		Helpers.stop(application);
 	}
+
 
 }

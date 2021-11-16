@@ -7,6 +7,10 @@ public class Author {
     public String login;
     public int commits;
     
+    public Author() {
+    	
+    }
+    
     public Author(String name,String login,int commits) {
     	this.name = name;
     	this.login = login;

@@ -42,8 +42,8 @@ public class IssueStatServiceTest {
 		test[0]=null;
 		test[1]=null;
 		
-		assertNull(count);
-		assertNull(word);
+		assertNull(test[0]);
+		assertNull(test[1]);
 		
 	}
 	
