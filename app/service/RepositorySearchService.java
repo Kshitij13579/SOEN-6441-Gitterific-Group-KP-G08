@@ -13,20 +13,48 @@ import com.typesafe.config.ConfigFactory;
 import model.GIT_PARAM;
 import model.Repository;
 
+/**
+ * This is the Service Class for Repositories which process json repsonse from API
+ * @author Kshitij
+ * @version 1.0
+ *
+ */
 public class RepositorySearchService {
    
+	/**
+	 * Repository Object
+	 */
 	Repository repository;
+	/**
+	 * ConfigFactory Object
+	 */
 	ConfigFactory config;
 	
+	/**
+	 * Empty Repository Search Service Constructor
+	 */
 	public RepositorySearchService() {
 		this.repository = new Repository();
 	}
 	
+	/**
+	 * Constructor to initialize to repository search service
+	 * @param repository repository object
+	 */
 	public RepositorySearchService(Repository repository) {
 		this.repository = repository;
 	}
 	
 	
+    /**
+     * This method process json and returns list of repository with details
+     * 
+     * @param json json response from API call
+     * @return list of repositories
+     * @throws InterruptedException Exception during runtime
+	 * @throws ExecutionException Exception thrown when attempting to 
+	 * 							  retrieve the result of any task
+     */
     public List<Repository> getRepoList(JsonNode json) throws InterruptedException, ExecutionException {
 		
 		List<Repository> repos= new ArrayList<Repository>();

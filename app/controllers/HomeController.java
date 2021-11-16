@@ -264,8 +264,22 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(index.render(repoList, topic));
 	}
 	
-	  public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
+	/**
+	 * 
+	 * This method performs repository issues title statistics by taking user and repository name as input
+	 * An API call is made and response is then processed and calculated stats.
+	 * @author Akshay
+	 * @param user repository owner
+	 * @param repository repository name
+	 * @return returns a HTML Response
+	 * @throws InterruptedException Exception during runtime
+	 * @throws ExecutionException Exception thrown when attempting to 
+	 * 							  retrieve the result of any task
+	 * 
+	 */
+	public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
 	  
+		
 	  IssueService issueService=new IssueService();
 	  
 	  IssueStatService issueStatService=new IssueStatService();
@@ -278,19 +292,21 @@ public class HomeController extends Controller implements WSBodyReadables {
 	  .addQueryParameter(GIT_PARAM.PER_PAGE.value,
 	  ConfigFactory.load().getString("constants.issues_per_page"))
 	  .addQueryParameter(GIT_PARAM.PAGE.value,
-	  ConfigFactory.load().getString("constants.issues_page") );
+	  ConfigFactory.load().getString("constants.issues_page") );  
 	  
-	  CompletionStage<JsonNode>
-	  jsonPromise=request.get().thenApply(r->r.getBody(json()));
+	  CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(user+"-"+repository+"-list", 
+  			new Callable<CompletionStage<JsonNode>>() {
+  				public CompletionStage<JsonNode> call() {
+  					return request.get().thenApply(r -> r.getBody(json()));
+  				};
+  	}, 3600);
 	  
 	  JsonNode repoIssues=jsonPromise.toCompletableFuture().get();
 	  
 	  issuesList=issueService.getTitleList(repoIssues);
 	 
 	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);
-	  
-	  System.out.println(frequencyList);
-	  
+	  	  
 	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));
 	  
 	  }
