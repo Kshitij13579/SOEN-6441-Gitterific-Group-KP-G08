@@ -1,15 +1,31 @@
 package model;
 
+/**
+ * @author yogesh
+ *
+ */
 public class RepositoryProfile {
 
+	/**
+	 * 
+	 */
 	public String login; 
+	/**
+	 * 
+	 */
 	public String id; 
+	/**
+	 * 
+	 */
 	public String node_id; 
 	public String avatar_url; 
 	public String collaborators_url;
 	public String issues_url;
 	public String open_issues;
 	
+	/**
+	 * 
+	 */
 	public RepositoryProfile() {
 		this.login = "";
 		this.id = "";
@@ -19,6 +35,15 @@ public class RepositoryProfile {
 		this.issues_url = "";
 		this.open_issues="";
 	}
+	/**
+	 * @param login
+	 * @param id
+	 * @param node_id
+	 * @param avatar_url
+	 * @param collaborators_url
+	 * @param issues_url
+	 * @param open_issues
+	 */
 	public RepositoryProfile(String login, String id, String node_id, String avatar_url, String collaborators_url,
 			String issues_url, String open_issues) {
 		this.login = login;
