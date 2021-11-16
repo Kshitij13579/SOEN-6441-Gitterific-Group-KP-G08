@@ -200,6 +200,10 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(index.render(repoList, topic));
 	}
 	
+	public List<Repository> fetchRepositoryInfo(String topic, boolean isTopic) throws InterruptedException, ExecutionException, FileNotFoundException {
+		return this.ghApi.getRepositoryInfo(topic, isTopic, this.cache);
+	}
+	
 	
 	/**
 	 * This method performs repository issues title statistics by taking user and repository name as input
