@@ -25,6 +25,10 @@ public class IssuesTest {
 		
 		assertEquals("testIssue","testIssue");
 		
+		//null checks
+		issues.setTitle(null);
+		assertNull(issues.getTitle());
+		
 	}
 	
 	@Test
@@ -33,6 +37,10 @@ public class IssuesTest {
 		Issues getIssues=new Issues("TestIssue");
 		
 		assertEquals("TestIssue",getIssues.getTitle());
+		
+		//null checks
+		issues.setTitle(null);
+		assertNull(issues.getTitle());
 		
 	}
 	

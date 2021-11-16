@@ -14,6 +14,10 @@ import static org.mockito.Mockito.*;
 import play.Application;
 import play.test.WithApplication;
   
+/**
+ * @author DM
+ *
+ */
 public class CommitTest{
     @Mock
     Commit commit;
