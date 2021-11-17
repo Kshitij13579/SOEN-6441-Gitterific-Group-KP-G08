@@ -25,7 +25,6 @@ import play.mvc.Http.Cookie;
 import play.mvc.Http.MultipartFormData.Part;
 
 import service.CommitStatService;
-import service.IssueService;
 import service.IssueStatService;
 import service.RepositorySearchService;
 import service.UserService;
