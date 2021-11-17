@@ -1,0 +1,65 @@
+[
+  {
+    "url": "https://api.github.com/repos/er1/s228/issues/1",
+    "repository_url": "https://api.github.com/repos/er1/s228",
+    "labels_url": "https://api.github.com/repos/er1/s228/issues/1/labels{/name}",
+    "comments_url": "https://api.github.com/repos/er1/s228/issues/1/comments",
+    "events_url": "https://api.github.com/repos/er1/s228/issues/1/events",
+    "html_url": "https://github.com/er1/s228/issues/1",
+    "id": 25472481,
+    "node_id": "MDU6SXNzdWUyNTQ3MjQ4MQ==",
+    "number": 1,
+    "title": "Chips look lazy",
+    "user": {
+      "login": "C-o-r-E",
+      "id": 131006,
+      "node_id": "MDQ6VXNlcjEzMTAwNg==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/131006?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/C-o-r-E",
+      "html_url": "https://github.com/C-o-r-E",
+      "followers_url": "https://api.github.com/users/C-o-r-E/followers",
+      "following_url": "https://api.github.com/users/C-o-r-E/following{/other_user}",
+      "gists_url": "https://api.github.com/users/C-o-r-E/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/C-o-r-E/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/C-o-r-E/subscriptions",
+      "organizations_url": "https://api.github.com/users/C-o-r-E/orgs",
+      "repos_url": "https://api.github.com/users/C-o-r-E/repos",
+      "events_url": "https://api.github.com/users/C-o-r-E/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/C-o-r-E/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "assignees": [
+
+    ],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2014-01-12T23:31:16Z",
+    "updated_at": "2014-01-12T23:31:16Z",
+    "closed_at": null,
+    "author_association": "NONE",
+    "active_lock_reason": null,
+    "body": "I propose you modify the ICs to be more happy:\n\n``` AsciiDoc\n        .^ ◡ ^.\n       [|     |]\n       [|     |]\n       [|     |]\n       [|     |]\n       [|     |]\n       [|     |]\n       [|     |]\n       [|     |]\n        '-----'\n```\n",
+    "reactions": {
+      "url": "https://api.github.com/repos/er1/s228/issues/1/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/er1/s228/issues/1/timeline",
+    "performed_via_github_app": null
+  }
+]
