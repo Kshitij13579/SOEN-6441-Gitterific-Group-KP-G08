@@ -1,7 +1,9 @@
 package model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -16,14 +18,13 @@ import java.util.List;
 
 public class CommitStatTest {
     
-	@Mock
-	CommitStat commStat;
+	@InjectMocks
+	CommitStat commStat = new CommitStat();
 	
 	List<Author> top_committers;
 	
 	@Before
 	public void setup() {
-		commStat = mock(CommitStat.class);
 		top_committers = new ArrayList<Author>();
 		top_committers.add(new Author("Chang","chvin",50));
 		top_committers.add(new Author("javaguy","jg",50));
@@ -43,14 +44,14 @@ public class CommitStatTest {
 		commStat.setRepository("Java");
 		commStat.setTop_committers(top_committers);
 		
-		verify(commStat).setMax_deletions(5);
-		verify(commStat).setMax_additions(10);
-		verify(commStat).setMin_additions(10);
-		verify(commStat).setMin_deletions(10);
-		verify(commStat).setAvg_additions(4.7);
-		verify(commStat).setAvg_deletions(4.7);
-		verify(commStat).setRepository("Java");
-		verify(commStat).setTop_committers(top_committers);
+		assertEquals(commStat.getMax_additions(), 10);
+		assertEquals(commStat.getMax_deletions(), 5);
+		assertEquals(commStat.getMin_additions(), 10);
+		assertEquals(commStat.getMin_deletions(), 10);
+		assertEquals(commStat.getAvg_additions(), 4.7,2);
+		assertEquals(commStat.getAvg_deletions(), 4.7,2);
+		assertEquals(commStat.getRepository(), "Java");
+		assertTrue(EqualsBuilder.reflectionEquals(commStat.top_committers, top_committers));
 		
 	}
 	

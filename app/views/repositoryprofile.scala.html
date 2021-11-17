@@ -1,0 +1,109 @@
+@(rp:  model.RepositoryProfile,list: List[model.RepositoryProfileIssues], listcollab :  List[model.RepositoryProfileCollaborators] )
+<html>
+<head>
+<style>
+.section {
+            width: 100vw;
+            height: 40vh;
+        }
+table, th, td {
+  border:1px solid black;
+}
+</style></head>
+<body>
+<center><h2 class="center">Repository Profile</h2></center>
+<!-- <center><h3>Welcome </h3></center> -->
+<center>
+
+<div>
+<table id="UP">
+            <tr>
+                <th> Name </th>
+                <td>@rp.login</td>
+            </tr>
+            <tr>
+                <th>Repository Name</th>
+                <td>@rp.id</td>
+            </tr>
+            <tr>
+                <th>Node ID</th>
+                <td>@rp.node_id</td>
+            </tr>
+            <tr>
+                <th>Avatar URL</th>
+                <td>@rp.avatar_url</td>
+            </tr>            
+            <tr>
+                <th>Open Issues Count</th>
+                <td>@rp.open_issues</td>
+            </tr>                     
+            
+</table>
+<div>
+<div>
+</div>
+<div>
+</div>        
+<!-- <br>Name: @rp.login -->
+<!-- <br>ID: @rp.id -->
+<!-- <br>Node ID: @rp.node_id</td> -->
+<!-- <br>Avatar URL: @rp.avatar_url -->
+<!-- <br>Open Issues Count : @rp.open_issues-->
+<!-- <br>Repository Issues : @rp.issues_url-->
+<!-- <br>Collaborations : @rp.collaborators_url-->
+
+</center>
+
+</br>
+<center>
+<center><h2 class="center">Latest 20 Repository Issues</h2></center>
+<center><h2 class="center">Issues Statistics : <a href=/search/@rp.login/@rp.id/issues target="_blank">Link</a></h2></center>
+	    <table>
+	         <tr>
+			    <th>Repository Issue</th>
+			    <th>Repository Issue Number</th>
+			    <th>Issue State</th>
+			    <th>Issue Created At</th>
+			    <th>Issue Last Updated At</th>
+             </tr>
+	    @for(repo <- list){
+	      <tr>
+	      		<td>@repo.issue_title</a>
+				<td>@repo.issue_number</td>
+			     <td>@repo.state</td>
+	      		<td>@repo.created_at</a>
+			    <td>@repo.updated_at</td>
+          </tr>
+	    }
+	   </table>
+</center>
+
+</br>
+<center>
+<center><h2 class="center">Collaborators</h2></center>
+	    <table>
+	         <tr>
+			    <th>Login</th>
+			    <th>ID</th>
+			    <th>Role Name</th>
+			    <th>User Url</th>
+             </tr>
+	    @for(repo <- listcollab){
+	      <tr>
+	      		<td>@repo.login</a>
+				<td>@repo.id</td>
+			     <td>@repo.role_name</td>
+			    <td><a href=/users/@repo.login style="text-decoration: none;" target="_blank" >@repo.user_url</td>
+          </tr>
+	    }
+	   </table>
+</center>
+</br>
+<center><h2 class="center">Repository Commit Statistics :  <a  href="/search/@rp.login/@rp.id/commits" style="text-decoration: none;" target="_blank" > Link </a> </h2></center>
+</center>
+
+<center><h2 class="center"><a  href="/" style="text-decoration: none;" target="_blank" > GOTO HOME </a> </h2></center>
+</center>
+
+</body>
+</html>

@@ -9,11 +9,10 @@ import java.util.concurrent.ExecutionException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.Test;
 
 import model.Repository;
-import play.api.libs.json.JsObject;
 import play.libs.Json;
 
 
@@ -22,15 +21,18 @@ public class ReporitorySearchServiceTest {
 	@Test
 	public void test() throws InterruptedException, ExecutionException {
 		
-		List<Repository> repos= new ArrayList<Repository>();
+		// Calculated RepoList from dummy data
+		RepositorySearchService rss=new RepositorySearchService();
+		JsonNode json = Json.parse("{\"items\": [{\n\"owner\": {\n  \"login\": \"abc\"\n},\n  \"name\": \"def\",\n  \"issues_url\": \"mno\",\n  \"commits_url\": \"pqr\",\n  \"topics\": [\"java\"]\n}]}");
+		List<Repository> repos = rss.getRepoList(json);
+		
+		// Expected RepoList
 		ArrayList<String> topics = new ArrayList<String>();
 		topics.add("java");
-		RepositorySearchService rss=new RepositorySearchService();
-		JsonNode json = Json.parse("{\"login\":\"abc\", \"name\":\"def\", \"issues_url\":\"mno\",\"commits_url\":\"pqr\" }");
-		repos = rss.getRepoList(json);
-		List<Repository> expected = rss.repository.Repository("abc","def","mno","pqr",topics);
-		assertTrue(expected.equals(repos));
-		
+		Repository expectedRepo = new Repository("abc","def","mno","pqr",topics);
+		List<Repository> expectedRepos = new ArrayList<Repository>();
+		expectedRepos.add(expectedRepo);
+		assertTrue(EqualsBuilder.reflectionEquals(expectedRepos.get(0),repos.get(0)));
 	}
 
 }

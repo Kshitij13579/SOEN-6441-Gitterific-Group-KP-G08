@@ -82,6 +82,14 @@ public class CommitStatService {
    public int getCommitsByAuthor(String name,List<Commit> commList) {
 	   int total = 0;
 	   
+	   boolean isPresent = commList.stream()
+			               .map(Commit::getAuthor)
+			               .anyMatch( a -> a.getName().equals(name));
+	   
+	   if(!isPresent) {
+		   return 0;
+	   }
+	   
 	   Long l  =  commList.stream()
 			   .map(Commit::getAuthor)
 			   .collect(Collectors.groupingBy(Author::getName,Collectors.counting()))
