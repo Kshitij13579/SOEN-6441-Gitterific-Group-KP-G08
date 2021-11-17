@@ -1,0 +1,51 @@
+@(issues: List[model.Issues], list1:List[String], list2:List[Long], repository:String)
+
+<!DOCTYPE html>
+<html lang="en">
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+<center><h2 class="center">@repository Issues</h2></center>
+<head>
+    <title>Repository Issues</title>
+</head>
+
+<body>
+    
+    <ul>
+    @for(issue<- issues){
+    <li >@issue.title</li>
+    }
+    </ul>
+    
+    
+    <h3>Issue Title Word Statistics</h3>
+    
+	<div style="display: flex">
+			    		<div style="display: flex; flex-direction: column">
+			    		@for(word <- list1) {
+			    			<div style="border: 1px solid black;">
+						        	<a >
+						        		@word
+						        	</a>
+						    </div>
+			    		}
+			    		</div>
+			    		<div style="display: flex; flex-direction: column">
+			    		@for(count <- list2) {
+			    			<div style="border: 1px solid black;">
+						        	<a>
+						        		@count
+						        	</a>
+			    				</div>
+			    		}
+			    	</div>
+			    	</div>
+    
+    
+</body>
+
+</html>
+
