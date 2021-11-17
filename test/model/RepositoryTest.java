@@ -15,17 +15,14 @@ public class RepositoryTest {
 	    ArrayList<String> topics = new ArrayList<String>();
 	    topics.add("java");
 		Repository repository=new Repository("er1","s228","https://api.github.com/repos/er1/s228/issues{/number}","https://api.github.com/repos/er1/s228/commits%7B/sha%7D%22",topics);
-		
 		//assertFalse(repository.login.isEmpty());
 		assertEquals("er1",repository.getLogin());
 		//assertFalse(repository.name.isEmpty());
 		assertEquals("s228",repository.getName());
 		assertEquals("https://api.github.com/repos/er1/s228/issues{/number}",repository.issues_url);
 		//assertFalse(repository.issues_url.isEmpty());
-		
 		//assertFalse(repository.commits_url.isEmpty());
-		assertEquals("https://api.github.com/repos/er1/s228/commits%7B/sha%7D%22",repository.getCommits_url());
-				
+		assertEquals("https://api.github.com/repos/er1/s228/commits%7B/sha%7D%22",repository.getCommits_url());	
 	}
 	
 	@Test
