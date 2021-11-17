@@ -2,9 +2,9 @@ package model;
 
 public class UserRepository {
 	
-	public String id;
+	public String login;
+    public String id;
     public String name;
-    public String login;
 	
     public UserRepository() {
 		this.id = "";
@@ -12,7 +12,7 @@ public class UserRepository {
 		this.login = "";
 	}
     
-    public UserRepository(String id, String name, String login) {
+    public UserRepository(String login, String id, String name) {
 		this.id = id;
 		this.name = name;
 		this.login = login;

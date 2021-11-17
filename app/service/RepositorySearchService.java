@@ -38,8 +38,7 @@ public class RepositorySearchService {
         	String commits_url = items.get("commits_url").asText();
         	ArrayList<String> topics = StreamSupport.stream(items.get("topics").spliterator(), true)
                     .map( num -> num.asText())
-                    .collect(Collectors
-                    		.toCollection(ArrayList::new));
+                    .collect(Collectors.toCollection(ArrayList::new));
         	repos.add(new Repository(login,name,issues_url,commits_url, topics));
         });
 
