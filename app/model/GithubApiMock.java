@@ -32,7 +32,7 @@ import service.RepositorySearchService;
 public class GithubApiMock implements GithubApi {
 	@Inject AsyncCacheApi cache;
 	@Override
-	public List<Repository> getRepositoryInfo(String query, boolean isTopic, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+	public List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		JsonNode json = getResponse("", "", "", "", cache);
 		List<Repository> repoList = new ArrayList<Repository>();
 		RepositorySearchService repoService = new RepositorySearchService();

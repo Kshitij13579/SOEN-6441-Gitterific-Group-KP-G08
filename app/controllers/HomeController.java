@@ -127,7 +127,16 @@ public class HomeController extends Controller implements WSBodyReadables {
     	CommitStat commitStat = this.ghApi.getCommitStatistics(user, repository, cache);
     	return ok(commit.render(commitStat));
    }
-	
+
+	/**
+	 * This method retrieves user profile by taking user name as an input
+	 * An API call is made and response is then processed.
+	 * @param username user name
+	 * @return a HTML Response
+	 * @throws InterruptedException InterruptedException Exception during runtime
+	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
+	 * 							  retrieve the result of any task
+	 */
     public Result user_profile(String username) throws InterruptedException, ExecutionException{
     	
     	UserService repoService = new UserService();
@@ -144,7 +153,15 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(users.render(repoList));
     }
     
-	
+	/**
+	 * This method retrieves user repository by taking user name as an input
+	 * An API call is made and response is then processed.
+	 * @param username user name
+	 * @return a HTML Response
+	 * @throws InterruptedException InterruptedException Exception during runtime
+	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
+	 * 							  retrieve the result of any task
+	 */
     public Result user_repository(String username) throws InterruptedException, ExecutionException{
     	UserService repoService = new UserService();
     	List<UserRepository> repoList = new ArrayList<>();
@@ -204,13 +221,36 @@ public class HomeController extends Controller implements WSBodyReadables {
     	
     }	
 	 
+	/**
+	 * An action that renders an Topic HTML page with 10 latest repositories for the selected topic.
+     * The configuration in the <code>routes</code> file means that
+     * this method will be called when the application receives a
+     * <code>GET</code> request with a path of <code>/topics/topicName</code>.
+	 * 
+	 * @author Mrinal Rai
+	 * @param topic	selected by the user on the main search page
+	 * @return Result showing the 10 latest repositories for the selected topic
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws FileNotFoundException
+	 */
 	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
-		List<Repository> repoList = this.fetchRepositoryInfo(topic, true);
+		List<Repository> repoList = this.fetchRepositoryInfo(topic);
     	return ok(index.render(repoList, topic));
 	}
 	
-	public List<Repository> fetchRepositoryInfo(String topic, boolean isTopic) throws InterruptedException, ExecutionException, FileNotFoundException {
-		return this.ghApi.getRepositoryInfo(topic, isTopic, this.cache);
+	/**
+	 * Gets the response from Github API for the searched topic
+	 * 
+	 * @author Mrinal Rai
+	 * @param topic selected by the user on the main search page 
+	 * @return
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws FileNotFoundException
+	 */
+	public List<Repository> fetchRepositoryInfo(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
+		return this.ghApi.getRepositoryInfo(topic, this.cache);
 	}
 	
 	

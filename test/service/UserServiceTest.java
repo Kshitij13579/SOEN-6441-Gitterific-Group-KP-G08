@@ -15,8 +15,19 @@ import model.UserProfile;
 import model.UserRepository;
 import play.libs.Json;
 
+/**
+ * This class is for Testing User Service Class
+ *  
+ * @author Siddhartha
+ * @version 1.0
+ *
+ */
 public class UserServiceTest {
 
+	
+	/**
+	 * This method is to test the getUser and getUser_repository methods of UserService Class
+	 */
 	@Test
 	public void test() throws InterruptedException, ExecutionException {
 			
@@ -35,16 +46,7 @@ public class UserServiceTest {
 		assertEquals(expected.getFollowers(), user_profile.getFollowers());
 		assertEquals(expected.getFollowing(), user_profile.getFollowing());
 		assertEquals(expected.getSubscriptions_url(), user_profile.getSubscriptions_url());
-		assertEquals(expected.getOrganizations_url(), user_profile.getOrganizations_url());
-		
-		
-//		JsonNode json2 = Json.parse("{ \"name\":\"b\", \"reponame\":\"c\", \"owner\": {\"login\":\"a\"} }");
-//		user_repository = us.getUser_repository(json2);
-//		System.out.println(json2);
-//		List<UserRepository> expected2 = new ArrayList<UserRepository>();
-//		expected2.add(new UserRepository("a","b","c"));
-//		assertTrue(EqualsBuilder.reflectionEquals(expected2.get(0),user_repository.get(0)));
-//		//assertTrue(expected2.equals(user_repository));	
+		assertEquals(expected.getOrganizations_url(), user_profile.getOrganizations_url());	
 		
 		JsonNode json2 = Json.parse("[{\n\"owner\": {\n  \"login\": \"abc\"\n},\n  \"name\": \"def\",\n  \"issues_url\": \"mno\",\n  \"commits_url\": \"pqr\",\n  \"topics\": [\"java\"]\n}]");
 		user_repository = us.getUser_repository(json2);
