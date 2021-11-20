@@ -38,14 +38,6 @@ public class UserServiceTest {
 		assertEquals(expected.getOrganizations_url(), user_profile.getOrganizations_url());
 		
 		
-//		JsonNode json2 = Json.parse("{ \"name\":\"b\", \"reponame\":\"c\", \"owner\": {\"login\":\"a\"} }");
-//		user_repository = us.getUser_repository(json2);
-//		System.out.println(json2);
-//		List<UserRepository> expected2 = new ArrayList<UserRepository>();
-//		expected2.add(new UserRepository("a","b","c"));
-//		assertTrue(EqualsBuilder.reflectionEquals(expected2.get(0),user_repository.get(0)));
-//		//assertTrue(expected2.equals(user_repository));	
-		
 		JsonNode json2 = Json.parse("[{\n\"owner\": {\n  \"login\": \"abc\"\n},\n  \"name\": \"def\",\n  \"issues_url\": \"mno\",\n  \"commits_url\": \"pqr\",\n  \"topics\": [\"java\"]\n}]");
 		user_repository = us.getUser_repository(json2);
 		List<UserRepository> expected2 = new ArrayList<UserRepository>();

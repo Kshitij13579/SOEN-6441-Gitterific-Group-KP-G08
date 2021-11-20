@@ -19,7 +19,7 @@ import service.RepositorySearchService;
 
 public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	@Override
-	public List<Repository> getRepositoryInfo(String query, boolean isTopic, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+	public List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		JsonNode jn = getResponse("topic:" + query, ConfigFactory.load().getString("constants.repo_per_page"), 
 				ConfigFactory.load().getString("constants.repo_page"), "updated", cache);
 		List<Repository> repoList = new ArrayList<Repository>();
