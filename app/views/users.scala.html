@@ -1,5 +1,12 @@
 @(repos: model.UserProfile)
 <html>
+<style>
+ th,td  {
+  padding: 15px;
+  text-align: left;
+  border: 1px solid black;
+}
+</style>
 <body>
 <center><h2 class="center">User Profile</h2></center>
 <!-- <center><h3>Welcome </h3></center> -->
@@ -20,11 +27,35 @@
             </tr>
             <tr>
                 <th>Avatar URL</th>
-                <td>@repos.avatar_url</td>
+                <td> @repos.avatar_url </td>
             </tr>
             <tr>
-                <th>Repos URL</th>
-                <td><a href=@repos.login/repos>@repos.repos_url</a></td>
+                <th> Repos URL </th>
+                <td><a href=@repos.login/repos> @repos.repos_url </a></td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td> @repos.email </td>
+            </tr>
+            <tr>
+                <th> Twitter Username </th>
+                <td> @repos.twitter_username </td>
+            </tr>
+            <tr>
+                <th> Followers </th>
+                <td> @repos.followers </td>
+            </tr>
+            <tr>
+                <th> Following </th>
+                <td> @repos.following </td>
+            </tr>
+            <tr>
+                <th> Subscriptions Url </th>
+                <td> @repos.subscriptions_url </td>
+            </tr>
+            <tr>
+                <th> Organizations Url </th>
+                <td> @repos.organizations_url </td>
             </tr>
         </table>
         
