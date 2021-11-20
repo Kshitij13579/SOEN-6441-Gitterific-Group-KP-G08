@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 
@@ -62,11 +63,10 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
     				};
     	}, 3600);
     	
-    	JsonNode commits = jsonPromise.toCompletableFuture().get();
     	
-    	List<String> shaList = commStatService.getShaList(commits);
+    	CompletableFuture<List<String>> shaList = jsonPromise.toCompletableFuture().thenApply(r -> commStatService.getShaList(r));
     	
-    	shaList.forEach(sha -> {
+    	shaList.get().forEach(sha -> {
     		WSRequest r = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+ "/"+user+"/"+repository+"/commits/"+sha)
   	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
     		      .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
