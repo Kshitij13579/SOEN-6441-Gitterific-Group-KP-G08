@@ -62,7 +62,7 @@ public class GithubApiImplTest {
 			e.printStackTrace();
 		}
 		try {
-			when(ghaMock.getRepositoryInfo("play", true, cache)).thenCallRealMethod();
+			when(ghaMock.getRepositoryInfo("play", cache)).thenCallRealMethod();
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,7 +71,7 @@ public class GithubApiImplTest {
 
 	@Test
 	public void testGetRepositoryInfo() throws InterruptedException, ExecutionException {
-		List<Repository> actualRepoList = ghaMock.getRepositoryInfo("play", true, cache);
+		List<Repository> actualRepoList = ghaMock.getRepositoryInfo("play", cache);
 		org.junit.Assert.assertTrue(actualRepoList.size()>0);
 		org.junit.Assert.assertTrue(actualRepoList.get(0).getClass().getName() == "model.Repository");
 	}
