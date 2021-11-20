@@ -4,13 +4,23 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
-
+/**
+ * Test class for Author model.
+ * @author Kshitij Yerande
+ * @version 1.0
+ * @since 2021-11-20
+ */
 public class AuthorTest {
     
 	@InjectMocks
 	Author a = new Author();
 	Author b = new Author();
 	
+	/**
+	 * Test to validate getter and setter.
+	 * 1. Getter - validate the variable values of Author object
+	 * 2. Setter - check that the values are set in Author object.
+	 */
 	@Test
 	public void GettersandSettersTest() {
 		a.setCommits(10);
@@ -30,6 +40,9 @@ public class AuthorTest {
 		assertEquals(a.getCommits(),0);
 	}
 	
+	/**
+	 * Test compare two Author objects
+	 */
 	@Test
 	public void EqualsTest() {
 		a.setCommits(10);
@@ -45,6 +58,9 @@ public class AuthorTest {
 		assertFalse(a.equals(null));
 	}
 	
+	/**
+	 * Test for hashCode method to verify the hashcode of Author object.
+	 */
 	@Test
 	public void hashCodeTest() {
 		assertEquals(a.hashCode(), 29791);

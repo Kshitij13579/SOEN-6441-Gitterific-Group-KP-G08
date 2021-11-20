@@ -19,7 +19,7 @@ import service.RepositorySearchService;
 
 public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	@Override
-	public List<Repository> getRepositoryInfo(String query, boolean isTopic, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+	public List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		JsonNode jn = getResponse("topic:" + query, ConfigFactory.load().getString("constants.repo_per_page"), 
 				ConfigFactory.load().getString("constants.repo_page"), "updated", cache);
 		List<Repository> repoList = new ArrayList<Repository>();
@@ -43,6 +43,10 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 		return jsonPromise.toCompletableFuture().get();
 	}
 	
+	/**
+	 * This method is used to retrieve 100 commits from github API and store the statistics in CommitStat model.
+	 * @return CommitStat - returns a CommitStat object with statistical information of commits.
+	 */
 	@Override
 	public CommitStat getCommitStatistics(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
