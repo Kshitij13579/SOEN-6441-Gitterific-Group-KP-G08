@@ -49,9 +49,9 @@ public class UserService {
     	
         json.forEach(items ->{
         	String login = items.get("owner").get("login").asText();
-        	String id = items.get("name").toString();
-        	String name = items.get("issues_url").toString();
-        	repos.add(new UserRepository(login,id,name));
+        	String name = items.get("name").asText();
+        	String reponame = items.get("issues_url").asText();
+        	repos.add(new UserRepository(login,name,reponame));
         });
 
 		return repos;

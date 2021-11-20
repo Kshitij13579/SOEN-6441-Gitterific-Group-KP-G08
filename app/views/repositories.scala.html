@@ -19,8 +19,8 @@ th,td  {
 	    @for(repo <- repos){
 	      <tr>
     			<td>@repo.login</td> 
-    			<td>@repo.id</td> 
- 			    <td>@repo.name</td>
+    			<td>@repo.name</td> 
+ 			    <td><a href=/repository/@repo.login/@repo.name> @repo.reponame </a></td>
 	      </tr>
 	    }
 	   </table>
