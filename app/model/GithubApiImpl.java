@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 
@@ -62,11 +63,10 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
     				};
     	}, 3600);
     	
-    	JsonNode commits = jsonPromise.toCompletableFuture().get();
     	
-    	List<String> shaList = commStatService.getShaList(commits);
+    	CompletableFuture<List<String>> shaList = jsonPromise.toCompletableFuture().thenApply(r -> commStatService.getShaList(r));
     	
-    	shaList.forEach(sha -> {
+    	shaList.get().forEach(sha -> {
     		WSRequest r = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+ "/"+user+"/"+repository+"/commits/"+sha)
   	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
     		      .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
@@ -113,4 +113,38 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 		
 		return commitStat;
 	}
+
+	@Override
+	public List<Issues> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
+	 WSRequest request =
+	  ws.url("https://api.github.com/repos/"+user+"/"+repository+"/issues")
+	  .addHeader(GIT_HEADER.CONTENT_TYPE.value,
+	  ConfigFactory.load().getString("constants.git_header.Content-Type"))
+	  .addQueryParameter(GIT_PARAM.PER_PAGE.value,
+	  ConfigFactory.load().getString("constants.issues_per_page"))
+	  .addQueryParameter(GIT_PARAM.PAGE.value,
+	  ConfigFactory.load().getString("constants.issues_page") );  
+	  
+	  CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
+ 			new Callable<CompletionStage<JsonNode>>() {
+ 				public CompletionStage<JsonNode> call() {
+ 					return request.get().thenApply(r -> r.getBody(json()));
+ 				};
+ 	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
+	  
+	  JsonNode repoIssues=jsonPromise.toCompletableFuture().get();
+	  
+	  List<Issues> titleList=new ArrayList<Issues>();
+	  
+		repoIssues.forEach(t->{ 	
+			
+			 String title=t.get("title").asText(); 
+			 titleList.add(new Issues(title));
+			 
+			 });
+		 
+		 return titleList;
+	   
+	}
+	
 }

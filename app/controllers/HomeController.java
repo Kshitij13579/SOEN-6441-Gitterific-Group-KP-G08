@@ -25,7 +25,6 @@ import play.mvc.Http.Cookie;
 import play.mvc.Http.MultipartFormData.Part;
 
 import service.CommitStatService;
-import service.IssueService;
 import service.IssueStatService;
 import service.RepositorySearchService;
 import service.UserService;
@@ -217,30 +216,11 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 */
 	public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
 
-	  IssueService issueService=new IssueService();	  
+		
+	  List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);
+	  
 	  IssueStatService issueStatService=new IssueStatService();
-	  List<Issues> issuesList=new ArrayList<Issues>();
 	  
-	  WSRequest request =
-	  ws.url("https://api.github.com/repos/"+user+"/"+repository+"/issues")
-	  .addHeader(GIT_HEADER.CONTENT_TYPE.value,
-	  ConfigFactory.load().getString("constants.git_header.Content-Type"))
-	  .addQueryParameter(GIT_PARAM.PER_PAGE.value,
-	  ConfigFactory.load().getString("constants.issues_per_page"))
-	  .addQueryParameter(GIT_PARAM.PAGE.value,
-	  ConfigFactory.load().getString("constants.issues_page") );  
-	  
-	  CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
-  			new Callable<CompletionStage<JsonNode>>() {
-  				public CompletionStage<JsonNode> call() {
-  					return request.get().thenApply(r -> r.getBody(json()));
-  				};
-  	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
-	  
-	  JsonNode repoIssues=jsonPromise.toCompletableFuture().get();
-	  
-	  issuesList=issueService.getTitleList(repoIssues);
-	 
 	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);
 	  	  
 	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));

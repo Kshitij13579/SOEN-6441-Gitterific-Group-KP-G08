@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -113,5 +114,36 @@ public class GithubApiMock implements GithubApi {
                 );
 		
 		return commitStat;
+	}
+
+	@Override
+	public List<Issues> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache)
+			throws InterruptedException, ExecutionException {
+		
+		String testJson=System.getProperty("user.dir") +"/test/resources/issues.json";
+		
+		File tempFile=new File(testJson);
+		ObjectMapper objectMapper=new ObjectMapper();
+		
+		JsonNode tempJson=null;
+		
+		try {
+			tempJson=objectMapper.readTree(tempFile);
+			
+		}catch (Exception e) {
+			
+			// TODO: handle exception
+		}
+		
+		List<Issues> titleIssues=new ArrayList<Issues>();
+		
+		tempJson.forEach(t->{
+			
+			String title=t.get("title").asText();
+			titleIssues.add(new Issues(title));
+			
+		});
+		
+		return titleIssues;
 	}
 }

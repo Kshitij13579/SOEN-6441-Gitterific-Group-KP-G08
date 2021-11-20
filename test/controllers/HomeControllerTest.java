@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import model.CommitStat;
 import model.GithubApi;
 import model.GithubApiMock;
+import model.Issues;
 import model.Repository;
 import play.Application;
 import play.cache.AsyncCacheApi;
@@ -29,6 +30,7 @@ import play.routing.RoutingDsl;
 import play.server.Server;
 import play.test.Helpers;
 import play.test.WithApplication;
+import service.IssueStatService;
 
 import java.io.FileNotFoundException;
 import java.lang.*;
@@ -146,6 +148,25 @@ public class HomeControllerTest extends WithApplication {
       assertEquals("text/html", result.contentType().get());
       assertEquals("utf-8", result.charset().get());
     } 
+    
+    @Test
+    public void testIssuesPage() throws InterruptedException,ExecutionException,FileNotFoundException{
+    	
+    	GithubApi testApi=application.injector().instanceOf(GithubApi.class);
+    	List<Issues> issuesList=testApi.getIssuesFromResponse("er1", "s228", cache);
+    	
+    	IssueStatService issueStatService=new IssueStatService();
+  	  
+    	List[] frequencyList=issueStatService.wordCountDescening(issuesList);
+    	
+    	Result result=Results.ok(issues.render(issuesList,frequencyList[0],frequencyList[1],"s228"));
+    	
+    	assertEquals(OK,result.status());
+    	
+    	assertEquals("text/html",result.contentType().get());
+    	
+    	assertEquals("utf-8", result.charset().get());
+    }
 
 	@AfterClass
 	public static void stopApp() {
