@@ -15,7 +15,12 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ * Test for CommitStat Model.
+ * @author Kshitij Yerande
+ *@version 1.0
+ *@since 2020-11-20
+ */
 public class CommitStatTest {
     
 	@InjectMocks
@@ -30,6 +35,10 @@ public class CommitStatTest {
 		top_committers.add(new Author("javaguy","jg",50));
 	}
 	
+	/**
+	 * Test for setter.
+	 * Setter - check that the values are set in CommitStat object.
+	 */
 	@Test
 	public void testSetters() {
 		
@@ -55,6 +64,10 @@ public class CommitStatTest {
 		
 	}
 	
+	/**
+	 * Test for getters
+	 * Getter - validate the variable values of CommitStat object
+	 */
 	@Test
 	public void testGetters() {
 		

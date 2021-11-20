@@ -40,11 +40,9 @@ public class UserServiceTest {
 		
 		JsonNode json2 = Json.parse("[{\n\"owner\": {\n  \"login\": \"abc\"\n},\n  \"name\": \"def\",\n  \"issues_url\": \"mno\",\n  \"commits_url\": \"pqr\",\n  \"topics\": [\"java\"]\n}]");
 		user_repository = us.getUser_repository(json2);
-		System.out.println("7879798798798798798798798798798779787987979879879879879879879879798797987987979879879879797");
-		System.out.println(json2);
 		List<UserRepository> expected2 = new ArrayList<UserRepository>();
 		expected2.add(new UserRepository("abc","def","mno"));
 		assertTrue(EqualsBuilder.reflectionEquals(expected2.get(0),user_repository.get(0)));
-		//assertTrue(expected2.equals(user_repository));		
+		
 	}
 }

@@ -138,7 +138,12 @@ public class HomeControllerTest extends WithApplication {
 		assertTrue(contentAsString(result).contains("play"));
 	}
 	
-    
+    /**
+     * Test method to test the Github APi using MOCK implementation.
+     * @throws InterruptedException
+     * @throws ExecutionException
+     * @throws FileNotFoundException
+     */
     @Test
     public void testCommitPage() throws InterruptedException, ExecutionException, FileNotFoundException  {
       GithubApi testApi = application.injector().instanceOf(GithubApi.class);

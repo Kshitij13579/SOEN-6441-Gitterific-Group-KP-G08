@@ -23,6 +23,12 @@ import model.Author;
 import model.Commit;
 import play.libs.Json;
 
+/**
+ * Test class for Commit Statistics Service
+ * @author Kshitij Yerande
+ *@version 1.0
+ *@since 2021-11-20
+ */
 public class CommitStatServiceTest {
     
 	CommitStatService commStat = new CommitStatService();
@@ -69,7 +75,10 @@ public class CommitStatServiceTest {
 		commitList.add(new Commit(lui, "soen", 2, 78));
 		commitList.add(new Commit(lui, "soen", 1, 100));
 	}
-	
+	 
+	/**
+	 * Test to validate shaList from list of commits
+	 */
 	@Test
 	public void getShaListTest() {
 		String jsonString = "[\n{\n\"sha\" : \"abcdefg#1234\"\n},\n {\n\"sha\" : \"abcdefg#1235\"\n}, \n {\n\"sha\" : \"abcdefg#1236\"\n}\n]";
@@ -89,36 +98,57 @@ public class CommitStatServiceTest {
 		
 	}
 	
+	/**
+	 * Test to validate maximum additions from list of commits.
+	 */
 	@Test
 	public void getMaxAdditionTest() {
 		assertEquals(commStat.getMaxAddition(commitList), 50);
 	}
 	
+	/**
+	 * Test to validate maximum deletions from list of commits.
+	 */
 	@Test
 	public void getMaxDeletionTest() {
 		assertEquals(commStat.getMaxDeletion(commitList), 100);
 	}
 	
+	/**
+	 * Test to validate minimum additions from list of commits.
+	 */
 	@Test
 	public void getMinAdditionTest() {
 		assertEquals(commStat.getMinAddition(commitList), 1);
 	}
 	
+    /**
+     * Test to validate minimum deletions from list of commits.
+     */
 	@Test
 	public void getMinDeletionTest() {
 		assertEquals(commStat.getMinDeletion(commitList), 3);
 	}
 	
+	/**
+	 * Test to validate average additions from list of commits.
+	 */
 	@Test
 	public void getAvgAdditionTest() {
 		assertEquals(commStat.getAvgAddition(commitList), 9.7223,4);
 	}
 	
+	/**
+	 * Test to validate average dletions from list of commits.
+	 */
 	@Test
 	public void getAvgDeletionTest() {
 		assertEquals(commStat.getAvgDeletion(commitList), 30.6112,4);
 	}
 	
+	/**
+	 * Test to validate top 10 committers from list of commits.
+	 */
 	@Test
 	public void getTopCommitterListTest() {
 		
@@ -138,6 +168,9 @@ public class CommitStatServiceTest {
 	
     }
 	
+	/**
+	 * Test to validate number of commits per Author from list of commits.
+	 */
 	@Test
 	public void getCommitsByAuthorTest() {
 		assertEquals(commStat.getCommitsByAuthor("jack", commitList),5);

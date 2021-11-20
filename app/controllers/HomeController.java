@@ -111,7 +111,17 @@ public class HomeController extends Controller implements WSBodyReadables {
 		return ok(index.render(globalRepoList, ""));
     }
     
-
+    
+    /**
+	 * This method calls github API to get statistics of top 100 commits.
+	 * An API call is made and response is then processed and calculated stats.
+	 * @param user user repository owner
+	 * @param repository repository name
+	 * @return a HTML Response
+	 * @throws InterruptedException InterruptedException Exception during runtime
+	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
+	 * 							  retrieve the result of any task
+	 */
     public Result commits(String user, String repository) throws InterruptedException, ExecutionException {
     	
     	CommitStat commitStat = this.ghApi.getCommitStatistics(user, repository, cache);

@@ -43,6 +43,10 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 		return jsonPromise.toCompletableFuture().get();
 	}
 	
+	/**
+	 * This method is used to retrieve 100 commits from github API and store the statistics in CommitStat model.
+	 * @return CommitStat - returns a CommitStat object with statistical information of commits.
+	 */
 	@Override
 	public CommitStat getCommitStatistics(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
