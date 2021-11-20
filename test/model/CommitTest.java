@@ -15,8 +15,10 @@ import play.Application;
 import play.test.WithApplication;
   
 /**
- * @author DM
- *
+ * Test for Commit Model.
+ * @author Kshitij Yerande
+ *@version 1.0
+ *@since 2021-11-20
  */
 public class CommitTest{
     @Mock
@@ -27,6 +29,10 @@ public class CommitTest{
     	commit = mock(Commit.class);
     }
     
+    /**
+	 * Test for setter.
+	 * Setter - check that the values are set in Commit object.
+	 */
     @Test
     public void testSetters() {
     	Author a = new Author("Kshitij","kyerande",100);
@@ -42,6 +48,10 @@ public class CommitTest{
     	
     }
     
+    /**
+	 * Test for getters
+	 * Getter - validate the variable values of Commit object
+	 */
     @Test
     public void testGetters() {
     	
