@@ -131,6 +131,7 @@ public class HomeController extends Controller implements WSBodyReadables {
 	/**
 	 * This method retrieves user profile by taking user name as an input
 	 * An API call is made and response is then processed.
+	 * @author Siddhartha
 	 * @param username user name
 	 * @return a HTML Response
 	 * @throws InterruptedException InterruptedException Exception during runtime
@@ -156,6 +157,7 @@ public class HomeController extends Controller implements WSBodyReadables {
 	/**
 	 * This method retrieves user repository by taking user name as an input
 	 * An API call is made and response is then processed.
+	 * @author Siddhartha
 	 * @param username user name
 	 * @return a HTML Response
 	 * @throws InterruptedException InterruptedException Exception during runtime
