@@ -19,11 +19,11 @@ public class RepositoryProfileService {
 	public RepositoryProfileService() {
 		this.repositoryprofile = new RepositoryProfile();
 	}
-	
+	/*
 	public RepositoryProfileService(RepositoryProfile repositoryprofile) {
 		this.repositoryprofile = repositoryprofile;
 	}
-	
+	*/
 	public RepositoryProfile getRepositoryProfile(JsonNode json)  throws InterruptedException, ExecutionException {
 		String login = json.get("owner").get("login").asText();
 		String id = json.get("name").asText();
@@ -49,13 +49,6 @@ public class RepositoryProfileService {
 	}
 	
 
-	public List<String> getissuesList(JsonNode json){
-		List<String> issues = new ArrayList<String>();
-		json.forEach(items -> {
-			issues.add(items.get("title").asText());
-		});
-		return issues;
-	}
 	public List<RepositoryProfileCollaborators> getRepositoryProfile_Collaborators(JsonNode json) throws InterruptedException, ExecutionException  {
 		 List<RepositoryProfileCollaborators> rpc = new ArrayList<>();
 		 json.forEach(items -> {

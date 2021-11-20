@@ -4,6 +4,7 @@
 
 
 # An example controller showing a sample home page
+
 GET     /                                 controllers.HomeController.index
 GET     /search                           controllers.HomeController.search(query:String)
 GET     /search/:user/:repository/commits controllers.HomeController.commits(user:String,repository:String)
@@ -13,6 +14,7 @@ GET     /users/:username/repos       	    controllers.HomeController.user_reposi
 GET     /topics/:topic       	    controllers.HomeController.topics(topic: String)
 GET     /repository/:username/:repository         controllers.HomeController.repository_profile(username:String,repository:String)
 GET     /search/:user/:repository/issues controllers.HomeController.issues(user:String,repository:String)
+
 
 # Map static resources from the /public folder to the /assets URL path
 #GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
