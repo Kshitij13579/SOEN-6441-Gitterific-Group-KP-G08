@@ -4,8 +4,19 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+/**
+ * This class is for Testing of User Repository Model Class
+ *  
+ * @author Siddhartha
+ * @version 1.0
+ *
+ */
 public class UserRepositoryTest {
 
+	
+	/**
+	 * This method is to test the getter methods of User Repository Model Class
+	 */
 	@Test
 	public void testGetters() {
 		
@@ -15,6 +26,9 @@ public class UserRepositoryTest {
 		assertEquals("https://api.github.com/repos/sj07/SOEN6441/issues{/number}",userrepository.getReponame());
 		}
 	
+	/**
+	 * This method is to test the setter methods of User Repository Model Class
+	 */	
 	@Test
 	public void testSetters() {
 		

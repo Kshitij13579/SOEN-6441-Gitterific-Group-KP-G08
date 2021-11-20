@@ -117,7 +117,16 @@ public class HomeController extends Controller implements WSBodyReadables {
     	CommitStat commitStat = this.ghApi.getCommitStatistics(user, repository, cache);
     	return ok(commit.render(commitStat));
    }
-	
+
+	/**
+	 * This method retrieves user profile by taking user name as an input
+	 * An API call is made and response is then processed.
+	 * @param username user name
+	 * @return a HTML Response
+	 * @throws InterruptedException InterruptedException Exception during runtime
+	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
+	 * 							  retrieve the result of any task
+	 */
     public Result user_profile(String username) throws InterruptedException, ExecutionException{
     	
     	UserService repoService = new UserService();
@@ -134,7 +143,15 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(users.render(repoList));
     }
     
-	
+	/**
+	 * This method retrieves user repository by taking user name as an input
+	 * An API call is made and response is then processed.
+	 * @param username user name
+	 * @return a HTML Response
+	 * @throws InterruptedException InterruptedException Exception during runtime
+	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
+	 * 							  retrieve the result of any task
+	 */
     public Result user_repository(String username) throws InterruptedException, ExecutionException{
     	UserService repoService = new UserService();
     	List<UserRepository> repoList = new ArrayList<>();

@@ -4,8 +4,18 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+/**
+ * This class is for Testing User Profile Model Class
+ *  
+ * @author Siddhartha
+ * @version 1.0
+ *
+ */
 public class UserProfileTest {
 
+	/**
+	 * This method is to test the getter methods of User Profile Model Class
+	 */
 	@Test
 	public void testGetters() {
 		
@@ -21,7 +31,10 @@ public class UserProfileTest {
 		assertEquals("22", userprofile.following);
 		assertEquals("https://api.github.com/users/sj07/subscriptions\r\n","https://api.github.com/users/sj07/orgs", userprofile.organizations_url);
 	}
-	
+
+	/**
+	 * This method is to test the setter methods of User Profile Model Class
+	 */
 	@Test
 	public void testSetters() {
 		
