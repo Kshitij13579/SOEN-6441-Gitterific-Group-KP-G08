@@ -30,6 +30,17 @@ public interface GithubApi {
 	 * @throws ExecutionException
 	 */
 	List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
+	/**
+	 * Processes the data recieved from github repository endpoint 
+	 * 
+	 * @author Mrinal Rai
+	 * @param query Query searched by the user
+	 * @param cache	Async cached being used in the main controller
+	 * @return List<Repository> containing the 10 latest repositories for the topic
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+	List<Repository> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	
 	public CommitStat getCommitStatistics(String user,String repository, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	/**
