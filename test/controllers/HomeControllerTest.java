@@ -97,7 +97,12 @@ public class HomeControllerTest extends WithApplication {
 		return new GuiceApplicationBuilder().build();
 	}
 
-	// Testing the Index page for HTML Response
+
+	/**
+	 * Test to Validate testIndex() 
+	 *  Testing the Index page for HTML Response
+	 * @author Yogesh Yadavn
+	 */
 	@Test
 	public void testIndex() {
 		Http.RequestBuilder request = new Http.RequestBuilder().method(GET).uri("/");
@@ -107,8 +112,13 @@ public class HomeControllerTest extends WithApplication {
 
 	}
 
-	// Test Index Page to return a HTML Response with expected status code,content
-	// type and character set
+
+	/**
+	 * Test Index Page to return a HTML Response with expected status code,content
+	 * type and character set
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	@Test
 	public void testIndex1() throws InterruptedException, ExecutionException {
 		// Result result = new HomeController.index();
@@ -119,7 +129,10 @@ public class HomeControllerTest extends WithApplication {
 		assertEquals("utf-8", result.charset().get());
 	}
 
-	// Testing Controller Action through Routing : Good and Bad Route Testing
+	// 
+	/**
+	 * Testing Controller Action through Routing :  Bad Route Testing
+	 */
 	@Test
 	public void testBadRouteForIndex() {
 		RequestBuilder request = Helpers.fakeRequest().method(GET).uri("/xx/Kiwi");
@@ -128,6 +141,9 @@ public class HomeControllerTest extends WithApplication {
 		assertEquals(NOT_FOUND, result.status());
 	}
 
+	/**
+	 *  Testing Controller Action through Routing : Good Route Testing
+	 */
 	@Test
 	public void testGoodRouteCallForIndex() {
 		RequestBuilder request = Helpers.fakeRequest(routes.HomeController.index());

@@ -17,12 +17,23 @@ import model.RepositoryProfileCollaborators;
 import model.RepositoryProfileIssues;
 import play.libs.Json;
 
+/**
+ * Test class for RepositoryProfile Service 
+ * @author Yogesh Yadav
+ *@version 1.0
+ *@since 2021-11-20
+ */
 public class RepositoryProfileServiceTest {
 	
 
 	
 
 
+	/**
+	 * Test to Validate getRepositoryProfile() from RepositoryProfile Service 
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	@Test
 	public void testgetRepositoryProfile() throws InterruptedException, ExecutionException {
 		
@@ -37,6 +48,11 @@ public class RepositoryProfileServiceTest {
 
 	}
 
+	/**
+	 * Test to Validate getRepositoryProfile_Issue() from RepositoryProfile Service 
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	@Test
 	public void testgetRepositoryProfile_Issue() throws InterruptedException, ExecutionException {
 		
@@ -55,6 +71,11 @@ public class RepositoryProfileServiceTest {
 		assertTrue(EqualsBuilder.reflectionEquals(expectedRepos.get(0),rpi.get(0)));
 	}
 	
+	/**
+	 * Test to Validate testgetRepositoryProfile_Collaborators() from RepositoryProfile Service 
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	@Test
 	public void testgetRepositoryProfile_Collaborators() throws InterruptedException, ExecutionException {
 		
