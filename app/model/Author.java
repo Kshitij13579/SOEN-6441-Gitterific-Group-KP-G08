@@ -1,5 +1,7 @@
 package model;
 
+
+import java.util.Objects;
 /**
 * The Author model class is used to store information about Author 
 * in a commit.
@@ -9,8 +11,6 @@ package model;
 * @version 1.0
 * @since   2021-11-20 
 */
-import java.util.Objects;
-
 public class Author {
     public String name;
     public String login;
