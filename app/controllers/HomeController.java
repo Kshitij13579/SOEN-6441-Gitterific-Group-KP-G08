@@ -206,17 +206,19 @@ public class HomeController extends Controller implements WSBodyReadables {
 	
 	/**
 	 * This method performs repository issues title statistics by taking user and repository name as input
-	 * An API call is made and response is then processed and calculated stats.
+	 * An API call is made and response is then processed and calculated statistics.
 	 * @param user user repository owner
 	 * @param repository repository name
 	 * @return a HTML Response
 	 * @throws InterruptedException InterruptedException Exception during runtime
 	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
 	 * 							  retrieve the result of any task
+	 * @author Akshay
+	 * 
 	 */
 	public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
 
-		
+	  
 	  List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);
 	  
 	  IssueStatService issueStatService=new IssueStatService();
