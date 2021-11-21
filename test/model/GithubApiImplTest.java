@@ -71,12 +71,14 @@ public class GithubApiImplTest {
 		}
 		try {
 			when(ghaMock.getResponse("topic:play", "10","1", "updated", cache)).thenReturn(json);
+			when(ghaMock.getResponse("play", "10","1", "updated", cache)).thenReturn(json);
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			when(ghaMock.getRepositoryInfo("play", cache)).thenCallRealMethod();
+			when(ghaMock.getRepositories("play", cache)).thenCallRealMethod();
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -96,6 +98,23 @@ public class GithubApiImplTest {
 	@Test
 	public void testGetRepositoryInfo() throws InterruptedException, ExecutionException {
 		List<Repository> actualRepoList = ghaMock.getRepositoryInfo("play", cache);
+		org.junit.Assert.assertTrue(actualRepoList.size()>0);
+		org.junit.Assert.assertTrue(actualRepoList.get(0).getClass().getName() == "model.Repository");
+	}
+	
+	/**
+	 * Tests the getRepsitories method in GithubApi class
+	 * Asserts the repository list's size and the type of the data it is storing
+	 * 
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * 
+	 * @author Mrinal Rai
+	 * @since 2021-11-20
+	 */
+	@Test
+	public void testGetRepositories() throws InterruptedException, ExecutionException {
+		List<Repository> actualRepoList = ghaMock.getRepositories("play", cache);
 		org.junit.Assert.assertTrue(actualRepoList.size()>0);
 		org.junit.Assert.assertTrue(actualRepoList.get(0).getClass().getName() == "model.Repository");
 	}

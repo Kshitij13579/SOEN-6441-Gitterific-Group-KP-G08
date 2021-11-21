@@ -51,6 +51,20 @@ public class GithubApiMock implements GithubApi {
 	 * @author Mrinal Rai
 	 * @since 2021-11-20
 	 */
+	@Override
+	public List<Repository> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+		JsonNode json = getResponse("", "", "", "", cache);
+		List<Repository> repoList = new ArrayList<Repository>();
+		RepositorySearchService repoService = new RepositorySearchService();
+		repoList = repoService.getRepoList(json);
+		return repoList;
+	}
+	
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Mrinal Rai
+	 * @since 2021-11-20
+	 */
 	@Inject WSClient ws;
 	@Override
 	public JsonNode getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {

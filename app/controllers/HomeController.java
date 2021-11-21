@@ -80,34 +80,23 @@ public class HomeController extends Controller implements WSBodyReadables {
   
     }
     
+    /**
+     * This method retrieves repositories by taking query as an input
+	 * An API call is made and response is then processed.
+     * @author Kshitij Yerande
+     * @param query Search made by the user
+     * @return Result showing the 10 latest repositories for the searched query
+     * @throws InterruptedException
+     * @throws ExecutionException
+     * @since 2021-11-20
+     */
     @SuppressWarnings("deprecation")
-	public Result search(String query) throws InterruptedException, ExecutionException {
-    	
-    	RepositorySearchService repoService = new RepositorySearchService();
-															 
-    	
-    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_repo_url"))
-    			              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
-    			              .addQueryParameter(GIT_PARAM.QUERY.value, query)
-    			              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("constants.repo_per_page"))
-    			              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.repo_page"));
-
-    	CompletionStage<JsonNode> jsonPromise = this.cache.getOrElseUpdate(request.getUrl()
-    			+ GIT_PARAM.QUERY.value + query 
-    			+ GIT_PARAM.PER_PAGE.value + ConfigFactory.load().getString("constants.repo_per_page")
-    			+ GIT_PARAM.PAGE.value + ConfigFactory.load().getString("constants.repo_page"), 
-    			new Callable<CompletionStage<JsonNode>>() {
-    				public CompletionStage<JsonNode> call() {
-    					return request.get().thenApply(r -> r.getBody(json()));
-    				};
-    	}, Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")));
-    	
+	public Result search(String query)  throws InterruptedException, ExecutionException, FileNotFoundException {    	
     	if(globalRepoList.isEmpty()) {
-    		globalRepoList = repoService.getRepoList(jsonPromise.toCompletableFuture().get());
+    		globalRepoList = this.fetchRepositoryInfo(query);
     	}else {
-    		globalRepoList.addAll(repoService.getRepoList(jsonPromise.toCompletableFuture().get()));
+    		globalRepoList.addAll(this.fetchRepositoryInfo(query));
     	}
-    	
 		return ok(index.render(globalRepoList, ""));
     }
     
