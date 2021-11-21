@@ -24,6 +24,7 @@ public class IssueStatService {
 	
 	/**
 	 * This method accepts list of repository issues and process
+	 * @author Akshay
 	 * @param issueList list of repository issue titles
 	 * @return	return lists of unique words and their occurrence 
 	 */
@@ -35,13 +36,12 @@ public class IssueStatService {
 		//List<String> to String
 		String joined = titles.stream().map(Object::toString).collect(Collectors.joining(" "));		
 		
-		Stream<String> stream=Stream.of(joined.toLowerCase().split(" "));
+		Stream<String> stream=Stream.of(joined.toLowerCase().split("[\\pP\\s&&[^']]+"));
 		
 		Map<String, Long> wordFreq=stream.collect(Collectors.groupingBy(String::toString,Collectors.counting()));
 		
 		Map<String,Long> sortedMapDescending=wordFreq.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).
 											collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2)->e1,LinkedHashMap::new));
-		
 		
 		List<String> wordList=new ArrayList<String>(sortedMapDescending.keySet());
 		List<Long>   wordCount=new ArrayList<Long>(sortedMapDescending.values());

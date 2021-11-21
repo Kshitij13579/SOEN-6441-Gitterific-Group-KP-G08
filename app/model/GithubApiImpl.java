@@ -18,6 +18,11 @@ import service.CommitStatService;
 import service.RepositorySearchService;
 
 public class GithubApiImpl implements GithubApi, WSBodyReadables  {
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Mrinal Rai
+	 * @since 2021-11-20
+	 */
 	@Override
 	public List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		JsonNode jn = getResponse("topic:" + query, ConfigFactory.load().getString("constants.repo_per_page"), 
@@ -28,6 +33,11 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 		return repoList;
 	};
 	
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Mrinal Rai
+	 * @since 2021-11-20
+	 */
 	@Inject WSClient ws;
 	public JsonNode getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_repo_url"))
@@ -151,4 +161,50 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	   
 	}
 	
+	@Override
+	public JsonNode getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
+		//Repository Profile
+    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository)
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
+	    CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
+	 			new Callable<CompletionStage<JsonNode>>() {
+				public CompletionStage<JsonNode> call() {
+					return request.get().thenApply(r -> r.getBody(json()));
+				};
+	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
+	    return jsonPromise.toCompletableFuture().get();
+	}
+	
+	@Override
+	public JsonNode getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
+		// Repository Issues
+    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository + "/issues?sort=created&direction=desc&per_page=20&page=1")
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
+	    CompletionStage<JsonNode> json_issues = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
+	 			new Callable<CompletionStage<JsonNode>>() {
+				public CompletionStage<JsonNode> call() {
+					return request.get().thenApply(r -> r.getBody(json()));
+				};
+	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
+	    return json_issues.toCompletableFuture().get();
+	}
+	
+	@Override
+	public JsonNode getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
+		
+		//Repository Collabs
+  		WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository + "/collaborators")
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
+	              .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
+  		CompletionStage<JsonNode> json_collab = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
+  	 			new Callable<CompletionStage<JsonNode>>() {
+				public CompletionStage<JsonNode> call() {
+					return request.get().thenApply(r -> r.getBody(json()));
+				};
+	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
+					
+  		return json_collab.toCompletableFuture().get();
+	}
+	
 }
+

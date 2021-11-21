@@ -4,7 +4,7 @@
 <html lang="en">
 <style>
 table, th, td {
-  border:1px solid black;
+  border:3px solid black;
 }
 </style>
 <center><h2 class="center">@repository Issues</h2></center>
@@ -19,14 +19,14 @@ table, th, td {
     <li >@issue.title</li>
     }
     </ul>
-    
+      
     
     <h3>Issue Title Word Statistics</h3>
     
-	<div style="display: flex">
+	<div style="display: flex; border: 1px solid black; width: fit-content">
 			    		<div style="display: flex; flex-direction: column">
 			    		@for(word <- list1) {
-			    			<div style="border: 1px solid black;">
+			    			<div style="border: 1px solid black; margin: 2px 1px 1px 2px; padding: 5px">
 						        	<a >
 						        		@word
 						        	</a>
@@ -35,7 +35,7 @@ table, th, td {
 			    		</div>
 			    		<div style="display: flex; flex-direction: column">
 			    		@for(count <- list2) {
-			    			<div style="border: 1px solid black;">
+			    			<div style="border: 1px solid black; margin: 2px 2px 1px 2px; padding: 5px">
 						        	<a>
 						        		@count
 						        	</a>

@@ -54,7 +54,6 @@ import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
 
 import java.util.*;
-import java.lang.String;
 
 import play.*;
 import play.mvc.*;
@@ -67,6 +66,16 @@ public class HomeControllerTest extends WithApplication {
 	private static HomeController hcMock;
 	static final int NOT_FOUND = 404;
 
+	/**
+	 * Sets up initial configuration required for the test cases
+	 * Binds the GithubApiMock class to GithubApi Interface for testing
+	 * Mocks the fetchRepositoryInfo method for HomeController class
+	 * @author Mrinal Rai
+	 * @since 2021-11-20 
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws FileNotFoundException
+	 */
 	@Inject
 	static
 	AsyncCacheApi cache;
@@ -88,7 +97,12 @@ public class HomeControllerTest extends WithApplication {
 		return new GuiceApplicationBuilder().build();
 	}
 
-	// Testing the Index page for HTML Response
+
+	/**
+	 * Test to Validate testIndex() 
+	 *  Testing the Index page for HTML Response
+	 * @author Yogesh Yadavn
+	 */
 	@Test
 	public void testIndex() {
 		Http.RequestBuilder request = new Http.RequestBuilder().method(GET).uri("/");
@@ -98,8 +112,13 @@ public class HomeControllerTest extends WithApplication {
 
 	}
 
-	// Test Index Page to return a HTML Response with expected status code,content
-	// type and character set
+
+	/**
+	 * Test Index Page to return a HTML Response with expected status code,content
+	 * type and character set
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	@Test
 	public void testIndex1() throws InterruptedException, ExecutionException {
 		// Result result = new HomeController.index();
@@ -110,7 +129,10 @@ public class HomeControllerTest extends WithApplication {
 		assertEquals("utf-8", result.charset().get());
 	}
 
-	// Testing Controller Action through Routing : Good and Bad Route Testing
+	// 
+	/**
+	 * Testing Controller Action through Routing :  Bad Route Testing
+	 */
 	@Test
 	public void testBadRouteForIndex() {
 		RequestBuilder request = Helpers.fakeRequest().method(GET).uri("/xx/Kiwi");
@@ -119,6 +141,9 @@ public class HomeControllerTest extends WithApplication {
 		assertEquals(NOT_FOUND, result.status());
 	}
 
+	/**
+	 *  Testing Controller Action through Routing : Good Route Testing
+	 */
 	@Test
 	public void testGoodRouteCallForIndex() {
 		RequestBuilder request = Helpers.fakeRequest(routes.HomeController.index());
@@ -129,8 +154,18 @@ public class HomeControllerTest extends WithApplication {
 		// aren't used
 	}
 
+	/**
+	 * Tests the topic action in the HomeController class
+	 * Asserts the response status, content-type, character-encoding and the text in the page
+	 * 
+	 * @author Mrinal Rai
+	 * @since 2021-11-20  
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws FileNotFoundException
+	 */
 	@Test
-	public void testTopics() throws InterruptedException, ExecutionException, FileNotFoundException {
+	public void testTopicsAction() throws InterruptedException, ExecutionException, FileNotFoundException {
 		Result result = hcMock.topics("play");
 		assertEquals(OK, result.status());
 		assertEquals("text/html", result.contentType().get());
@@ -154,6 +189,14 @@ public class HomeControllerTest extends WithApplication {
       assertEquals("utf-8", result.charset().get());
     } 
     
+    /**
+     * This is the Test Method for Repository Issues Statistics
+     * @author Akshay
+   	 * @throws InterruptedException InterruptedException Exception during runtime
+	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
+	 * 													  retrieve the result of any task
+     * @throws FileNotFoundException File Not Found Exception due to unavailability of file
+     */
     @Test
     public void testIssuesPage() throws InterruptedException,ExecutionException,FileNotFoundException{
     	

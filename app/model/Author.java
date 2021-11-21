@@ -2,6 +2,7 @@ package model;
 
 
 import java.util.Objects;
+
 /**
 * The Author model class is used to store information about Author 
 * in a commit.

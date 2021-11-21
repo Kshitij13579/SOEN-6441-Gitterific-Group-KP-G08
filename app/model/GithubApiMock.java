@@ -30,6 +30,12 @@ import scala.xml.Elem;
 import service.RepositorySearchService;
 
 public class GithubApiMock implements GithubApi {
+	
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Mrinal Rai
+	 * @since 2021-11-20
+	 */
 	@Inject AsyncCacheApi cache;
 	@Override
 	public List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
@@ -40,6 +46,11 @@ public class GithubApiMock implements GithubApi {
 		return repoList;
 	}
 	
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Mrinal Rai
+	 * @since 2021-11-20
+	 */
 	@Inject WSClient ws;
 	@Override
 	public JsonNode getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
@@ -146,4 +157,60 @@ public class GithubApiMock implements GithubApi {
 		
 		return titleIssues;
 	}
+	
+	@Override
+	public JsonNode getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
+		
+		String path=System.getProperty("user.dir") +"/test/resources/repositoryprofile.json";
+		java.io.File file = new java.io.File(path);
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode json = null;
+		 
+		try {
+			json = mapper.readTree(file);
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return  json;
+	}
+	
+	@Override
+	public JsonNode getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
+		String path=System.getProperty("user.dir") +"/test/resources/repositoryprofileissues.json";
+		java.io.File file = new java.io.File(path);
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode json = null;
+		 
+		try {
+			json = mapper.readTree(file);
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return  json;
+	}
+	
+	@Override
+	public JsonNode getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
+		String path=System.getProperty("user.dir") +"/test/resources/repositoryprofilecollab.json";
+		java.io.File file = new java.io.File(path);
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode json = null;
+		 
+		try {
+			json = mapper.readTree(file);
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return  json;
+	}
+		
 }

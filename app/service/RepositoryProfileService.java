@@ -11,19 +11,35 @@ import java.util.concurrent.ExecutionException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.*;
 
+/**
+ * The RepositoryProfileService class is used  to convert JSON Data coming from GIT API based on repository model objects - RepositoryProfile, RepositoryProfileIssues and RepositoryProfileCollaborations.
+ * @author Yogesh Yadav
+ * @version 1.0
+ * @since   2021-11-20 
+ */
 public class RepositoryProfileService {
 
+	/**
+	 * Java Variable - Object of Class -  RepositoryProfile, ConfigFactory
+	 */
 	RepositoryProfile repositoryprofile;
 	ConfigFactory config;
 	
+	/**
+	 * Constructor : to Initialize RepositoryProfile object
+	 */
 	public RepositoryProfileService() {
 		this.repositoryprofile = new RepositoryProfile();
 	}
-	/*
-	public RepositoryProfileService(RepositoryProfile repositoryprofile) {
-		this.repositoryprofile = repositoryprofile;
-	}
-	*/
+	
+	
+	/**
+	 * Method to covert JSON object from GIT API Call from Controller.repository_profile and initialize RepositoryProfile object.
+	 * @param json
+	 * @return RepositoryProfile object
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	public RepositoryProfile getRepositoryProfile(JsonNode json)  throws InterruptedException, ExecutionException {
 		String login = json.get("owner").get("login").asText();
 		String id = json.get("name").asText();
@@ -35,6 +51,14 @@ public class RepositoryProfileService {
 		return new RepositoryProfile(login,id,node_id,avatar_url,collaborators_url,issues_url,open_issues);
 	}
 	
+	
+	/**
+	 * Method to covert JSON object from GIT API Call from Controller.repository_profile and initialize RepositoryProfileissues object. 
+	 * @param json
+	 * @return List of RepositoryProfileIssues objects
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	public List<RepositoryProfileIssues> getRepositoryProfile_Issue(JsonNode json) throws InterruptedException, ExecutionException  {
 		 List<RepositoryProfileIssues> rpi = new ArrayList<>();
 		 json.forEach(items -> {
@@ -49,6 +73,13 @@ public class RepositoryProfileService {
 	}
 	
 
+	/**
+	 * Method to covert JSON object from GIT API Call from Controller.repository_profile and initialize RepositoryProfileCollborations object.
+	 * @param json
+	 * @return List of RepositoryProfileCollaborations objects
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	public List<RepositoryProfileCollaborators> getRepositoryProfile_Collaborators(JsonNode json) throws InterruptedException, ExecutionException  {
 		 List<RepositoryProfileCollaborators> rpc = new ArrayList<>();
 		 json.forEach(items -> {
