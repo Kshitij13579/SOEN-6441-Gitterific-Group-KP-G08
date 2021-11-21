@@ -2,13 +2,25 @@ package model;
 
 import static org.junit.Assert.*;
 
+import java.util.concurrent.ExecutionException;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+
+/**
+ * Test class for RepositoryProfileCollaborators  
+ * @author Yogesh Yadav
+ *@version 1.0
+ *@since 2021-11-20
+ */
 public class RepositoryProfileCollaboratorsTest {
 
 private static RepositoryProfileCollaborators repoprofilecollab;
 	
+/**
+ *  Initialize Object of RepositoryProfileCollaborators
+ */
 	@BeforeClass
 	public static void init() {
 		
@@ -16,6 +28,9 @@ private static RepositoryProfileCollaborators repoprofilecollab;
 		
 	}
 
+	/**
+	 * Test to Validate setLogin() from RepositoryProfileCollaborators  
+	 */
 	@Test
 	public void testsetLogin() {
 		
@@ -30,6 +45,9 @@ private static RepositoryProfileCollaborators repoprofilecollab;
 		
 	}
 	
+	/**
+	 * Test to Validate getLogin() from RepositoryProfileCollaborators  
+	 */
 	@Test
 	public void testgetLogin() {
 		
@@ -41,6 +59,9 @@ private static RepositoryProfileCollaborators repoprofilecollab;
 		
 	}
 	
+	/**
+	 * Test to Validate setId() from RepositoryProfileCollaborators  
+	 */
 	@Test
 	public void testsetId() {
 		
@@ -55,6 +76,10 @@ private static RepositoryProfileCollaborators repoprofilecollab;
 		
 	}
 	
+
+	/**
+	 * Test to Validate getId() from RepositoryProfileCollaborators  
+	 */
 	@Test
 	public void testgetId() {
 		
@@ -66,6 +91,10 @@ private static RepositoryProfileCollaborators repoprofilecollab;
 		
 	}
 	
+
+	/**
+	 * Test to Validate setRoleName() from RepositoryProfileCollaborators  
+	 */
 	@Test
 	public void testsetRoleName() {
 		
@@ -80,6 +109,10 @@ private static RepositoryProfileCollaborators repoprofilecollab;
 		
 	}
 	
+
+	/**
+	 * Test to Validate getRoleName() from RepositoryProfileCollaborators  
+	 */
 	@Test
 	public void testgetRoleName() {
 		
@@ -91,6 +124,10 @@ private static RepositoryProfileCollaborators repoprofilecollab;
 		
 	}
 	
+
+	/**
+	 * Test to Validate setUserUrl() from RepositoryProfileCollaborators  
+	 */
 	@Test
 	public void testsetUserUrl() {
 		
@@ -105,6 +142,9 @@ private static RepositoryProfileCollaborators repoprofilecollab;
 		
 	}
 	
+	/**
+	 * Test to Validate getUserUrl() from RepositoryProfileCollaborators  
+	 */
 	@Test
 	public void testgetUserUrl() {
 		

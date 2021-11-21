@@ -179,7 +179,16 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(repositories.render(repoList));
     }
     
-	 public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
+	 /**
+	 * Method to Accept Username and Repository from Index HTML Page and update Repository Profile HTML Page
+	 * @author Yogesh Yadav
+	 * @param username - Git Username
+	 * @param repository - Git Repository name
+	 * @return Goto Render Repository Profile HTML page
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+	public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
 		 
 		    RepositoryProfileService rps = new RepositoryProfileService();
 	    	RepositoryProfile rp = new RepositoryProfile();
@@ -187,16 +196,15 @@ public class HomeController extends Controller implements WSBodyReadables {
 	    	List<RepositoryProfileCollaborators> rpc = new ArrayList<>();
 	    	JsonNode reppprofile = this.ghApi.getRepositoryProfileFromResponse(username, repository, cache);
 	    	JsonNode repoprofileissues = this.ghApi.getRepositoryProfileIssuesFromResponse(username, repository, cache);
-	    	try {
+	    	
 	    	JsonNode repoprofilecollab = this.ghApi.getRepositoryProfileCollaborationsFromResponse(username, repository, cache);
-	    	} catch (Exception e) {
-				e.printStackTrace();
-	        }
+	    	
 	    	rp =  rps.getRepositoryProfile(reppprofile);	
 	  		rpi = rps.getRepositoryProfile_Issue(repoprofileissues);
+	  		
 	  		try {
 		    	
-	  			rpc = rps.getRepositoryProfile_Collaborators(repoprofileissues);
+	  			rpc = rps.getRepositoryProfile_Collaborators(repoprofilecollab);
 			} catch (Exception e) {
 				e.printStackTrace();
 	        } 

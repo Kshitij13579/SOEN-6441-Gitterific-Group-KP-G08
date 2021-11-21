@@ -2,13 +2,24 @@ package model;
 
 import static org.junit.Assert.*;
 
+import java.util.concurrent.ExecutionException;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Test class for RepositoryProfileIssues  
+ * @author Yogesh Yadav
+ *@version 1.0
+ *@since 2021-11-20
+ */
 public class RepositoryProfileIssuesTest {
 
 	private static RepositoryProfileIssues repoprofileissues;
 	
+	/**
+	 *  Initialize Object of RepositoryProfileIssues
+	 */
 	@BeforeClass
 	public static void init() {
 		
@@ -16,6 +27,9 @@ public class RepositoryProfileIssuesTest {
 		
 	}
 	
+	/**
+	 * Test to Validate setIssueNumber() from RepositoryProfileIssues  
+	 */
 	@Test
 	public void testsetIssueNumber() {
 		
@@ -30,6 +44,9 @@ public class RepositoryProfileIssuesTest {
 		
 	}
 	
+	/**
+	 * Test to Validate getIssueNumber() from RepositoryProfileIssues  
+	 */
 	@Test
 	public void testgetIssueNumber() {
 		
@@ -41,6 +58,9 @@ public class RepositoryProfileIssuesTest {
 		
 	}
 	
+	/**
+	 * Test to Validate setIssueTitle() from RepositoryProfileIssues  
+	 */
 	@Test
 	public void testsetIssueTitle() {
 		
@@ -55,6 +75,9 @@ public class RepositoryProfileIssuesTest {
 		
 	}
 	
+	/**
+	 * Test to Validate getIssueTitle() from RepositoryProfileIssues  
+	 */
 	@Test
 	public void testgetIssueTitle() {
 		
@@ -66,6 +89,9 @@ public class RepositoryProfileIssuesTest {
 		
 	}
 	
+	/**
+	 * Test to Validate setState() from RepositoryProfileIssues  
+	 */
 	@Test
 	public void testsetState() {
 		
@@ -80,6 +106,9 @@ public class RepositoryProfileIssuesTest {
 		
 	}
 	
+	/**
+	 * Test to Validate getState() from RepositoryProfileIssues  
+	 */
 	@Test
 	public void testgetState() {
 		
@@ -91,6 +120,9 @@ public class RepositoryProfileIssuesTest {
 		
 	}
 	
+	/**
+	 * Test to Validate setCreatedAt() from RepositoryProfileIssues  
+	 */
 	@Test
 	public void testsetCreatedAt() {
 		
@@ -105,6 +137,9 @@ public class RepositoryProfileIssuesTest {
 		
 	}
 	
+	/**
+	 * Test to Validate getCreatedAt() from RepositoryProfileIssues  
+	 */
 	@Test
 	public void testgetCreatedAt() {
 		
@@ -116,6 +151,9 @@ public class RepositoryProfileIssuesTest {
 		
 	}
 	
+	/**
+	 * Test to Validate setUpdateAt() from RepositoryProfileIssues  
+	 */
 	@Test
 	public void testsetUpdateAt() {
 		
@@ -130,6 +168,9 @@ public class RepositoryProfileIssuesTest {
 		
 	}
 	
+	/**
+	 * Test to Validate getUpdateAt() from RepositoryProfileIssues  
+	 */
 	@Test
 	public void testgetUpdateAt() {
 		
