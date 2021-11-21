@@ -14,19 +14,45 @@ import com.gargoylesoftware.htmlunit.javascript.host.dom.AbstractList;
 
 import model.Issues;
 
+/**
+ * This Method tests Issue Statistics Service 
+ * @author Akshay
+ *
+ */
 public class IssueStatServiceTest {
 	
 	
-	 List<String> word = new ArrayList<>();
-	 List<Long> count = new ArrayList<>();	
+	 /**
+	 * List of words
+	 */
+	List<String> word = new ArrayList<>();
+	 /**
+	 * List of word counts
+	 */
+	List<Long> count = new ArrayList<>();	
 	 
-	 IssueStatService issueStatService=new IssueStatService();
+	 /**
+	 * 
+	 * Creates issue service object
+	 */
+	IssueStatService issueStatService=new IssueStatService();
 	 
-	 List<Issues> issuesList=Arrays.asList(new Issues("hi"));
+	 /**
+	 * 
+	 * List of Issues
+	 */
+	List<Issues> issuesList=Arrays.asList(new Issues("hi"));
 	 
-	 List[] test=issueStatService.wordCountDescening(issuesList);
+	 /**
+	 * 
+	 * List of words and Count
+	 */
+	List[] test=issueStatService.wordCountDescening(issuesList);
 	
 	
+	/**
+	 * Method tests word count for issues
+	 */
 	@Test
 	public  void testwordCountDescending() {
 		
@@ -47,6 +73,9 @@ public class IssueStatServiceTest {
 		
 	}
 	
+	/**
+	 * Method tests not null values
+	 */
 	@Test
 	public void testNotEquals() {
 		

@@ -54,7 +54,6 @@ import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
 
 import java.util.*;
-import java.lang.String;
 
 import play.*;
 import play.mvc.*;
@@ -174,6 +173,14 @@ public class HomeControllerTest extends WithApplication {
       assertEquals("utf-8", result.charset().get());
     } 
     
+    /**
+     * This is the Test Method for Repository Issues Statistics
+     * @author Akshay
+   	 * @throws InterruptedException InterruptedException Exception during runtime
+	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
+	 * 													  retrieve the result of any task
+     * @throws FileNotFoundException File Not Found Exception due to unavailability of file
+     */
     @Test
     public void testIssuesPage() throws InterruptedException,ExecutionException,FileNotFoundException{
     	

@@ -180,45 +180,26 @@ public class HomeController extends Controller implements WSBodyReadables {
     }
     
 	 public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
-    	RepositoryProfileService rps = new RepositoryProfileService();
-    	RepositoryProfile rp = new RepositoryProfile();
-    	List<RepositoryProfileIssues> rpi = new ArrayList<>();
-    	List<RepositoryProfileCollaborators> rpc = new ArrayList<>();
-    	//Repository Profile
-    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository)
-	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
-	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
-	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
-	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
-    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
-    	// Repository Issues
-    	WSRequest req = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository + "/issues?sort=created&direction=desc&per_page=20&page=1")
-	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
-	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
-	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
-	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
-  		CompletionStage<JsonNode> json_issues = req.get().thenApply(r -> r.getBody(json()));
-  		//Repository Collabs
-  		WSRequest req_collab = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository + "/collaborators")
-	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
-	              //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
-	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("repo_per_page"))
-	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("repo_page"))
-	              .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
-		CompletionStage<JsonNode> json_collab = req_collab.get().thenApply(r -> r.getBody(json()));
-		System.out.println(json_collab.toCompletableFuture().get());
-  		rp =  rps.getRepositoryProfile(jsonPromise.toCompletableFuture().get());	
-  		rpi = rps.getRepositoryProfile_Issue(json_issues.toCompletableFuture().get());
-  		
-  		//System.out.println(json_collab.toCompletableFuture().get());
-  		try {
-	    	
-  			rpc = rps.getRepositoryProfile_Collaborators(json_collab.toCompletableFuture().get());
-		} catch (Exception e) {
-			e.printStackTrace();
-        }
-
-  		
+		 
+		    RepositoryProfileService rps = new RepositoryProfileService();
+	    	RepositoryProfile rp = new RepositoryProfile();
+	    	List<RepositoryProfileIssues> rpi = new ArrayList<>();
+	    	List<RepositoryProfileCollaborators> rpc = new ArrayList<>();
+	    	JsonNode reppprofile = this.ghApi.getRepositoryProfileFromResponse(username, repository, cache);
+	    	JsonNode repoprofileissues = this.ghApi.getRepositoryProfileIssuesFromResponse(username, repository, cache);
+	    	try {
+	    	JsonNode repoprofilecollab = this.ghApi.getRepositoryProfileCollaborationsFromResponse(username, repository, cache);
+	    	} catch (Exception e) {
+				e.printStackTrace();
+	        }
+	    	rp =  rps.getRepositoryProfile(reppprofile);	
+	  		rpi = rps.getRepositoryProfile_Issue(repoprofileissues);
+	  		try {
+		    	
+	  			rpc = rps.getRepositoryProfile_Collaborators(repoprofileissues);
+			} catch (Exception e) {
+				e.printStackTrace();
+	        } 
   		return ok(repositoryprofile.render(rp,rpi,rpc));
     	
     }	
@@ -258,23 +239,22 @@ public class HomeController extends Controller implements WSBodyReadables {
 	
 	/**
 	 * This method performs repository issues title statistics by taking user and repository name as input
-	 * An API call is made and response is then processed and calculated stats.
+	 * An API call is made and response is then processed and calculated statistics.
 	 * @param user user repository owner
 	 * @param repository repository name
 	 * @return a HTML Response
 	 * @throws InterruptedException InterruptedException Exception during runtime
 	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
 	 * 							  retrieve the result of any task
+	 * @author Akshay
+	 * 
 	 */
 	public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
 
-		
-	  List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);
 	  
+	  List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);	  
 	  IssueStatService issueStatService=new IssueStatService();
-	  
-	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);
-	  	  
+	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);	  	  
 	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));
 	  
 	  }
