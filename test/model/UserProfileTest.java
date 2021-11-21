@@ -18,7 +18,6 @@ public class UserProfileTest {
 	 */
 	@Test
 	public void testGetters() {
-		
 		UserProfile userprofile=new UserProfile("sj07","989238","MDQ6VXNlcjU4MzYDA--","https://avatars.githubusercontent.com/u/536680?v=4\r\n","https://api.github.com/users/sj07/repos", "sj07@gmail.com", "sj07twitter", "21","22", "https://api.github.com/users/sj07/subscriptions\r\n","https://api.github.com/users/sj07/orgs");
 		assertEquals("sj07",userprofile.getLogin());
 		assertEquals("989238",userprofile.getId());
@@ -29,7 +28,8 @@ public class UserProfileTest {
 		assertEquals("sj07@gmail.com", userprofile.email);
 		assertEquals("21",userprofile.followers);
 		assertEquals("22", userprofile.following);
-		assertEquals("https://api.github.com/users/sj07/subscriptions\r\n","https://api.github.com/users/sj07/orgs", userprofile.organizations_url);
+		assertEquals("https://api.github.com/users/sj07/subscriptions\r\n", userprofile.subscriptions_url);
+		assertEquals("https://api.github.com/users/sj07/orgs", userprofile.organizations_url);
 	}
 
 	/**
@@ -49,6 +49,7 @@ public class UserProfileTest {
 		userprofile.setTwitter_username("twitter_username");
 		userprofile.setFollowers("followers");
 		userprofile.setFollowing("following");
+		userprofile.setSubscriptions_url("subscriptions_url");
 		userprofile.setOrganizations_url("organizations_url");
 		
 		assertEquals("login", userprofile.getLogin());
@@ -60,6 +61,7 @@ public class UserProfileTest {
 		assertEquals("twitter_username",userprofile.getTwitter_username());
 		assertEquals("followers",userprofile.getFollowers());
 		assertEquals("following",userprofile.getFollowing());
+		assertEquals("subscriptions_url", userprofile.getSubscriptions_url());
 		assertEquals("organizations_url",userprofile.getOrganizations_url());
 	
 	}

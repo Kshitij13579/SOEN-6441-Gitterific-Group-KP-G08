@@ -54,5 +54,7 @@ public class UserServiceTest {
 		expected2.add(new UserRepository("abc","def","mno"));
 		assertTrue(EqualsBuilder.reflectionEquals(expected2.get(0),user_repository.get(0)));
 		
+		UserService tt=new UserService(user_profile);
+		
 	}
 }
