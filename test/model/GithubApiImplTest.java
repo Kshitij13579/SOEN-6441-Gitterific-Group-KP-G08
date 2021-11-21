@@ -41,6 +41,16 @@ public class GithubApiImplTest {
 	private GithubApi ghaMock;
 	
 
+	/**
+	 * Sets up initial configuration required for the test cases
+	 * Uses locally saved sample json for API testing
+	 * Mocks the getResponse method for GithubApi class for testing
+	 * @author Mrinal Rai
+	 * @since 2021-11-20 
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws FileNotFoundException
+	 */
 	@Inject
 	AsyncCacheApi cache;
 	@Before
@@ -73,6 +83,16 @@ public class GithubApiImplTest {
 		}
 	}
 
+	/**
+	 * Tests the getRepsitoryInfo method in GithubApi class
+	 * Asserts the repository list's size and the type of the data it is storing
+	 * 
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * 
+	 * @author Mrinal Rai
+	 * @since 2021-11-20
+	 */
 	@Test
 	public void testGetRepositoryInfo() throws InterruptedException, ExecutionException {
 		List<Repository> actualRepoList = ghaMock.getRepositoryInfo("play", cache);
