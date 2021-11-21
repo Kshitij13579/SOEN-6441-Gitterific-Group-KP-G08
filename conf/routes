@@ -15,9 +15,5 @@ GET     /topics/:topic       	    				controllers.HomeController.topics(topic: S
 GET     /repository/:username/:repository         	controllers.HomeController.repository_profile(username:String,repository:String)
 GET     /search/:user/:repository/issues 			controllers.HomeController.issues(user:String,repository:String)
 
-# Test API
-GET     /test                                       controllers.HomeControllerMock.index
-
-
 # Map static resources from the /public folder to the /assets URL path
 #GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

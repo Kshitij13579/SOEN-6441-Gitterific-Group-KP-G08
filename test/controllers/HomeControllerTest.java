@@ -67,6 +67,16 @@ public class HomeControllerTest extends WithApplication {
 	private static HomeController hcMock;
 	static final int NOT_FOUND = 404;
 
+	/**
+	 * Sets up initial configuration required for the test cases
+	 * Binds the GithubApiMock class to GithubApi Interface for testing
+	 * Mocks the fetchRepositoryInfo method for HomeController class
+	 * @author Mrinal Rai
+	 * @since 2021-11-20 
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws FileNotFoundException
+	 */
 	@Inject
 	static
 	AsyncCacheApi cache;
@@ -129,8 +139,18 @@ public class HomeControllerTest extends WithApplication {
 		// aren't used
 	}
 
+	/**
+	 * Tests the topic action in the HomeController class
+	 * Asserts the response status, content-type, character-encoding and the text in the page
+	 * 
+	 * @author Mrinal Rai
+	 * @since 2021-11-20  
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws FileNotFoundException
+	 */
 	@Test
-	public void testTopics() throws InterruptedException, ExecutionException, FileNotFoundException {
+	public void testTopicsAction() throws InterruptedException, ExecutionException, FileNotFoundException {
 		Result result = hcMock.topics("play");
 		assertEquals(OK, result.status());
 		assertEquals("text/html", result.contentType().get());

@@ -18,6 +18,11 @@ import service.CommitStatService;
 import service.RepositorySearchService;
 
 public class GithubApiImpl implements GithubApi, WSBodyReadables  {
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Mrinal Rai
+	 * @since 2021-11-20
+	 */
 	@Override
 	public List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		JsonNode jn = getResponse("topic:" + query, ConfigFactory.load().getString("constants.repo_per_page"), 
@@ -28,6 +33,11 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 		return repoList;
 	};
 	
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Mrinal Rai
+	 * @since 2021-11-20
+	 */
 	@Inject WSClient ws;
 	public JsonNode getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_repo_url"))
