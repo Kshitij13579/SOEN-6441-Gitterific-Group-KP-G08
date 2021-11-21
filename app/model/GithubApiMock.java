@@ -32,7 +32,7 @@ import service.RepositorySearchService;
 public class GithubApiMock implements GithubApi {
 	@Inject AsyncCacheApi cache;
 	@Override
-	public List<Repository> getRepositoryInfo(String query, boolean isTopic, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+	public List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		JsonNode json = getResponse("", "", "", "", cache);
 		List<Repository> repoList = new ArrayList<Repository>();
 		RepositorySearchService repoService = new RepositorySearchService();
@@ -146,4 +146,60 @@ public class GithubApiMock implements GithubApi {
 		
 		return titleIssues;
 	}
+	
+	@Override
+	public JsonNode getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
+		
+		String path=System.getProperty("user.dir") +"/test/resources/repositoryprofile.json";
+		java.io.File file = new java.io.File(path);
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode json = null;
+		 
+		try {
+			json = mapper.readTree(file);
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return  json;
+	}
+	
+	@Override
+	public JsonNode getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
+		String path=System.getProperty("user.dir") +"/test/resources/repositoryprofileissues.json";
+		java.io.File file = new java.io.File(path);
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode json = null;
+		 
+		try {
+			json = mapper.readTree(file);
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return  json;
+	}
+	
+	@Override
+	public JsonNode getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
+		String path=System.getProperty("user.dir") +"/test/resources/repositoryprofilecollab.json";
+		java.io.File file = new java.io.File(path);
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode json = null;
+		 
+		try {
+			json = mapper.readTree(file);
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return  json;
+	}
+		
 }

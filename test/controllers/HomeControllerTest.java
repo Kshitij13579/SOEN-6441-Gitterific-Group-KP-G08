@@ -77,8 +77,8 @@ public class HomeControllerTest extends WithApplication {
 		Helpers.start(application);
 
 		hcMock = mock(HomeController.class);
-		List<Repository> repoList = testApi.getRepositoryInfo("play", true, cache);
-		when(hcMock.fetchRepositoryInfo("play", true)).thenReturn(repoList);
+		List<Repository> repoList = testApi.getRepositoryInfo("play", cache);
+		when(hcMock.fetchRepositoryInfo("play")).thenReturn(repoList);
 		when(hcMock.topics("play")).thenCallRealMethod();
 	}
 
@@ -137,7 +137,12 @@ public class HomeControllerTest extends WithApplication {
 		assertTrue(contentAsString(result).contains("play"));
 	}
 	
-    
+    /**
+     * Test method to test the Github APi using MOCK implementation.
+     * @throws InterruptedException
+     * @throws ExecutionException
+     * @throws FileNotFoundException
+     */
     @Test
     public void testCommitPage() throws InterruptedException, ExecutionException, FileNotFoundException  {
       GithubApi testApi = application.injector().instanceOf(GithubApi.class);

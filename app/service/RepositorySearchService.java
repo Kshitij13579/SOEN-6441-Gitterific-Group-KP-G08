@@ -69,8 +69,6 @@ public class RepositorySearchService {
                     .collect(Collectors.toCollection(ArrayList::new));
         	repos.add(new Repository(login,name,issues_url,commits_url, topics));
         });
-
 		return repos;
-		
 	}
 }

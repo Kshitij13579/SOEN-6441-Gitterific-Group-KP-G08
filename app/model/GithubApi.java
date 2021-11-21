@@ -9,10 +9,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import play.cache.AsyncCacheApi;
 
 public interface GithubApi {
-	List<Repository> getRepositoryInfo(String query, boolean isTopic, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
+	List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	
 	public CommitStat getCommitStatistics(String user,String repository, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	JsonNode getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	List<Issues> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
+	JsonNode getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
+	JsonNode getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
+	JsonNode getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	
 }

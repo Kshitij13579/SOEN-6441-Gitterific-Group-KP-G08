@@ -19,7 +19,7 @@ import service.RepositorySearchService;
 
 public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	@Override
-	public List<Repository> getRepositoryInfo(String query, boolean isTopic, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+	public List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		JsonNode jn = getResponse("topic:" + query, ConfigFactory.load().getString("constants.repo_per_page"), 
 				ConfigFactory.load().getString("constants.repo_page"), "updated", cache);
 		List<Repository> repoList = new ArrayList<Repository>();
@@ -43,6 +43,10 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 		return jsonPromise.toCompletableFuture().get();
 	}
 	
+	/**
+	 * This method is used to retrieve 100 commits from github API and store the statistics in CommitStat model.
+	 * @return CommitStat - returns a CommitStat object with statistical information of commits.
+	 */
 	@Override
 	public CommitStat getCommitStatistics(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
@@ -147,4 +151,50 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	   
 	}
 	
+	@Override
+	public JsonNode getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
+		//Repository Profile
+    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository)
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
+	    CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
+	 			new Callable<CompletionStage<JsonNode>>() {
+				public CompletionStage<JsonNode> call() {
+					return request.get().thenApply(r -> r.getBody(json()));
+				};
+	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
+	    return jsonPromise.toCompletableFuture().get();
+	}
+	
+	@Override
+	public JsonNode getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
+		// Repository Issues
+    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository + "/issues?sort=created&direction=desc&per_page=20&page=1")
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
+	    CompletionStage<JsonNode> json_issues = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
+	 			new Callable<CompletionStage<JsonNode>>() {
+				public CompletionStage<JsonNode> call() {
+					return request.get().thenApply(r -> r.getBody(json()));
+				};
+	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
+	    return json_issues.toCompletableFuture().get();
+	}
+	
+	@Override
+	public JsonNode getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
+		
+		//Repository Collabs
+  		WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository + "/collaborators")
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
+	              .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
+  		CompletionStage<JsonNode> json_collab = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
+  	 			new Callable<CompletionStage<JsonNode>>() {
+				public CompletionStage<JsonNode> call() {
+					return request.get().thenApply(r -> r.getBody(json()));
+				};
+	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
+					
+  		return json_collab.toCompletableFuture().get();
+	}
+	
 }
+

@@ -11,19 +11,43 @@ import model.Repository;
 import model.UserProfile;
 import model.UserRepository;
 
+/**
+ * This is the Service Class for User Profile and User Repository which process json repsonse from API
+ * @author Siddhartha
+ * @version 1.0
+ *
+ */
 public class UserService {
-	
+
+	/**
+	 * User Profile Object
+	 */
 	UserProfile userprofile;
-	ConfigFactory config;
 	
+	/**
+	 * Empty User Service Constructor
+	 */
 	public UserService() {
 		this.userprofile = new UserProfile();
 	}
 	
+	/**
+	 * Constructor to initialize to User service
+	 * @param userprofile userprofile object
+	 */
 	public UserService(UserProfile userprofile) {
 		this.userprofile = userprofile;
 	}
-	
+
+    /**
+     * This method process json and returns user details
+     * 
+     * @param json json response from API call
+     * @return user profile object
+     * @throws InterruptedException Exception during runtime
+	 * @throws ExecutionException Exception thrown when attempting to 
+	 * 							  retrieve the result of any task
+     */
     public UserProfile getUser(JsonNode json) throws InterruptedException, ExecutionException {
 		
         	String login = json.get("login").asText();
@@ -40,9 +64,17 @@ public class UserService {
         	return new UserProfile(login, id, node_id, avatar_url, repos_url, email,
         			twitter_username,  followers,  following,  subscriptions_url,
         			 organizations_url);
-        
-	}
-    
+        	}
+   
+    /**
+     * This method process json and returns user details
+     * 
+     * @param json json response from API call
+     * @return list of user repository
+     * @throws InterruptedException Exception during runtime
+	 * @throws ExecutionException Exception thrown when attempting to 
+	 * 							  retrieve the result of any task
+     */
     public List<UserRepository> getUser_repository(JsonNode json) throws InterruptedException, ExecutionException {
 		
     	List<UserRepository> repos= new ArrayList<>();
@@ -53,10 +85,8 @@ public class UserService {
         	String reponame = items.get("issues_url").asText();
         	repos.add(new UserRepository(login,name,reponame));
         });
-
 		return repos;
-    
-}
+     }
 }
 
 
