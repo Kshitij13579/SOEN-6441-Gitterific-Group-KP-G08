@@ -46,9 +46,6 @@ import static play.test.Helpers.running;
 import static play.test.Helpers.contentAsString;
 import static play.inject.Bindings.bind;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
@@ -81,15 +78,18 @@ public class HomeControllerTest extends WithApplication {
 	AsyncCacheApi cache;
 	@BeforeClass
 	public static void startApp() throws InterruptedException, ExecutionException, FileNotFoundException {
+		List<Repository> globalRepoList = new ArrayList<Repository>();  
 		application = new GuiceApplicationBuilder().overrides(bind(GithubApi.class).to(GithubApiMock.class)).build();
 		GithubApi testApi = application.injector().instanceOf(GithubApi.class);
 		
 		Helpers.start(application);
 
 		hcMock = mock(HomeController.class);
+		hcMock.globalRepoList = globalRepoList;
 		List<Repository> repoList = testApi.getRepositoryInfo("play", cache);
 		when(hcMock.fetchRepositoryInfo("play")).thenReturn(repoList);
 		when(hcMock.topics("play")).thenCallRealMethod();
+		when(hcMock.search("play")).thenCallRealMethod();
 	}
 
 	@Override
@@ -167,6 +167,25 @@ public class HomeControllerTest extends WithApplication {
 	@Test
 	public void testTopicsAction() throws InterruptedException, ExecutionException, FileNotFoundException {
 		Result result = hcMock.topics("play");
+		assertEquals(OK, result.status());
+		assertEquals("text/html", result.contentType().get());
+		assertEquals("utf-8", result.charset().get());
+		assertTrue(contentAsString(result).contains("play"));
+	}
+	
+	/**
+	 * Tests the search action in the HomeController class
+	 * Asserts the response status, content-type, character-encoding and the text in the page
+	 * 
+	 * @author Mrinal Rai
+	 * @since 2021-11-20  
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws FileNotFoundException
+	 */
+	@Test
+	public void testSearchAction() throws InterruptedException, ExecutionException, FileNotFoundException {
+		Result result = hcMock.search("play");
 		assertEquals(OK, result.status());
 		assertEquals("text/html", result.contentType().get());
 		assertEquals("utf-8", result.charset().get());

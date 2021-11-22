@@ -38,6 +38,21 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	 * @author Mrinal Rai
 	 * @since 2021-11-20
 	 */
+	@Override
+	public List<Repository> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+		JsonNode jn = getResponse(query, ConfigFactory.load().getString("constants.repo_per_page"), 
+				ConfigFactory.load().getString("constants.repo_page"), "updated", cache);
+		List<Repository> repoList = new ArrayList<Repository>();
+		RepositorySearchService repoService = new RepositorySearchService();
+		repoList = repoService.getRepoList(jn);
+		return repoList;
+	};
+	
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Mrinal Rai
+	 * @since 2021-11-20
+	 */
 	@Inject WSClient ws;
 	public JsonNode getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_repo_url"))
