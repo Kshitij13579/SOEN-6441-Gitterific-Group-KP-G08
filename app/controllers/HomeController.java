@@ -93,9 +93,9 @@ public class HomeController extends Controller implements WSBodyReadables {
     @SuppressWarnings("deprecation")
 	public Result search(String query)  throws InterruptedException, ExecutionException, FileNotFoundException {    	
     	if(globalRepoList.isEmpty()) {
-    		globalRepoList = this.fetchRepositoryInfo(query);
+    		globalRepoList = this.fetchRepositories(query);
     	}else {
-    		globalRepoList.addAll(this.fetchRepositoryInfo(query));
+    		globalRepoList.addAll(this.fetchRepositories(query));
     	}
 		return ok(index.render(globalRepoList, ""));
     }
@@ -231,6 +231,20 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 */
 	public List<Repository> fetchRepositoryInfo(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
 		return this.ghApi.getRepositoryInfo(topic, this.cache);
+	}
+	
+	/**
+	 * Gets the response from Github API for the searched query
+	 * 
+	 * @author Mrinal Rai
+	 * @param topic selected by the user on the main search page 
+	 * @return
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws FileNotFoundException
+	 */
+	public List<Repository> fetchRepositories(String query) throws InterruptedException, ExecutionException, FileNotFoundException {
+		return this.ghApi.getRepositories(query, this.cache);
 	}
 	
 	

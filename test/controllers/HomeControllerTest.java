@@ -88,6 +88,7 @@ public class HomeControllerTest extends WithApplication {
 		hcMock.globalRepoList = globalRepoList;
 		List<Repository> repoList = testApi.getRepositoryInfo("play", cache);
 		when(hcMock.fetchRepositoryInfo("play")).thenReturn(repoList);
+		when(hcMock.fetchRepositories("play")).thenReturn(repoList);
 		when(hcMock.topics("play")).thenCallRealMethod();
 		when(hcMock.search("play")).thenCallRealMethod();
 	}
