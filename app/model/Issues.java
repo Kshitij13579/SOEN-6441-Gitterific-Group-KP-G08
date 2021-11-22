@@ -17,6 +17,7 @@ public class Issues {
 	
 	/**
 	 * Creates Empty Constructor for class
+	 * @author Akshay
 	 */
 	public Issues() {
 		
@@ -24,7 +25,9 @@ public class Issues {
 	
 	/**
 	 * Constructor for initializing title
+	 * @author Akshay
 	 * @param title This is the Repository issue title
+	 * 
 	 */
 	public Issues(String title)
 	{
@@ -33,6 +36,7 @@ public class Issues {
 
 	/**
 	 * Getter for title
+	 * @author Akshay
 	 * @return Title of type String
 	 */
 	public String getTitle() {
@@ -41,6 +45,7 @@ public class Issues {
 
 	/**
 	 * Setter for title
+	 * @author Akshay
 	 * @param title set title value
 	 */
 	public void setTitle(String title) {
