@@ -1,10 +1,14 @@
 package controllers;
 
 import javax.inject.Inject;
-import play.cache.*;
+import play.cache.AsyncCacheApi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
 
+import actors.RepoSearchActor;
+import actors.SupervisorActor;
+import akka.actor.ActorSystem;
+import akka.stream.Materializer;
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 import model.Author;
@@ -33,6 +37,7 @@ import service.RepositoryProfileService;
 import views.html.*;
 import play.data.Form;
 import play.data.FormFactory;
+import play.libs.streams.ActorFlow;
 import play.libs.ws.*;
 
 import java.io.File;
@@ -56,9 +61,13 @@ public class HomeController extends Controller implements WSBodyReadables {
 	@Inject
 	private GithubApi ghApi;
 	
+	@Inject private ActorSystem actorSystem;
+	@Inject private Materializer materializer;
+	
 	@Inject
-	  public HomeController(AsyncCacheApi cache) {
+	  public HomeController(AsyncCacheApi cache,ActorSystem system) {
 	    this.cache = cache;
+	    system.actorOf(SupervisorActor.getProps(),"supervisorActor");
 	  }
 	
     /**
@@ -72,12 +81,21 @@ public class HomeController extends Controller implements WSBodyReadables {
 	WSClient ws;
 	List<Repository> globalRepoList = new ArrayList<Repository>();  
 	
-    public Result index() throws InterruptedException, ExecutionException {
-    	
-    	List<Repository> repoList = new ArrayList<Repository>();
-    	globalRepoList = new ArrayList<Repository>();
-        return ok(index.render(repoList, ""));
-  
+//    public Result index() throws InterruptedException, ExecutionException {
+//    	
+//    	List<Repository> repoList = new ArrayList<Repository>();
+//    	globalRepoList = new ArrayList<Repository>();
+//        return ok(index.render(repoList, ""));
+//  
+//    }
+    
+    public Result index(Http.Request request) throws InterruptedException, ExecutionException {
+
+        return ok(index.render(request));
+    }
+    
+    public WebSocket ws() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepoSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
     
     /**
@@ -92,12 +110,12 @@ public class HomeController extends Controller implements WSBodyReadables {
      */
     @SuppressWarnings("deprecation")
 	public Result search(String query)  throws InterruptedException, ExecutionException, FileNotFoundException {    	
-    	if(globalRepoList.isEmpty()) {
-    		globalRepoList = this.fetchRepositories(query);
-    	}else {
-    		globalRepoList.addAll(this.fetchRepositories(query));
-    	}
-		return ok(index.render(globalRepoList, ""));
+//    	if(globalRepoList.isEmpty()) {
+//    		globalRepoList = this.fetchRepositories(query);
+//    	}else {
+//    		globalRepoList.addAll(this.fetchRepositories(query));
+//    	}
+		return ok(temp.render(globalRepoList, ""));
     }
     
     
@@ -216,7 +234,7 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 */
 	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
 		List<Repository> repoList = this.fetchRepositoryInfo(topic);
-    	return ok(index.render(repoList, topic));
+    	return ok(temp.render(repoList, topic));
 	}
 	
 	/**
