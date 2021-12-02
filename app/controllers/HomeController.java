@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 /**
@@ -201,10 +202,10 @@ public class HomeController extends Controller implements WSBodyReadables {
 	    	RepositoryProfile rp = new RepositoryProfile();
 	    	List<RepositoryProfileIssues> rpi = new ArrayList<>();
 	    	List<RepositoryProfileCollaborators> rpc = new ArrayList<>();
-	    	JsonNode reppprofile = this.ghApi.getRepositoryProfileFromResponse(username, repository, cache);
-	    	JsonNode repoprofileissues = this.ghApi.getRepositoryProfileIssuesFromResponse(username, repository, cache);
+	    	CompletableFuture<Object> reppprofile = this.ghApi.getRepositoryProfileFromResponse(username, repository, cache);
+	    	CompletableFuture<Object> repoprofileissues = this.ghApi.getRepositoryProfileIssuesFromResponse(username, repository, cache);
 	    	
-	    	JsonNode repoprofilecollab = this.ghApi.getRepositoryProfileCollaborationsFromResponse(username, repository, cache);
+	    	CompletableFuture<Object> repoprofilecollab = this.ghApi.getRepositoryProfileCollaborationsFromResponse(username, repository, cache);
 	    	
 	    	rp =  rps.getRepositoryProfile(reppprofile);	
 	  		rpi = rps.getRepositoryProfile_Issue(repoprofileissues);
