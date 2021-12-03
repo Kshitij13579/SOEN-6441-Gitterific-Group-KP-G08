@@ -177,7 +177,7 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	}
 	
 	@Override
-	public JsonNode getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
+	public CompletableFuture<Object> getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
 		//Repository Profile
     	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository)
 	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
@@ -187,11 +187,14 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 					return request.get().thenApply(r -> r.getBody(json()));
 				};
 	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
-	    return jsonPromise.toCompletableFuture().get();
+	   // return jsonPromise.toCompletableFuture().get();
+	    return jsonPromise.toCompletableFuture().thenApply(json -> {
+	    	return json ; 
+	    	});
 	}
 	
 	@Override
-	public JsonNode getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
+	public CompletableFuture<Object> getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
 		// Repository Issues
     	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository + "/issues?sort=created&direction=desc&per_page=20&page=1")
 	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
@@ -201,11 +204,13 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 					return request.get().thenApply(r -> r.getBody(json()));
 				};
 	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
-	    return json_issues.toCompletableFuture().get();
+	    return json_issues.toCompletableFuture().thenApply(json -> {
+	    	return json ; 
+	    	});
 	}
 	
 	@Override
-	public JsonNode getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
+	public CompletableFuture<Object> getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
 		
 		//Repository Collabs
   		WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository + "/collaborators")
@@ -218,7 +223,9 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 				};
 	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
 					
-  		return json_collab.toCompletableFuture().get();
+  		return json_collab.toCompletableFuture().thenApply(json -> {
+	    	return json ; 
+	    	});
 	}
 	
 }
