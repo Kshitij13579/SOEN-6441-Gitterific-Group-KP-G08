@@ -12,10 +12,21 @@ import java.util.concurrent.TimeUnit;
 import com.google.inject.Inject;
 import scala.concurrent.duration.Duration;
 
+/**
+* The Commit Supervisor Actor class is a timer which ticks every 45 seconds
+* and notifies all its clients.
+*
+* @author  Kshitij Yerande
+* @version 1.0
+* @since   2021-12-04 
+*/
 public class CommitSupervisorActor extends AbstractActorWithTimers {
     
 private Set<ActorRef> commitActors;
 	
+    /**
+     * Timer method which ticks every 45 seconds.
+     */
 	@Override
     public void preStart() {
     	// Logger.info("TimeActor {} started", self());
