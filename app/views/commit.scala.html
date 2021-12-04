@@ -1,17 +1,19 @@
-@(commStat: model.CommitStat)
+@(request: play.mvc.Http.Request)
 <html>
+<head>
+    <title>Gitterific - Commit</title>
+    <script type='text/javascript' src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/commit.js")'></script>  
+</head>
 <style>
 table, th, td {
   border:1px solid black;
 }
 </style>
-<body>
-<center><h1>Commit Statistics of @commStat.repository Repository</h1></center>
+<body data-ws-url="@routes.HomeController.wsCommit.webSocketURL(request)">
+<center><h1 id="title"></h1></center>
 <h3>Top 10 Committers</h3>
-<ul>
-@for(comm <- commStat.top_committers){
-  <li><a href="/users/@comm.login">@comm.name</a> Commits:@comm.commits</li>
-}
+<ul id="topCommitters">
 </ul>
 <h3>Addition and Deletion Statistics</h3>
 <table>
@@ -23,15 +25,15 @@ table, th, td {
 	</tr>
 	<tr>
 	    <th>Addition</th>
-	    <td>@commStat.max_additions</td>
-	    <td>@commStat.min_additions</td>
-	    <td>@commStat.avg_additions</td>
+	    <td id="max_add"></td>
+	    <td id="min_add"></td>
+	    <td id="avg_add"></td>
 	</tr>
 	<tr>
 	    <th>Deletion</th>
-	    <td>@commStat.max_deletions</td>
-	    <td>@commStat.min_deletions</td>
-	    <td>@commStat.avg_deletions</td>
+	    <td id="max_del"></td>
+	    <td id="min_del"></td>
+	    <td id="avg_del"></td>
 	</tr>
 </table>
 </body>
