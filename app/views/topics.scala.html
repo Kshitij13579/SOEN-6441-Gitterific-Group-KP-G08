@@ -1,0 +1,29 @@
+@(request: play.mvc.Http.Request, topic: String)
+<!DOCTYPE html>
+
+<html>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+<head>
+    <title>Gitterific</title>
+    <script type='text/javascript' src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/topics.js")'></script>  
+</head>
+<body data-ws-url="@routes.HomeController.wsTopic.webSocketURL(request)">
+    <center><h2>@topic</h2></center>
+    <center>
+    	<table id="repo">
+    		<tr>
+			    <th>User</th>
+			    <th>Repository</th>
+			    <th>Issues</th>
+			    <th>Topics</th>
+			    <th>Commit Statistics</th>
+             </tr>
+    	</table>
+    </center>
+</body>
+</html>
