@@ -7,6 +7,7 @@ import com.typesafe.config.ConfigFactory;
 
 import actors.RepoSearchActor;
 import actors.SupervisorActor;
+import actors.TopicSearchActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import akka.stream.javadsl.Source;
@@ -94,9 +95,34 @@ public class HomeController extends Controller implements WSBodyReadables {
 
         return ok(index.render(request));
     }
+
+	/**
+	 * An action that renders an Topic HTML page with 10 latest repositories for the selected topic.
+     * The configuration in the <code>routes</code> file means that
+     * this method will be called when the application receives a
+     * <code>GET</code> request with a path of <code>/topics/topicName</code>.
+	 * 
+	 * @author Mrinal Rai
+	 * @param request Request sent by the topics page
+	 * @param topic	selected by the user on the main search page
+	 * @return Result showing the 10 latest repositories for the selected topic
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+    public Result topics(Http.Request request, String topic) throws InterruptedException, ExecutionException {
+        return ok(topics.render(request, topic));
+    }
     
     public WebSocket ws() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepoSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
+    }
+    
+    /**
+     * Handles WebSocket for Topics Page
+     * @return WebSocket
+     */
+    public WebSocket wsTopic() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> TopicSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
     
     /**
@@ -233,10 +259,10 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException
 	 * @throws FileNotFoundException
 	 */
-	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
-		List<Repository> repoList = this.fetchRepositoryInfo(topic);
-    	return ok(temp.render(repoList, topic));
-	}
+//	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
+//		List<Repository> repoList = this.fetchRepositoryInfo(topic);
+//    	return ok(temp.render(repoList, topic));
+//	}
 	
 	/**
 	 * Gets the response from Github API for the searched topic

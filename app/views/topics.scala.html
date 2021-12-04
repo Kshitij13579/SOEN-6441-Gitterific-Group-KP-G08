@@ -1,4 +1,4 @@
-@(request: play.mvc.Http.Request)
+@(request: play.mvc.Http.Request, topic: String)
 <!DOCTYPE html>
 
 <html>
@@ -10,16 +10,10 @@ table, th, td {
 <head>
     <title>Gitterific</title>
     <script type='text/javascript' src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
-    <script type='text/javascript' src='@routes.Assets.at("javascripts/index.js")'></script>  
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/topics.js")'></script>  
 </head>
-<body data-ws-url="@routes.HomeController.ws.webSocketURL(request)">
-    <center><h2>Gitterific</h2></center>
-    <center>
-			<form id="addsymbolform">
-			 Search : <input id="addsymboltext" type="text" name="query" required></input>
-			 <input type="submit" value="Go"></input>
-			</form>
-    </center>
+<body data-ws-url="@routes.HomeController.wsTopic.webSocketURL(request)">
+    <center><h2>@topic</h2></center>
     <center>
     	<table id="repo">
     		<tr>
