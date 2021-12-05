@@ -10,7 +10,6 @@ GET     /topics/:topic	                         	controllers.HomeController.topi
 GET     /repository/:username/:repository         	controllers.HomeController.repository_profile(request :Request,username:String,repository:String)
 GET     /search                           			controllers.HomeController.search(query:String)
 GET     /search/:user/:repository/commits 			controllers.HomeController.commits(user:String,repository:String,request :Request)
-GET     /topics/search/:user/:repository/commits 	controllers.HomeController.commits(user:String,repository:String)
 GET     /users/:username                  			controllers.HomeController.user_profile(username:String)
 GET     /users/:username/repos       	    		controllers.HomeController.user_repository(username:String)
 # GET     /topics/:topic       	    				controllers.HomeController.topics(topic: String)
