@@ -1,5 +1,7 @@
 $ ->
   ws = new WebSocket $("body").data("ws-url")
+  ws.onopen = (event) ->
+  	ws.send(JSON.stringify({keyword: window.location.pathname.split("/").pop()}))
   ws.onmessage = (event) ->
     repo = JSON.parse event.data
     row=$('<tr/>')
@@ -12,10 +14,3 @@ $ ->
     row.append topicContainer
     row.append $('<td/>').append $('<a href="/search/'+repo.login+'/'+repo.name+'/commits">'+'click here'+'</a>')
     $('#repo').append row
-    
-  $("#addsymbolform").submit (event) ->
-    event.preventDefault()
-    # send the message to watch the stock
-    ws.send(JSON.stringify({keyword: $("#addsymboltext").val()}))
-    # reset the form
-    $("#addsymboltext").val("")

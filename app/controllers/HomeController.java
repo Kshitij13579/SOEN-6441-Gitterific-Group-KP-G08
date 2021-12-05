@@ -5,8 +5,11 @@ import play.cache.AsyncCacheApi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
 
+import actors.CommitSupervisorActor;
+import actors.CommitStatActor;
 import actors.RepoSearchActor;
 import actors.SupervisorActor;
+import actors.TopicSearchActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import akka.stream.javadsl.Source;
@@ -50,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 /**
@@ -68,6 +72,7 @@ public class HomeController extends Controller implements WSBodyReadables {
 	  public HomeController(AsyncCacheApi cache,ActorSystem system) {
 	    this.cache = cache;
 	    system.actorOf(SupervisorActor.getProps(),"supervisorActor");
+	    system.actorOf(CommitSupervisorActor.getProps(),"commitSupervisorActor");
 	  }
 	
     /**
@@ -93,9 +98,34 @@ public class HomeController extends Controller implements WSBodyReadables {
 
         return ok(index.render(request));
     }
+
+	/**
+	 * An action that renders an Topic HTML page with 10 latest repositories for the selected topic.
+     * The configuration in the <code>routes</code> file means that
+     * this method will be called when the application receives a
+     * <code>GET</code> request with a path of <code>/topics/topicName</code>.
+	 * 
+	 * @author Mrinal Rai
+	 * @param request Request sent by the topics page
+	 * @param topic	selected by the user on the main search page
+	 * @return Result showing the 10 latest repositories for the selected topic
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+    public Result topics(Http.Request request, String topic) throws InterruptedException, ExecutionException {
+        return ok(topics.render(request, topic));
+    }
     
     public WebSocket ws() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepoSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
+    }
+    
+    /**
+     * Handles WebSocket for Topics Page
+     * @return WebSocket
+     */
+    public WebSocket wsTopic() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> TopicSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
     
     /**
@@ -129,11 +159,13 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
 	 * 							  retrieve the result of any task
 	 */
-    public Result commits(String user, String repository) throws InterruptedException, ExecutionException {
-    	
-    	CommitStat commitStat = this.ghApi.getCommitStatistics(user, repository, cache);
-    	return ok(commit.render(commitStat));
-   }
+	public Result commits(String user,String repository,Http.Request request) throws InterruptedException, ExecutionException {
+    	return ok(commit.render(request));
+    }
+    
+    public WebSocket wsCommit() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> CommitStatActor.props(ws, cache,ghApi), actorSystem, materializer));
+    }
 
 	/**
 	 * This method retrieves user profile by taking user name as an input
@@ -201,10 +233,10 @@ public class HomeController extends Controller implements WSBodyReadables {
 	    	RepositoryProfile rp = new RepositoryProfile();
 	    	List<RepositoryProfileIssues> rpi = new ArrayList<>();
 	    	List<RepositoryProfileCollaborators> rpc = new ArrayList<>();
-	    	JsonNode reppprofile = this.ghApi.getRepositoryProfileFromResponse(username, repository, cache);
-	    	JsonNode repoprofileissues = this.ghApi.getRepositoryProfileIssuesFromResponse(username, repository, cache);
+	    	CompletableFuture<Object> reppprofile = this.ghApi.getRepositoryProfileFromResponse(username, repository, cache);
+	    	CompletableFuture<Object> repoprofileissues = this.ghApi.getRepositoryProfileIssuesFromResponse(username, repository, cache);
 	    	
-	    	JsonNode repoprofilecollab = this.ghApi.getRepositoryProfileCollaborationsFromResponse(username, repository, cache);
+	    	CompletableFuture<Object> repoprofilecollab = this.ghApi.getRepositoryProfileCollaborationsFromResponse(username, repository, cache);
 	    	
 	    	rp =  rps.getRepositoryProfile(reppprofile);	
 	  		rpi = rps.getRepositoryProfile_Issue(repoprofileissues);
@@ -232,10 +264,10 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException
 	 * @throws FileNotFoundException
 	 */
-	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
-		List<Repository> repoList = this.fetchRepositoryInfo(topic);
-    	return ok(temp.render(repoList, topic));
-	}
+//	public Result topics(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
+//		List<Repository> repoList = this.fetchRepositoryInfo(topic);
+//    	return ok(temp.render(repoList, topic));
+//	}
 	
 	/**
 	 * Gets the response from Github API for the searched topic
