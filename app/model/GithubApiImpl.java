@@ -61,10 +61,11 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 				.addQueryParameter(GIT_PARAM.PER_PAGE.value, per_page)
 				.addQueryParameter(GIT_PARAM.PAGE.value, page)
 				.addQueryParameter(GIT_PARAM.SORT.value, sort);
-		CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(
-				request.getUrl() + GIT_PARAM.QUERY.value + query + GIT_PARAM.PER_PAGE.value 
-				+ per_page + GIT_PARAM.PAGE.value + page + GIT_PARAM.SORT.value + sort, () -> request.get().thenApply(r -> r.getBody(json()))
-				, Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")));
+//		CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(
+//				request.getUrl() + GIT_PARAM.QUERY.value + query + GIT_PARAM.PER_PAGE.value 
+//				+ per_page + GIT_PARAM.PAGE.value + page + GIT_PARAM.SORT.value + sort, () -> request.get().thenApply(r -> r.getBody(json()))
+//				, Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")));
+		CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
 		return jsonPromise.toCompletableFuture().get();
 	}
 	

@@ -68,30 +68,32 @@ public class RepoSearchActor extends AbstractActor {
 	
 	 private void send(Data d) throws Exception {
 		 Logger.debug("New Repo Search Actor Query {}",this.query);
-		 List<Repository> repoList = ghApi.getRepositories(query, cache);
-		 
-		 if(userSearchHist.containsKey(this.query)) {
-			 Logger.debug("Subsequent Query:{}",this.query);
-			 repoList = getDifference(repoList);
-		 }else {
-			 Logger.debug("First Query:{}",this.query);
-			 userSearchHist.put(this.query,repoList);
-		 }
-		 
-		 if(!repoList.isEmpty()) {
-		     repoList.forEach(r -> {
-		    	 
-		    	 ObjectNode response = Json.newObject();
-		         response.put("name", r.name);
-		         response.put("login", r.login);
-		         ArrayNode arrayNode = response.putArray("topics");
-		         for (String item : r.topics) {
-		             arrayNode.add(item);
-		         }
-		         Logger.debug("New Repo Search Actor Response {}",response);
-		    	 ws.tell(response, self());
-		    	 
-		     });
+		 if (this.query != null && this.query != "") {
+			 List<Repository> repoList = ghApi.getRepositories(query, cache);
+			 
+			 if(userSearchHist.containsKey(this.query)) {
+				 Logger.debug("Subsequent Query:{}",this.query);
+				 repoList = getDifference(repoList);
+			 }else {
+				 Logger.debug("First Query:{}",this.query);
+				 userSearchHist.put(this.query,repoList);
+			 }
+			 
+			 if(!repoList.isEmpty()) {
+			     repoList.forEach(r -> {
+			    	 
+			    	 ObjectNode response = Json.newObject();
+			         response.put("name", r.name);
+			         response.put("login", r.login);
+			         ArrayNode arrayNode = response.putArray("topics");
+			         for (String item : r.topics) {
+			             arrayNode.add(item);
+			         }
+			         Logger.debug("New Repo Search Actor Response {}",response);
+			    	 ws.tell(response, self());
+			    	 
+			     });
+			 }			 
 		 }
 	 }
 	 
