@@ -17,6 +17,7 @@ GET     /users/:username/repos       	    		controllers.HomeController.user_repo
 # GET     /repository/:username/:repository         	controllers.HomeController.repository_profile(username:String,repository:String)
 GET     /search/:user/:repository/issues 			controllers.HomeController.issues(user:String,repository:String)
 GET     /ws                                         controllers.HomeController.ws
+GET     /wsCommit                                   controllers.HomeController.wsCommit
 GET     /wsTopic                                    controllers.HomeController.wsTopic
 GET     /wsRepositoryProfile                        controllers.HomeController.wsRepositoryProfile
 GET     /assets/*file				                controllers.Assets.at(path="/public", file) 
