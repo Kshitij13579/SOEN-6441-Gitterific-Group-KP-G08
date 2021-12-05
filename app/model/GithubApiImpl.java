@@ -85,14 +85,8 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.commits_page"))
 	              .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
 
-    	CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(user+"-"+repository+"-list", 
-    			new Callable<CompletionStage<JsonNode>>() {
-    				public CompletionStage<JsonNode> call() {
-    					return request.get().thenApply(r -> r.getBody(json()));
-    				};
-    	}, 3600);
-    	
-    	
+    	CompletionStage<JsonNode> jsonPromise =  request.get().thenApply(r -> r.getBody(json()));
+
     	CompletableFuture<List<String>> shaList = jsonPromise.toCompletableFuture().thenApply(r -> commStatService.getShaList(r));
     	
     	shaList.get().forEach(sha -> {
@@ -100,12 +94,7 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
   	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
     		      .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
 
-    		CompletionStage<JsonNode> jsonCommit = cache.getOrElseUpdate(sha, 
-        			new Callable<CompletionStage<JsonNode>>() {
-        				public CompletionStage<JsonNode> call() {
-        					return r.get().thenApply(r -> r.getBody(json()));
-        				};
-        	}, 3600);
+    		CompletionStage<JsonNode> jsonCommit =  r.get().thenApply(r1 -> r1.getBody(json()));        				
     		
     	    try {
     	    	

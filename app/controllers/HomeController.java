@@ -5,6 +5,8 @@ import play.cache.AsyncCacheApi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
 
+import actors.CommitSupervisorActor;
+import actors.CommitStatActor;
 import actors.RepoSearchActor;
 import actors.SupervisorActor;
 import actors.TopicSearchActor;
@@ -70,6 +72,7 @@ public class HomeController extends Controller implements WSBodyReadables {
 	  public HomeController(AsyncCacheApi cache,ActorSystem system) {
 	    this.cache = cache;
 	    system.actorOf(SupervisorActor.getProps(),"supervisorActor");
+	    system.actorOf(CommitSupervisorActor.getProps(),"commitSupervisorActor");
 	  }
 	
     /**
@@ -156,11 +159,13 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
 	 * 							  retrieve the result of any task
 	 */
-    public Result commits(String user, String repository) throws InterruptedException, ExecutionException {
-    	
-    	CommitStat commitStat = this.ghApi.getCommitStatistics(user, repository, cache);
-    	return ok(commit.render(commitStat));
-   }
+	public Result commits(String user,String repository,Http.Request request) throws InterruptedException, ExecutionException {
+    	return ok(commit.render(request));
+    }
+    
+    public WebSocket wsCommit() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> CommitStatActor.props(ws, cache,ghApi), actorSystem, materializer));
+    }
 
 	/**
 	 * This method retrieves user profile by taking user name as an input
