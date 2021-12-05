@@ -36,19 +36,19 @@ public class RepositoryProfileService {
 	
 	/**
 	 * Method to covert JSON object from GIT API Call from Controller.repository_profile and initialize RepositoryProfile object.
-	 * @param reppprofile
+	 * @param repoprofile
 	 * @return RepositoryProfile object
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public RepositoryProfile getRepositoryProfile(CompletableFuture<Object> reppprofile)  throws InterruptedException, ExecutionException {
-		String login = ((JsonNode) reppprofile.get()).get("owner").get("login").asText();
-		String id = ((JsonNode) reppprofile.get()).get("name").asText();
-		String node_id = ((JsonNode) reppprofile.get()).get("owner").get("node_id").asText();
-		String avatar_url = ((JsonNode) reppprofile.get()).get("owner").get("avatar_url").asText();
-		String collaborators_url = ((JsonNode) reppprofile.get()).get("collaborators_url").asText();
-		String issues_url = ((JsonNode) reppprofile.get()).get("issues_url").asText();
-		String open_issues = ((JsonNode) reppprofile.get()).get("open_issues_count").asText();
+	public RepositoryProfile getRepositoryProfile(CompletableFuture<Object> repoprofile)  throws InterruptedException, ExecutionException {
+		String login = ((JsonNode) repoprofile.get()).get("owner").get("login").asText();
+		String id = ((JsonNode) repoprofile.get()).get("name").asText();
+		String node_id = ((JsonNode) repoprofile.get()).get("owner").get("node_id").asText();
+		String avatar_url = ((JsonNode) repoprofile.get()).get("owner").get("avatar_url").asText();
+		String collaborators_url = ((JsonNode) repoprofile.get()).get("collaborators_url").asText();
+		String issues_url = ((JsonNode) repoprofile.get()).get("issues_url").asText();
+		String open_issues = ((JsonNode) repoprofile.get()).get("open_issues_count").asText();
 		return new RepositoryProfile(login,id,node_id,avatar_url,collaborators_url,issues_url,open_issues);
 	}
 	
