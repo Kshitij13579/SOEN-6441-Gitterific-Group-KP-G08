@@ -26,7 +26,7 @@ public class SupervisorActor extends AbstractActorWithTimers {
         getTimers().startPeriodicTimer("Timer", new Tick(), Duration.create(10, TimeUnit.SECONDS));
     }
 	
-	private static final class Tick {
+	public static final class Tick {
     }
     
     static public class RegisterMsg {
