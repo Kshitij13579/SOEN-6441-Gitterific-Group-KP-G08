@@ -14,8 +14,11 @@ import com.typesafe.config.ConfigFactory;
 
 import play.cache.AsyncCacheApi;
 import play.libs.ws.*;
+import play.mvc.Result;
 import service.CommitStatService;
 import service.RepositorySearchService;
+import service.UserService;
+import views.html.repositories;
 
 public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	/**
@@ -220,6 +223,31 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 					
   		return json_collab.toCompletableFuture().get();
 	}
+	
+	@Override
+	public UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException {
+		
+		    UserService repoService = new UserService();
+	    	UserProfile repoList = new UserProfile();
+	    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username)
+		              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
+		   
+	    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+	    	repoList = repoService.getUser(jsonPromise.toCompletableFuture().get());
+	    	return repoList;
+	}
+	
+	public List<UserRepository> getuser_repository(String username) throws InterruptedException, ExecutionException {
+	    	UserService repoService = new UserService();
+	    	List<UserRepository> repoList = new ArrayList<>();
+	    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username+"/repos")
+		              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
+		              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("constants.repo_per_page_repo"))
+		              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.repo_page"));
+	    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+	    	repoList = repoService.getUser_repository(jsonPromise.toCompletableFuture().get());
+	    	return repoList;
+	    }
 	
 }
 

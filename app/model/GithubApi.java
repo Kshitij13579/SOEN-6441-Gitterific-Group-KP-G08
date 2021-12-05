@@ -62,4 +62,7 @@ public interface GithubApi {
 	JsonNode getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	JsonNode getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	
+	UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException ;
+	List<UserRepository> getuser_repository(String username) throws InterruptedException, ExecutionException;
+	
 }
