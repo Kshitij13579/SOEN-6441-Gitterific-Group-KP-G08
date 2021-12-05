@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
 
 import actors.RepoSearchActor;
+import actors.RepositoryProfileActor;
 import actors.SupervisorActor;
 import actors.TopicSearchActor;
 import akka.actor.ActorSystem;
@@ -113,6 +114,10 @@ public class HomeController extends Controller implements WSBodyReadables {
         return ok(topics.render(request, topic));
     }
     
+    public Result repository_profile(Http.Request request, String username, String repository) throws InterruptedException, ExecutionException {
+        return ok(repositoryprofile.render(request, username, repository));
+    }
+    
     public WebSocket ws() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepoSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
@@ -123,6 +128,10 @@ public class HomeController extends Controller implements WSBodyReadables {
      */
     public WebSocket wsTopic() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> TopicSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
+    }
+    
+    public WebSocket wsRepositoryProfile() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepositoryProfileActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
     
     /**
@@ -222,7 +231,8 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
+	/*
+    public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
 		 
 		    RepositoryProfileService rps = new RepositoryProfileService();
 	    	RepositoryProfile rp = new RepositoryProfile();
@@ -245,6 +255,7 @@ public class HomeController extends Controller implements WSBodyReadables {
   		return ok(repositoryprofile.render(rp,rpi,rpc));
     	
     }	
+    */
 	 
 	/**
 	 * An action that renders an Topic HTML page with 10 latest repositories for the selected topic.
