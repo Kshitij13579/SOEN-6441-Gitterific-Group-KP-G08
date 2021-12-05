@@ -56,7 +56,7 @@ public class UserProfileSearchActor extends AbstractActor {
 	
 	 private void send(Data d) throws Exception {
 		 //Logger.debug("New User Search Actor Query {}",this.query);
-		 UserProfile userList = ghApi.getUserProfile("siddharthajha07");
+		 UserProfile userList = ghApi.getUserProfile(username);
 	    	 ObjectNode response = Json.newObject();
 	         response.put("name", userList.login);
 	         response.put("id", userList.id);

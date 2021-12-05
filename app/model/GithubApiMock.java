@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 
@@ -172,59 +173,68 @@ public class GithubApiMock implements GithubApi {
 		return titleIssues;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public JsonNode getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
+	public CompletableFuture<Object> getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
 		
 		String path=System.getProperty("user.dir") +"/test/resources/repositoryprofile.json";
 		java.io.File file = new java.io.File(path);
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode json = null;
+		 CompletionStage<JsonNode> json = null;
 		 
 		try {
-			json = mapper.readTree(file);
+			json = (CompletionStage<JsonNode>) mapper.readTree(file);
 		} 
 		 catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return  json;
+	    return json.toCompletableFuture().thenApply(j -> {
+	    	return j ; 
+	    	});
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public JsonNode getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
+	public CompletableFuture<Object> getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
 		String path=System.getProperty("user.dir") +"/test/resources/repositoryprofileissues.json";
 		java.io.File file = new java.io.File(path);
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode json = null;
+		CompletionStage<JsonNode> json = null;
 		 
 		try {
-			json = mapper.readTree(file);
+			json = (CompletionStage<JsonNode>) mapper.readTree(file);
 		} 
 		 catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return  json;
+		return json.toCompletableFuture().thenApply(j -> {
+	    	return j ; 
+	    	});
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public JsonNode getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
+	public CompletableFuture<Object> getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
 		String path=System.getProperty("user.dir") +"/test/resources/repositoryprofilecollab.json";
 		java.io.File file = new java.io.File(path);
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode json = null;
+		CompletionStage<JsonNode> json = null;
 		 
 		try {
-			json = mapper.readTree(file);
+			json = (CompletionStage<JsonNode>) mapper.readTree(file);
 		} 
 		 catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return  json;
+		return json.toCompletableFuture().thenApply(j -> {
+	    	return j ; 
+	    	});
 	}
 	
 	public UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException 
