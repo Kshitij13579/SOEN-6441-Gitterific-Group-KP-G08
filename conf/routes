@@ -18,7 +18,6 @@ GET     /search/:user/:repository/issues 			controllers.HomeController.issues(us
 GET     /ws                                         controllers.HomeController.ws
 GET     /wsCommit                                   controllers.HomeController.wsCommit
 GET     /wsTopic                                    controllers.HomeController.wsTopic
-GET     /wsRepositoryProfile                        controllers.HomeController.wsRepositoryProfile
 GET     /assets/*file				                controllers.Assets.at(path="/public", file) 
 
 # Map static resources from the /public folder to the /assets URL path
