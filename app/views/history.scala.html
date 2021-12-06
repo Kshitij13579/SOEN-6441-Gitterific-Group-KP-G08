@@ -1,0 +1,54 @@
+@(request: play.mvc.Http.Request, issues: List[model.Issues], list1:List[String], list2:List[Long], repository:String)
+
+<!DOCTYPE html>
+<html lang="en">
+<style>
+table, th, td {
+  border:3px solid black;
+}
+</style>
+<center><h2 class="center">@repository Issues</h2></center>
+
+<head>
+    <title>Repository Issues</title>
+    <script type='text/javascript' src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/issues.js")'></script>  
+</head>
+
+<body data-ws-url="@routes.HomeController.wsIssue.webSocketURL(request)"> 
+    
+    <ul>
+    @for(issue<- issues){
+    <li >@issue.title</li>
+    }
+    </ul>
+      
+    
+    <h3>Issue Title Word Statistics</h3>
+    
+	<div style="display: flex; border: 1px solid black; width: fit-content">
+			    		<div style="display: flex; flex-direction: column">
+			    		@for(word <- list1) {
+			    			<div style="border: 1px solid black; margin: 2px 1px 1px 2px; padding: 5px">
+						        	<a >
+						        		@word
+						        	</a>
+						    </div>
+			    		}
+			    		</div>
+			    		<div style="display: flex; flex-direction: column">
+			    		@for(count <- list2) {
+			    			<div style="border: 1px solid black; margin: 2px 2px 1px 2px; padding: 5px">
+						        	<a>
+						        		@count
+						        	</a>
+			    				</div>
+			    		}
+			    	</div>
+			    	</div>
+    
+    
+</body>
+
+</html>
+

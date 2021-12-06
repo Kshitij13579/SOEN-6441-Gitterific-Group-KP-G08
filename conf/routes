@@ -14,9 +14,10 @@ GET     /users/:username                  			controllers.HomeController.user_pro
 GET     /users/:username/repos       	    		controllers.HomeController.user_repository(username:String)
 # GET     /topics/:topic       	    				controllers.HomeController.topics(topic: String)
 GET     /repository/:username/:repository         	controllers.HomeController.repository_profile(username:String,repository:String)
-GET     /search/:user/:repository/issues 			controllers.HomeController.issues(user:String,repository:String)
+GET     /search/:user/:repository/issues 			controllers.HomeController.issues(request:Request, user:String,repository:String)
 GET     /ws                                         controllers.HomeController.ws
 GET     /wsTopic                                         controllers.HomeController.wsTopic
+GET		/wsIssue									controllers.HomeController.wsIssue
 GET     /assets/*file				                controllers.Assets.at(path="/public", file) 
 
 # Map static resources from the /public folder to the /assets URL path
