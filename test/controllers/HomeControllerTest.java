@@ -202,7 +202,7 @@ public class HomeControllerTest extends WithApplication {
     @Test
     public void testCommitPage() throws InterruptedException, ExecutionException, FileNotFoundException  {
       GithubApi testApi = application.injector().instanceOf(GithubApi.class);
-      CommitStat commStat = testApi.getCommitStatistics("test", "repo", cache);
+      CommitStat commStat = testApi.getCommitStatistics("test", "repo", cache).get();
 //      Result result = play.mvc.Results.ok(commit.render(request));
 //      assertEquals(OK, result.status());
 //      assertEquals("text/html", result.contentType().get());

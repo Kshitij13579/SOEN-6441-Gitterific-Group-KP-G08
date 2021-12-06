@@ -43,7 +43,7 @@ public interface GithubApi {
 	 */
 	List<Repository> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	
-	public CommitStat getCommitStatistics(String user,String repository, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
+	public CompletableFuture<CommitStat> getCommitStatistics(String user,String repository, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	/**
 	 * Gets the http-response from the Github repository topic's end point 
 	 * 
