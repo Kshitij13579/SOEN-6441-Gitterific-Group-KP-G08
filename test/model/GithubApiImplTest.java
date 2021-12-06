@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
@@ -59,16 +60,18 @@ public class GithubApiImplTest {
 		String testResources = System.getProperty("user.dir") + "/test/resources/play.json";
 		java.io.File file = new java.io.File(testResources);
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode json = null;
-		try {
-			json = mapper.readTree(file);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		CompletableFuture<Object> json = CompletableFuture.supplyAsync(() -> {
+			try {
+				return mapper.readTree(file);
+			} catch (JsonProcessingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			return mapper;
+		});	
 		try {
 			when(ghaMock.getResponse("topic:play", "10","1", "updated", cache)).thenReturn(json);
 			when(ghaMock.getResponse("play", "10","1", "updated", cache)).thenReturn(json);
@@ -97,7 +100,7 @@ public class GithubApiImplTest {
 	 */
 	@Test
 	public void testGetRepositoryInfo() throws InterruptedException, ExecutionException {
-		List<Repository> actualRepoList = ghaMock.getRepositoryInfo("play", cache);
+		List<Repository> actualRepoList = ghaMock.getRepositoryInfo("play", cache).toCompletableFuture().get();
 		org.junit.Assert.assertTrue(actualRepoList.size()>0);
 		org.junit.Assert.assertTrue(actualRepoList.get(0).getClass().getName() == "model.Repository");
 	}
@@ -114,7 +117,7 @@ public class GithubApiImplTest {
 	 */
 	@Test
 	public void testGetRepositories() throws InterruptedException, ExecutionException {
-		List<Repository> actualRepoList = ghaMock.getRepositories("play", cache);
+		List<Repository> actualRepoList = ghaMock.getRepositories("play", cache).toCompletableFuture().get();
 		org.junit.Assert.assertTrue(actualRepoList.size()>0);
 		org.junit.Assert.assertTrue(actualRepoList.get(0).getClass().getName() == "model.Repository");
 	}

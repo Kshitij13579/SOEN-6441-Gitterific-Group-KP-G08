@@ -3,6 +3,8 @@ package service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -55,20 +57,22 @@ public class RepositorySearchService {
 	 * @throws ExecutionException Exception thrown when attempting to 
 	 * 							  retrieve the result of any task
      */
-    public List<Repository> getRepoList(JsonNode json) throws InterruptedException, ExecutionException {
+    public CompletionStage<List<Repository>> getRepoList(CompletableFuture<Object> json) throws InterruptedException, ExecutionException {
 		
 		List<Repository> repos= new ArrayList<Repository>();
-		
-        json.get("items").forEach(items ->{
-        	String login = items.get("owner").get("login").asText();
-        	String name = items.get("name").asText();
-        	String issues_url = items.get("issues_url").asText();
-        	String commits_url = items.get("commits_url").asText();
-        	ArrayList<String> topics = StreamSupport.stream(items.get("topics").spliterator(), true)
-                    .map( num -> num.asText())
-                    .collect(Collectors.toCollection(ArrayList::new));
-        	repos.add(new Repository(login,name,issues_url,commits_url, topics));
-        });
-		return repos;
+		CompletionStage<List<Repository>> jsonPromise = json.thenApply(response -> {
+			((JsonNode) response).get("items").forEach(items ->{
+	        	String login = items.get("owner").get("login").asText();
+	        	String name = items.get("name").asText();
+	        	String issues_url = items.get("issues_url").asText();
+	        	String commits_url = items.get("commits_url").asText();
+	        	ArrayList<String> topics = StreamSupport.stream(items.get("topics").spliterator(), true)
+	                    .map( num -> num.asText())
+	                    .collect(Collectors.toCollection(ArrayList::new));
+	        	repos.add(new Repository(login,name,issues_url,commits_url, topics));
+	        });
+			return repos;
+		});
+		return jsonPromise;
 	}
 }

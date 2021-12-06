@@ -24,10 +24,10 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	 * @since 2021-11-20
 	 */
 	@Override
-	public List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
-		JsonNode jn = getResponse("topic:" + query, ConfigFactory.load().getString("constants.repo_per_page"), 
+	public CompletionStage<List<Repository>> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+		 CompletableFuture<Object> jn = getResponse("topic:" + query, ConfigFactory.load().getString("constants.repo_per_page"), 
 				ConfigFactory.load().getString("constants.repo_page"), "updated", cache);
-		List<Repository> repoList = new ArrayList<Repository>();
+		 CompletionStage<List<Repository>> repoList;
 		RepositorySearchService repoService = new RepositorySearchService();
 		repoList = repoService.getRepoList(jn);
 		return repoList;
@@ -39,10 +39,10 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	 * @since 2021-11-20
 	 */
 	@Override
-	public List<Repository> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
-		JsonNode jn = getResponse(query, ConfigFactory.load().getString("constants.repo_per_page"), 
+	public CompletionStage<List<Repository>> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+		 CompletableFuture<Object> jn = getResponse(query, ConfigFactory.load().getString("constants.repo_per_page"), 
 				ConfigFactory.load().getString("constants.repo_page"), "updated", cache);
-		List<Repository> repoList = new ArrayList<Repository>();
+		 CompletionStage<List<Repository>> repoList;
 		RepositorySearchService repoService = new RepositorySearchService();
 		repoList = repoService.getRepoList(jn);
 		return repoList;
@@ -54,7 +54,7 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	 * @since 2021-11-20
 	 */
 	@Inject WSClient ws;
-	public JsonNode getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+	public CompletableFuture<Object> getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_repo_url"))
 				.addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
 				.addQueryParameter(GIT_PARAM.QUERY.value, query)
@@ -62,11 +62,15 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 				.addQueryParameter(GIT_PARAM.PAGE.value, page)
 				.addQueryParameter(GIT_PARAM.SORT.value, sort)
 				.setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
-		CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(
-				request.getUrl() + GIT_PARAM.QUERY.value + query + GIT_PARAM.PER_PAGE.value 
-				+ per_page + GIT_PARAM.PAGE.value + page + GIT_PARAM.SORT.value + sort, () -> request.get().thenApply(r -> r.getBody(json()))
-				, Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")));
-		return jsonPromise.toCompletableFuture().get();
+
+//		CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(
+//				request.getUrl() + GIT_PARAM.QUERY.value + query + GIT_PARAM.PER_PAGE.value 
+//				+ per_page + GIT_PARAM.PAGE.value + page + GIT_PARAM.SORT.value + sort, () -> request.get().thenApply(r -> r.getBody(json()))
+//				, Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")));
+		CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+		return jsonPromise.toCompletableFuture().thenApply(json -> {
+	    	return json ; 
+	    	});
 	}
 	
 	/**
