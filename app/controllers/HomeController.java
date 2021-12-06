@@ -8,9 +8,11 @@ import play.cache.AsyncCacheApi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
 
+import actors.IssueServiceActor;
 import actors.CommitSupervisorActor;
 import actors.CommitStatActor;
 import actors.RepoSearchActor;
+import actors.RepositoryProfileActor;
 import actors.SupervisorActor;
 import actors.UserProfileSearchActor;
 import actors.UserRepositoryActor;
@@ -121,6 +123,10 @@ public class HomeController extends Controller implements WSBodyReadables {
         return ok(topics.render(request, topic));
     }
     
+    public Result repository_profile(Http.Request request, String username, String repository) throws InterruptedException, ExecutionException {
+        return ok(repositoryprofile.render(request, username, repository));
+    }
+    
     public WebSocket ws() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepoSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
@@ -133,7 +139,10 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> TopicSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
     
-    /**
+    public WebSocket wsRepositoryProfile() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepositoryProfileActor.props(ws, cache,ghApi), actorSystem, materializer));
+    
+    }/**
      * This method retrieves repositories by taking query as an input
 	 * An API call is made and response is then processed.
      * @author Kshitij Yerande
@@ -235,7 +244,8 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
+	/*
+    public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
 		 
 		    RepositoryProfileService rps = new RepositoryProfileService();
 	    	RepositoryProfile rp = new RepositoryProfile();
@@ -257,6 +267,7 @@ public class HomeController extends Controller implements WSBodyReadables {
 	        } 
   		return ok(repositoryprofile.render(rp,rpi,rpc));
     }	
+    */
 	 
 	/**
 	 * An action that renders an Topic HTML page with 10 latest repositories for the selected topic.
@@ -286,9 +297,9 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException
 	 * @throws FileNotFoundException
 	 */
-	public List<Repository> fetchRepositoryInfo(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
-		return this.ghApi.getRepositoryInfo(topic, this.cache);
-	}
+//	public List<Repository> fetchRepositoryInfo(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
+//		return this.ghApi.getRepositoryInfo(topic, this.cache);
+//	}
 	
 	/**
 	 * Gets the response from Github API for the searched query
@@ -300,9 +311,9 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException
 	 * @throws FileNotFoundException
 	 */
-	public List<Repository> fetchRepositories(String query) throws InterruptedException, ExecutionException, FileNotFoundException {
-		return this.ghApi.getRepositories(query, this.cache);
-	}
+//	public List<Repository> fetchRepositories(String query) throws InterruptedException, ExecutionException, FileNotFoundException {
+//		return this.ghApi.getRepositories(query, this.cache);
+//	}
 	
 	
 	/**
@@ -317,14 +328,17 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @author Akshay
 	 * 
 	 */
-	public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
+	public Result issues(Http.Request request, String user, String repository) throws InterruptedException, ExecutionException{
 
-	  
-	  List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);	  
-	  IssueStatService issueStatService=new IssueStatService();
-	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);	  	  
-	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));
+	return ok(issues.render(request,user,repository));
+	
+//	List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);	  
+//	  IssueStatService issueStatService=new IssueStatService();
+//	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);	  	  
+//	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));
 	  
 	  }
-	 
+	  public WebSocket wsIssue() {
+	    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> IssueServiceActor.props(ws, cache,ghApi), actorSystem, materializer));
+	    }	 
 }

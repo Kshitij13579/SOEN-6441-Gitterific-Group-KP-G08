@@ -30,10 +30,10 @@ private Set<ActorRef> commitActors;
 	@Override
     public void preStart() {
     	// Logger.info("TimeActor {} started", self());
-        getTimers().startPeriodicTimer("Timer", new Tick(), Duration.create(45, TimeUnit.SECONDS));
+        getTimers().startPeriodicTimer("Timer", new Tick(), Duration.create(60, TimeUnit.SECONDS));
     }
 	
-	private static final class Tick {
+	public static final class Tick {
     }
     
     static public class RegisterMsg {
@@ -67,6 +67,7 @@ private Set<ActorRef> commitActors;
     			.match(DeRegister.class, msg -> commitActors.remove(sender()))
     		    .build();
 	}
+	
 	
 	 private void notifyClients() throws Exception {
 		 commitActors.forEach(ar -> ar.tell(new Data(), self()));

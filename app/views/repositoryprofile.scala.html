@@ -1,65 +1,38 @@
-@(rp:  model.RepositoryProfile,list: List[model.RepositoryProfileIssues], listcollab :  List[model.RepositoryProfileCollaborators] )
+@(request: play.mvc.Http.Request, username: String, repository: String)
+<!DOCTYPE html>
+
 <html>
-<head>
-<title>Repository Profile Information Details</title>
 <style>
-.section {
-            width: 100vw;
-            height: 40vh;
-        }
 table, th, td {
   border:1px solid black;
 }
-</style></head>
-<body>
+</style>
+<head>
+    <title>Gitterific</title>
+    <script type='text/javascript' src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/repositoryprofile.js")'></script>  
+</head>
+<body data-ws-url="@routes.HomeController.wsRepositoryProfile.webSocketURL(request)">
 <center><h2 class="center">Repository Profile</h2></center>
-<!-- <center><h3>Welcome </h3></center> -->
+<div>
 <center>
-
-<div>
-<table id="UP">
-            <tr>
-                <th> Name </th>
-                <td>@rp.login</td>
-            </tr>
-            <tr>
-                <th>Repository Name</th>
-                <td>@rp.id</td>
-            </tr>
-            <tr>
-                <th>Node ID</th>
-                <td>@rp.node_id</td>
-            </tr>
-            <tr>
-                <th>Avatar URL</th>
-                <td>@rp.avatar_url</td>
-            </tr>            
-            <tr>
-                <th>Open Issues Count</th>
-                <td>@rp.open_issues</td>
-            </tr>                     
-            
+<table id="repoprofile">
+            	<tr> 
+            		<th>User Name </th>
+					<th>Repository Name</th> 
+                    <th>Node ID</th> 
+                    <th>Avatar URL</th>  
+                    <th>Open Issues Count</th> 
+               </tr> 
+            	                                                                           
 </table>
-<div>
-<div>
+</center>
 </div>
 <div>
-</div>        
-<!-- <br>Name: @rp.login -->
-<!-- <br>ID: @rp.id -->
-<!-- <br>Node ID: @rp.node_id</td> -->
-<!-- <br>Avatar URL: @rp.avatar_url -->
-<!-- <br>Open Issues Count : @rp.open_issues-->
-<!-- <br>Repository Issues : @rp.issues_url-->
-<!-- <br>Collaborations : @rp.collaborators_url-->
-
-</center>
-
-</br>
 <center>
-<center><h2 class="center">Latest 20 Repository Issues</h2></center>
-<center><h2 class="center">Issues Statistics : <a href=/search/@rp.login/@rp.id/issues target="_blank">Link</a></h2></center>
-	    <table>
+<h2>Latest 20 Repository Issues</h2>
+<h2> Issues Statistics : <a href=/search/@username/@repository/issues target="_blank">Link</a></h2></center>
+<center><table id="repository_issues">
 	         <tr>
 			    <th>Repository Issue</th>
 			    <th>Repository Issue Number</th>
@@ -67,44 +40,28 @@ table, th, td {
 			    <th>Issue Created At</th>
 			    <th>Issue Last Updated At</th>
              </tr>
-	    @for(repo <- list){
-	      <tr>
-	      		<td>@repo.issue_title</a>
-				<td>@repo.issue_number</td>
-			     <td>@repo.state</td>
-	      		<td>@repo.created_at</a>
-			    <td>@repo.updated_at</td>
-          </tr>
-	    }
-	   </table>
+</table>
 </center>
-
-</br>
+</center>
+</div>
+<div>
 <center>
-<center><h2 class="center">Collaborators</h2></center>
-	    <table>
+<h2 class="center">Collaborators</h2>
+	    <table id="repository_collab">
 	         <tr>
 			    <th>Login</th>
 			    <th>ID</th>
 			    <th>Role Name</th>
 			    <th>User Url</th>
              </tr>
-	    @for(repo <- listcollab){
-	      <tr>
-	      		<td>@repo.login</a>
-				<td>@repo.id</td>
-			     <td>@repo.role_name</td>
-			    <td><a href=/users/@repo.login style="text-decoration: none;" target="_blank" >@repo.user_url</td>
-          </tr>
-	    }
-	   </table>
+         </table>
 </center>
-</br>
-<center><h2 class="center">Repository Commit Statistics :  <a  href="/search/@rp.login/@rp.id/commits" style="text-decoration: none;" target="_blank" > Link </a> </h2></center>
+</div>
+<div>
+<center><h2 class="center">Repository Commit Statistics :  <a  href="/search/@username/@repository/commits" style="text-decoration: none;" target="_blank" > Link </a> </h2></center>
 </center>
-
 <center><h2 class="center"><a  href="/" style="text-decoration: none;" target="_blank" > GOTO HOME </a> </h2></center>
 </center>
-
+</div>
 </body>
 </html>

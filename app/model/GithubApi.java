@@ -30,7 +30,7 @@ public interface GithubApi {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
+	CompletionStage<List<Repository>> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	/**
 	 * Processes the data recieved from github repository endpoint 
 	 * 
@@ -41,9 +41,9 @@ public interface GithubApi {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	List<Repository> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
+	CompletionStage<List<Repository>> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	
-	public CommitStat getCommitStatistics(String user,String repository, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
+	public CompletableFuture<CommitStat> getCommitStatistics(String user,String repository, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	/**
 	 * Gets the http-response from the Github repository topic's end point 
 	 * 
@@ -57,7 +57,7 @@ public interface GithubApi {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	JsonNode getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
+	CompletableFuture<Object> getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	List<Issues> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	CompletableFuture<Object> getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	CompletableFuture<Object> getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;

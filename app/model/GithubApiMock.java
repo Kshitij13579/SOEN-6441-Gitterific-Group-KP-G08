@@ -39,9 +39,9 @@ public class GithubApiMock implements GithubApi {
 	 */
 	@Inject AsyncCacheApi cache;
 	@Override
-	public List<Repository> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
-		JsonNode json = getResponse("", "", "", "", cache);
-		List<Repository> repoList = new ArrayList<Repository>();
+	public CompletionStage<List<Repository>> getRepositoryInfo(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+		CompletableFuture<Object> json = getResponse("", "", "", "", cache);
+		CompletionStage<List<Repository>> repoList;
 		RepositorySearchService repoService = new RepositorySearchService();
 		repoList = repoService.getRepoList(json);
 		return repoList;
@@ -53,9 +53,9 @@ public class GithubApiMock implements GithubApi {
 	 * @since 2021-11-20
 	 */
 	@Override
-	public List<Repository> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
-		JsonNode json = getResponse("", "", "", "", cache);
-		List<Repository> repoList = new ArrayList<Repository>();
+	public CompletionStage<List<Repository>> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+		CompletableFuture<Object> json = getResponse("", "", "", "", cache);
+		CompletionStage<List<Repository>> repoList;
 		RepositorySearchService repoService = new RepositorySearchService();
 		repoList = repoService.getRepoList(json);
 		return repoList;
@@ -68,25 +68,24 @@ public class GithubApiMock implements GithubApi {
 	 */
 	@Inject WSClient ws;
 	@Override
-	public JsonNode getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
+	public CompletableFuture<Object> getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
 		String testResources = System.getProperty("user.dir") + "/test/resources/play.json";
 		java.io.File file = new java.io.File(testResources);
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode json = null;
-		try {
-			json = mapper.readTree(file);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return json;
+		CompletableFuture<Object> json = null;
+		return CompletableFuture.supplyAsync(() -> {
+			try {
+				return mapper.readTree(file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return json;
+		});	
 	}
 
 	@Override
-	public CommitStat getCommitStatistics(String user, String repository, AsyncCacheApi cache)
+	public CompletableFuture<CommitStat> getCommitStatistics(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
 		
 		CommitStatService commStatService = new CommitStatService();
@@ -139,7 +138,9 @@ public class GithubApiMock implements GithubApi {
                 ,repository
                 );
 		
-		return commitStat;
+		CompletableFuture<CommitStat> c = CompletableFuture.supplyAsync(() -> commitStat);
+		
+		return c;
 	}
 
 	@Override

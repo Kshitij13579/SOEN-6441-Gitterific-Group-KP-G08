@@ -3,10 +3,12 @@ package actors;
 import play.Logger;
 import play.cache.AsyncCacheApi;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import play.libs.Json;
 
 import java.util.*;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 
 import com.google.inject.Inject;
@@ -25,6 +27,7 @@ import akka.japi.Function;
 import akka.actor.typed.javadsl.Behaviors;
 import scala.concurrent.duration.Duration;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class RepoSearchActor extends AbstractActor {
 	private final ActorRef ws;
@@ -68,43 +71,49 @@ public class RepoSearchActor extends AbstractActor {
 	
 	 private void send(Data d) throws Exception {
 		 Logger.debug("New Repo Search Actor Query {}",this.query);
-		 List<Repository> repoList = ghApi.getRepositories(query, cache);
-		 
-		 if(userSearchHist.containsKey(this.query)) {
-			 Logger.debug("Subsequent Query:{}",this.query);
-			 repoList = getDifference(repoList);
-		 }else {
-			 Logger.debug("First Query:{}",this.query);
-			 userSearchHist.put(this.query,repoList);
-		 }
-		 
-		 if(!repoList.isEmpty()) {
-		     repoList.forEach(r -> {
-		    	 
-		    	 ObjectNode response = Json.newObject();
-		         response.put("name", r.name);
-		         response.put("login", r.login);
-		         ArrayNode arrayNode = response.putArray("topics");
-		         for (String item : r.topics) {
-		             arrayNode.add(item);
-		         }
-		         Logger.debug("New Repo Search Actor Response {}",response);
-		    	 ws.tell(response, self());
-		    	 
-		     });
+		 if (this.query != null && this.query != "") {
+			 CompletionStage<List<Repository>> repoList = ghApi.getRepositories(query, cache);
+			 
+				 repoList.thenAcceptAsync(res -> {
+					 
+					 if(userSearchHist.containsKey(this.query)) {
+						 Logger.debug("Subsequent Query:{}",this.query);
+						 res = getDifference(res);
+					 }else {
+						 Logger.debug("First Query:{}",this.query);
+						 userSearchHist.put(this.query,res);
+					 }
+					 if(!res.isEmpty()) {
+						 res.forEach(r -> {
+					    	 
+					    	 ObjectNode response = Json.newObject();
+					         response.put("name", r.name);
+					         response.put("login", r.login);
+					         ArrayNode arrayNode = response.putArray("topics");
+					         for (String item : r.topics) {
+					             arrayNode.add(item);
+					         }
+					         Logger.debug("New Repo Search Actor Response {}",response);
+					    	 ws.tell(response, self());
+					    	 
+					     });						 
+					 }
+				 });
+			 // }	 
+			 
 		 }
 	 }
 	 
 	 private List<Repository> getDifference(List<Repository> repoList){
 		 
-		 List<Repository> actorRepoList = userSearchHist.get(this.query);
+		 List<Repository> actorRepoList = this.userSearchHist.get(this.query);
 		 List<Repository> res = repoList.stream()
 				                .filter(a -> actorRepoList.stream().noneMatch(b -> a.name.equals(b.name)))
 				                .collect(Collectors.toList());
 		 
 		 if(!res.isEmpty()) {
 			 actorRepoList.addAll(res);
-			 userSearchHist.replace(this.query,actorRepoList);
+			 this.userSearchHist.replace(this.query,actorRepoList);
 		 }
 
 		 return res;
