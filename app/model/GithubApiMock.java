@@ -143,6 +143,7 @@ public class GithubApiMock implements GithubApi {
 
 	@Override
 	public List<Issues> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache)
+//	public CompletableFuture<Object> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
 		
 		String testJson=System.getProperty("user.dir") +"/test/resources/issues.json";
