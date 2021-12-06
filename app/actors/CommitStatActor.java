@@ -94,22 +94,23 @@ public class CommitStatActor extends AbstractActor {
 	 private void send(Data d) throws Exception {
 		 Logger.debug("New Commit Stat Actor Call Send");
 		 if(this.user !=null && this.repository!=null) {
-			 CommitStat commitStat = this.ghApi.getCommitStatistics(user, repository, cache);
-			 Logger.debug("New Commit Stat Actor Data Received");
-			 String authorList = commitStat.getTop_committers().stream()
-					             .map(a -> a.getName()+"@"+a.getLogin()+"@"+a.getCommits())
-					             .collect(Collectors.joining(","));
-			 
-			 ObjectNode response = Json.newObject();
-			 response.put("author_list",authorList);
-			 response.put("min_add", commitStat.getMin_additions());
-			 response.put("max_add", commitStat.getMax_additions());
-			 response.put("avg_add", commitStat.getAvg_additions());
-			 response.put("min_del", commitStat.getMin_deletions());
-			 response.put("max_del", commitStat.getMax_deletions());
-			 response.put("avg_del", commitStat.getAvg_deletions());
-			 
-			 ws.tell(response, self());
+			 this.ghApi.getCommitStatistics(user, repository, cache).thenAccept(commitStat ->{
+				 Logger.debug("New Commit Stat Actor Data Received");
+				 String authorList = commitStat.getTop_committers().stream()
+						             .map(a -> a.getName()+"@"+a.getLogin()+"@"+a.getCommits())
+						             .collect(Collectors.joining(","));
+				 
+				 ObjectNode response = Json.newObject();
+				 response.put("author_list",authorList);
+				 response.put("min_add", commitStat.getMin_additions());
+				 response.put("max_add", commitStat.getMax_additions());
+				 response.put("avg_add", commitStat.getAvg_additions());
+				 response.put("min_del", commitStat.getMin_deletions());
+				 response.put("max_del", commitStat.getMax_deletions());
+				 response.put("avg_del", commitStat.getAvg_deletions());
+				 Logger.debug("Commit Stat Response {}",response);
+				 ws.tell(response, self());
+			 });
 			 
 		 }else {
 			 Logger.debug("Either user or Repository is null");

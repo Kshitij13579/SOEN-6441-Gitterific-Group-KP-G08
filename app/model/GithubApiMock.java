@@ -85,7 +85,7 @@ public class GithubApiMock implements GithubApi {
 	}
 
 	@Override
-	public CommitStat getCommitStatistics(String user, String repository, AsyncCacheApi cache)
+	public CompletableFuture<CommitStat> getCommitStatistics(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
 		
 		CommitStatService commStatService = new CommitStatService();
@@ -138,7 +138,9 @@ public class GithubApiMock implements GithubApi {
                 ,repository
                 );
 		
-		return commitStat;
+		CompletableFuture<CommitStat> c = CompletableFuture.supplyAsync(() -> commitStat);
+		
+		return c;
 	}
 
 	@Override
