@@ -218,7 +218,7 @@ public class HomeController extends Controller implements WSBodyReadables {
 //    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
 //    	repoList = repoService.getUser_repository(jsonPromise.toCompletableFuture().get());
 //      return ok(repositories.render(repoList));
-    	return ok(users.render(request));
+    	return ok(repositories.render(request));
 
     }
     

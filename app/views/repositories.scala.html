@@ -10,12 +10,12 @@ th,td  {
 <head>
     <title>WebSocket Test</title>
     <script type='text/javascript' src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
-    <script type='text/javascript' src='@routes.Assets.at("javascripts/userrepository.js")'></script>  
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/userrepo.js")'></script>  
 </head>
 <body data-ws-url="@routes.HomeController.wsur.webSocketURL(request)">
 <center><h2 class="center">Repositories</h2></center>
 	<center>
-	    <table>
+	    <table id="repo">
 	         <tr>
 			    <th>User</th>
 			    <th>Id</th>

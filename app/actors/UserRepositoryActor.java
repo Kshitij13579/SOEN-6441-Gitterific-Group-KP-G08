@@ -30,7 +30,7 @@ public class UserRepositoryActor extends AbstractActor {
 	private final ActorRef ws;
     GithubApi ghApi;
 	String username;
-	String query;
+	
     
     public UserRepositoryActor(final ActorRef wsOut,GithubApi ghApi) {
     	ws =  wsOut;
@@ -39,7 +39,7 @@ public class UserRepositoryActor extends AbstractActor {
     }
     
     public static Props props(final ActorRef wsout,GithubApi ghApi) {
-        return Props.create(UserProfileSearchActor.class, wsout, ghApi);
+        return Props.create(UserRepositoryActor.class, wsout, ghApi);
     }
     
     @Override
@@ -52,17 +52,18 @@ public class UserRepositoryActor extends AbstractActor {
 	public Receive createReceive() {
 		return receiveBuilder()
     			.match(Data.class, this::send)
-    			//.match(ObjectNode.class, o -> this.query = o.get("keyword").textValue())
+    			.match(ObjectNode.class, o -> this.username = o.get("keyword").textValue())
     			.build();
 	}
 	
 	 private void send(Data d) throws Exception {
+         Logger.debug("New Repo Search Actor Response {}",username);
 		 List<UserRepository> userrepoList = ghApi.getuser_repository(username);
 		 userrepoList.forEach(r -> {
 	    	 ObjectNode response = Json.newObject();
 	         response.put("login", r.login);
 	         response.put("name", r.name);
-	         response.put("Reponame", r.reponame);
+	         response.put("reponame", r.reponame);
 	         Logger.debug("New Repo Search Actor Response {}",response);
 	    	 ws.tell(response, self());	 
 	     });

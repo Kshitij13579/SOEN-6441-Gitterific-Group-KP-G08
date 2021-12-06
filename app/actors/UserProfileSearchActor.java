@@ -50,7 +50,7 @@ public class UserProfileSearchActor extends AbstractActor {
 	public Receive createReceive() {
 		return receiveBuilder()
     			.match(Data.class, this::send)
-    			//.match(ObjectNode.class, o -> this.query = o.get("keyword").textValue())
+    			.match(ObjectNode.class, o -> this.username = o.get("keyword").textValue())
     			.build();
 	}
 	
@@ -60,15 +60,15 @@ public class UserProfileSearchActor extends AbstractActor {
 	    	 ObjectNode response = Json.newObject();
 	         response.put("name", userList.login);
 	         response.put("id", userList.id);
-//	         response.put("id", userList.node_id);
-//	         response.put("id", userList.avatar_url);
-//	         response.put("id", userList.repos_url);
-//	         response.put("id", userList.email);
-//	         response.put("id", userList.twitter_username);
-//	         response.put("id", userList.followers);
-//	         response.put("id", userList.following);
-//	         response.put("id", userList.subscriptions_url);
-//	         response.put("id", userList.organizations_url);
+	         response.put("node_id", userList.node_id);
+	         response.put("avatar_url", userList.avatar_url);
+	         response.put("repos_url", userList.repos_url);
+	         response.put("email", userList.email);
+	         response.put("twitter_username", userList.twitter_username);
+	         response.put("followers", userList.followers);
+	         response.put("following", userList.following);
+	         response.put("subscriptions_url", userList.subscriptions_url);
+	         response.put("organizations_url", userList.organizations_url);
 
 	         Logger.debug("New User Search Actor Response {}",response);
 	    	 ws.tell(response, self());
