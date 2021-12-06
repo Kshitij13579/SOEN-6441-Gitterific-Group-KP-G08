@@ -63,4 +63,7 @@ public interface GithubApi {
 	CompletableFuture<Object> getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	CompletableFuture<Object> getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	
+	UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException ;
+	List<UserRepository> getuser_repository(String username) throws InterruptedException, ExecutionException;
+	
 }

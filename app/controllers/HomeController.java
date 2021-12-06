@@ -1,6 +1,9 @@
 package controllers;
 
 import javax.inject.Inject;
+
+import org.checkerframework.checker.units.qual.g;
+
 import play.cache.AsyncCacheApi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
@@ -11,6 +14,8 @@ import actors.CommitStatActor;
 import actors.RepoSearchActor;
 import actors.RepositoryProfileActor;
 import actors.SupervisorActor;
+import actors.UserProfileSearchActor;
+import actors.UserRepositoryActor;
 import actors.TopicSearchActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
@@ -186,20 +191,20 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
 	 * 							  retrieve the result of any task
 	 */
-    public Result user_profile(String username) throws InterruptedException, ExecutionException{
+    public Result user_profile(String username , Http.Request request) throws InterruptedException, ExecutionException{
     	
-    	UserService repoService = new UserService();
-    	UserProfile repoList = new UserProfile();
-    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username)
-	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
-	             //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
-	              //.addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("constants.repo_per_page"))
-	              //.addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.repo_page"))
-	
-
-    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
-    	repoList = repoService.getUser(jsonPromise.toCompletableFuture().get());
-    	return ok(users.render(repoList));
+//    	UserService repoService = new UserService();
+//    	UserProfile repoList = new UserProfile();
+//    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username)
+//	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
+//	   
+//    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+//    	repoList = repoService.getUser(jsonPromise.toCompletableFuture().get());
+    	return ok(users.render(request));
+    }
+    
+    public WebSocket wsup() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> UserProfileSearchActor.props(ws,ghApi), actorSystem, materializer));
     }
     
 	/**
@@ -212,19 +217,22 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
 	 * 							  retrieve the result of any task
 	 */
-    public Result user_repository(String username) throws InterruptedException, ExecutionException{
-    	UserService repoService = new UserService();
-    	List<UserRepository> repoList = new ArrayList<>();
-    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username+"/repos")
-	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
-	             //; .addQueryParameter(GIT_PARAM.QUERY.value, username);
-	              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("constants.repo_per_page_repo"))
-	              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.repo_page"));
-	
+    public Result user_repository(String username, Http.Request request) throws InterruptedException, ExecutionException{
+//    	UserService repoService = new UserService();
+//    	List<UserRepository> repoList = new ArrayList<>();
+//    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username+"/repos")
+//	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
+//	              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("constants.repo_per_page_repo"))
+//	              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.repo_page"));
+//    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+//    	repoList = repoService.getUser_repository(jsonPromise.toCompletableFuture().get());
+//      return ok(repositories.render(repoList));
+    	return ok(repositories.render(request));
 
-    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
-    	repoList = repoService.getUser_repository(jsonPromise.toCompletableFuture().get());
-    	return ok(repositories.render(repoList));
+    }
+    
+    public WebSocket wsur() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> UserRepositoryActor.props(ws,ghApi), actorSystem, materializer));
     }
     
 	 /**
@@ -258,7 +266,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 				e.printStackTrace();
 	        } 
   		return ok(repositoryprofile.render(rp,rpi,rpc));
-    	
     }	
     */
 	 

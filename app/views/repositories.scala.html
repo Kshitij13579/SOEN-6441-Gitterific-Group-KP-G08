@@ -1,4 +1,4 @@
-@(repos: List[model.UserRepository])
+@(request: play.mvc.Http.Request)
 <html>
 <style>
 th,td  {
@@ -7,22 +7,20 @@ th,td  {
   border: 1px solid black;
 }
 </style>
+<head>
+    <title>WebSocket Test</title>
+    <script type='text/javascript' src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/userrepo.js")'></script>  
+</head>
+<body data-ws-url="@routes.HomeController.wsur.webSocketURL(request)">
 <center><h2 class="center">Repositories</h2></center>
-<body>
 	<center>
-	    <table>
+	    <table id="repo">
 	         <tr>
 			    <th>User</th>
 			    <th>Id</th>
 			    <th>Repository</th>
 			 </tr>
-	    @for(repo <- repos){
-	      <tr>
-    			<td>@repo.login</td> 
-    			<td>@repo.name</td> 
- 			    <td><a href=/repository/@repo.login/@repo.name> @repo.reponame </a></td>
-	      </tr>
-	    }
 	   </table>
 	</center>
 </body>

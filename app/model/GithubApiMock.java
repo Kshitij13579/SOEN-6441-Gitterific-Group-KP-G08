@@ -237,5 +237,14 @@ public class GithubApiMock implements GithubApi {
 	    	return j ; 
 	    	});
 	}
+	
+	public UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException 
+	{
+		return new UserProfile();
+	}
 		
+	public List<UserRepository> getuser_repository(String username) throws InterruptedException, ExecutionException {
+	
+		return new ArrayList<UserRepository>();
+	}
 }
