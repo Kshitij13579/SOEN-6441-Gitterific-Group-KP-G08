@@ -90,7 +90,8 @@ public class IssueServiceActor extends AbstractActor{
 		 
 		 if(this.user !=null && this.repository!=null) {
 			 
-		List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);	  
+		this.ghApi.getIssuesFromResponse(user, repository, cache).thenAccept(issuesList->{
+			
 		IssueStatService issueStatService=new IssueStatService();
 		List[] frequencyList=issueStatService.wordCountDescening(issuesList);
 
@@ -118,8 +119,13 @@ public class IssueServiceActor extends AbstractActor{
 		 
 	    	 ws.tell(response, self());
 	    	 
-		 }else {
+		});
+	    	 
+		 }
+		else {
 			 Logger.debug("Either user or Repository is null");
 		 }
+		 
+		 
 	 }
 }

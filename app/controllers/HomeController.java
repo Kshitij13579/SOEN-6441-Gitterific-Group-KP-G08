@@ -331,11 +331,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 	public Result issues(Http.Request request, String user, String repository) throws InterruptedException, ExecutionException{
 
 	return ok(issues.render(request,user,repository));
-	
-//	List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);	  
-//	  IssueStatService issueStatService=new IssueStatService();
-//	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);	  	  
-//	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));
 	  
 	  }
 	  public WebSocket wsIssue() {
