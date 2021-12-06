@@ -144,7 +144,7 @@ public class GithubApiMock implements GithubApi {
 	}
 
 	@Override
-	public List<Issues> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache)
+	public CompletableFuture<List<Issues>> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
 		
 		String testJson=System.getProperty("user.dir") +"/test/resources/issues.json";
@@ -162,16 +162,22 @@ public class GithubApiMock implements GithubApi {
 			// TODO: handle exception
 		}
 		
-		List<Issues> titleIssues=new ArrayList<Issues>();
+		JsonNode j=tempJson;
 		
-		tempJson.forEach(t->{
-			
-			String title=t.get("title").asText();
-			titleIssues.add(new Issues(title));
-			
-		});
+		CompletableFuture<List<Issues>> titleIssues = CompletableFuture.supplyAsync(() -> {
+			  List<Issues> titleList=new ArrayList<Issues>();
+			  j.forEach(t->{
+		  String title=t.get("title").asText();
+		  titleList.add(new Issues(title));
+		  
+	  });
+			  return titleList;
+});
 		
 		return titleIssues;
+		
+		
+
 	}
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })

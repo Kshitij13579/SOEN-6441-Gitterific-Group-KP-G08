@@ -90,30 +90,22 @@ public class IssueServiceActor extends AbstractActor{
 		 
 		 if(this.user !=null && this.repository!=null) {
 			 
-		List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);	  
+		this.ghApi.getIssuesFromResponse(user, repository, cache).thenAccept(issuesList->{
+			
 		IssueStatService issueStatService=new IssueStatService();
 		List[] frequencyList=issueStatService.wordCountDescening(issuesList);
 
 		 ObjectNode response = Json.newObject(); 
-		 List<String> titles=issuesList.stream().map(Issues::getTitle).collect(Collectors.toList());
+		List<String> titles=issuesList.stream().map(Issues::getTitle).collect(Collectors.toList());
 		
 		List<String> wordList=frequencyList[0];
-		List<Long>   wordCount=frequencyList[1];
-		
-		
-		
-		Map<String,Long> map=IntStream.range(0, wordList.size())
-								.boxed()
-								.collect(Collectors.toMap(i->wordList.get(i),i->wordCount.get(i)));
-		
+		List<Long>   wordCount=frequencyList[1];	
 			
 		ArrayNode arrayNode = response.putArray("titles");
 		for (String item : titles) {
 			arrayNode.add(item);
 		}
 		
-//		response.putPOJO("Map", map);
-//		Logger.debug("Map{}",map);
 		ArrayNode arrayNode1 = response.putArray("words");
 		for (String word : wordList) {
 			arrayNode1.add(word);
@@ -122,15 +114,18 @@ public class IssueServiceActor extends AbstractActor{
 		for (Long count : wordCount) {
 			arrayNode2.add(count);
 		}
-//		response.putPOJO("words", wordList);
-//		Logger.debug("wordList{}",wordList);
-//		Logger.debug("count{}",wordCount);
-		Logger.debug("Respose{}",response);
+
+		Logger.debug("Response{}",response);
 		 
 	    	 ws.tell(response, self());
 	    	 
-		 }else {
+		});
+	    	 
+		 }
+		else {
 			 Logger.debug("Either user or Repository is null");
 		 }
+		 
+		 
 	 }
 }
