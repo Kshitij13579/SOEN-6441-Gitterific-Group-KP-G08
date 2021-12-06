@@ -43,7 +43,7 @@ public interface GithubApi {
 	 */
 	CompletionStage<List<Repository>> getRepositories(String query, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	
-	public CommitStat getCommitStatistics(String user,String repository, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
+	public CompletableFuture<CommitStat> getCommitStatistics(String user,String repository, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
 	/**
 	 * Gets the http-response from the Github repository topic's end point 
 	 * 
@@ -62,5 +62,8 @@ public interface GithubApi {
 	CompletableFuture<Object> getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	CompletableFuture<Object> getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	CompletableFuture<Object> getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
+	
+	UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException ;
+	List<UserRepository> getuser_repository(String username) throws InterruptedException, ExecutionException;
 	
 }

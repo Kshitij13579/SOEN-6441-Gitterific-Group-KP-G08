@@ -14,8 +14,11 @@ import com.typesafe.config.ConfigFactory;
 
 import play.cache.AsyncCacheApi;
 import play.libs.ws.*;
+import play.mvc.Result;
 import service.CommitStatService;
 import service.RepositorySearchService;
+import service.UserService;
+import views.html.repositories;
 
 public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	/**
@@ -62,6 +65,7 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 				.addQueryParameter(GIT_PARAM.PAGE.value, page)
 				.addQueryParameter(GIT_PARAM.SORT.value, sort)
 				.setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
+
 //		CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(
 //				request.getUrl() + GIT_PARAM.QUERY.value + query + GIT_PARAM.PER_PAGE.value 
 //				+ per_page + GIT_PARAM.PAGE.value + page + GIT_PARAM.SORT.value + sort, () -> request.get().thenApply(r -> r.getBody(json()))
@@ -77,11 +81,17 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	 * @return CommitStat - returns a CommitStat object with statistical information of commits.
 	 */
 	@Override
-	public CommitStat getCommitStatistics(String user, String repository, AsyncCacheApi cache)
+	public CompletableFuture<CommitStat> getCommitStatistics(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
 		
 		CommitStatService commStatService = new CommitStatService();
-    	List<Commit> commitList = new ArrayList<Commit>();
+		
+		//Config
+    	final String repourl = ConfigFactory.load().getString("constants.git_repositoryprofile_url");
+    	final String contentType = ConfigFactory.load().getString("constants.git_header.Content-Type");
+    	final String username = ConfigFactory.load().getString("constants.git_user");
+    	final String token = ConfigFactory.load().getString("constants.git_token");
+    	
     	
     	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+user+"/"+repository+"/commits")
 	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
@@ -89,51 +99,53 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.commits_page"))
 	              .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
 
-    	CompletionStage<JsonNode> jsonPromise =  request.get().thenApply(r -> r.getBody(json()));
+       	CompletableFuture<CommitStat> commitStatFinal = request.get().thenApply(r -> r.getBody(json())).toCompletableFuture()
+    	.thenApply(r -> commStatService.getShaList(r))
+    	.thenApply(shal -> {
+			List<Commit> commitList1 = new ArrayList<Commit>();
+		      shal.forEach(sha -> {
+						    		WSRequest r = ws.url(repourl+ "/"+user+"/"+repository+"/commits/"+sha)
+						    				.addHeader(GIT_HEADER.CONTENT_TYPE.value, contentType)
+						  	                .setAuth(username,token);
+						    		CompletionStage<JsonNode> jsonCommit =  r.get().thenApply(r1 -> r1.getBody(json()));        				
+						    	    JsonNode temp;
+									try {
+										temp = jsonCommit.toCompletableFuture().get();
+										
+										commitList1.add(new Commit(
+											       new Author(temp.get("commit").get("author").get("name").asText(), 
+											                  (temp.get("author").has("login")) ? temp.get("author").get("login").asText() : "null",
+											                  0
+											       ),
+											       sha,
+											       (temp.has("stats")) ? temp.get("stats").get("additions").asInt() : 0 , 
+											       (temp.has("stats")) ? temp.get("stats").get("deletions").asInt() : 0 ));
+										
+									} catch (InterruptedException | ExecutionException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+						    	        
+										
 
-    	CompletableFuture<List<String>> shaList = jsonPromise.toCompletableFuture().thenApply(r -> commStatService.getShaList(r));
-    	
-    	shaList.get().forEach(sha -> {
-    		WSRequest r = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+ "/"+user+"/"+repository+"/commits/"+sha)
-  	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
-    		      .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
 
-    		CompletionStage<JsonNode> jsonCommit =  r.get().thenApply(r1 -> r1.getBody(json()));        				
-    		
-    	    try {
-    	    	
-				JsonNode temp = jsonCommit.toCompletableFuture().get();
-				commitList.add(new Commit(
-						       new Author(temp.get("commit").get("author").get("name").asText(), 
-						                  (temp.get("author").has("login")) ? temp.get("author").get("login").asText() : "null",
-						                  0
-						       ),
-						       sha,
-						       (temp.has("stats")) ? temp.get("stats").get("additions").asInt() : 0 , 
-						       (temp.has("stats")) ? temp.get("stats").get("deletions").asInt() : 0 ));
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-    	});
-    	
-    	
-    	
-    	CommitStat commitStat = new CommitStat(commStatService.getTopCommitterList(commitList)
-    			                              ,commStatService.getAvgAddition(commitList)
-    			                              ,commStatService.getAvgDeletion(commitList)
-    			                              ,commStatService.getMaxAddition(commitList)
-    			                              ,commStatService.getMaxDeletion(commitList)
-    			                              ,commStatService.getMinAddition(commitList)
-    			                              ,commStatService.getMinDeletion(commitList)
-    			                              ,repository
-    			                              );
+                         });
+		      return commitList1;
+	        }).thenApply( commitList->{
+	    		CommitStat  commitStat= new CommitStat(commStatService.getTopCommitterList(commitList)
+	                ,commStatService.getAvgAddition(commitList)
+	                ,commStatService.getAvgDeletion(commitList)
+	                ,commStatService.getMaxAddition(commitList)
+	                ,commStatService.getMaxDeletion(commitList)
+	                ,commStatService.getMinAddition(commitList)
+	                ,commStatService.getMinDeletion(commitList)
+	                ,repository
+	                );
+	    	
+	    	    return commitStat;
+	    	});
 		
-		return commitStat;
+		return commitStatFinal;
 	}
 
 	@Override
@@ -257,6 +269,31 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	    	return json ; 
 	    	});
 	}
+	
+	@Override
+	public UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException {
+		
+		    UserService repoService = new UserService();
+	    	UserProfile repoList = new UserProfile();
+	    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username)
+		              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
+		   
+	    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+	    	repoList = repoService.getUser(jsonPromise.toCompletableFuture().get());
+	    	return repoList;
+	}
+	
+	public List<UserRepository> getuser_repository(String username) throws InterruptedException, ExecutionException {
+	    	UserService repoService = new UserService();
+	    	List<UserRepository> repoList = new ArrayList<>();
+	    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username+"/repos")
+		              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
+		              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("constants.repo_per_page_repo"))
+		              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.repo_page"));
+	    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
+	    	repoList = repoService.getUser_repository(jsonPromise.toCompletableFuture().get());
+	    	return repoList;
+	    }
 	
 }
 
