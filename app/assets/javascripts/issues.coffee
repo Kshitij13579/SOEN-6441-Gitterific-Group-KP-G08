@@ -9,12 +9,14 @@ $ ->
   	$('#title').text(repository)
   	ws.send(JSON.stringify({user: user, repository: repository}))
   ws.onmessage = (event) ->
-    issues = JSON.parse event.data
-    #titleTest=issues.titles
-    $('#titleList').empty()
-   	for titleName in issues.titles
-  	    $('#titleList').append $('<li/>').text(titleName)
-  	row1=$('<tr>')
-  	for x in issues.words
-  		row1.append $('<td style="border:1px solid black" />').append 'Hello'
-  	$('#issueStat').append row1
+  	repo = JSON.parse event.data
+  	$('#titleList').empty()
+  	$('#issueStat').empty()
+  	for titleName in repo.titles
+  		$('#titleList').append $('<li/>').text(titleName)
+  	for x in [0..repo.words.length-1]
+  		row1=$('<tr>')
+  		row1.append $('<td style="border:1px solid black" />').append repo.words[x]
+  		row1.append $('<td style="border:1px solid black"/>').append repo.count[x]
+  		row1.append $('<tr />')
+    $('#issueStat').append row1
