@@ -217,6 +217,7 @@ public class HomeControllerTest extends WithApplication {
 	 * 													  retrieve the result of any task
      * @throws FileNotFoundException File Not Found Exception due to unavailability of file
      */
+   /*
     @Test
     public void testIssuesPage() throws InterruptedException,ExecutionException,FileNotFoundException{
     	
@@ -235,7 +236,7 @@ public class HomeControllerTest extends WithApplication {
     	
     	assertEquals("utf-8", result.charset().get());
     }
-
+*/
 	@AfterClass
 	public static void stopApp() {
 		Helpers.stop(application);
