@@ -25,13 +25,13 @@ $ ->
   		row1.append $('<td style="border:1px solid black"/>').append repo.updated_at[x]
   		row1.append $('<tr />')
     $('#repository_issues').append row1
-    for x in [0..repo.user_name.length-1]
-    	row2=$('<tr>')
-    	row2.append $('<td style="border:1px solid black" />').append repo.user_name[x]
-    	row2.append $('<td style="border:1px solid black"/>').append repo.repo_name[x]
-    	row2.append $('<td style="border:1px solid black"/>').append repo.role_name[x]
-    	row2.append $('<td style="border:1px solid black"/>').append repo.user_url[x]
-    	row2.append $('<tr />')
+  	for x in [0..repo.user_name.length-1]
+  		row2=$('<tr>')
+  		row2.append $('<td style="border:1px solid black" />').append repo.user_name[x]
+  		row2.append $('<td style="border:1px solid black"/>').append repo.repo_name[x]
+  		row2.append $('<td style="border:1px solid black"/>').append repo.role_name[x]
+  		row2.append $('<td style="border:1px solid black"/>').append repo.user_url[x]
+  		row2.append $('<tr />')
     $('#repository_collab').append row2
     
  	
