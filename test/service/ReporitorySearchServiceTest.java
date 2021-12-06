@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,8 +24,8 @@ public class ReporitorySearchServiceTest {
 		
 		// Calculated RepoList from dummy data
 		RepositorySearchService rss=new RepositorySearchService();
-		JsonNode json = Json.parse("{\"items\": [{\n\"owner\": {\n  \"login\": \"abc\"\n},\n  \"name\": \"def\",\n  \"issues_url\": \"mno\",\n  \"commits_url\": \"pqr\",\n  \"topics\": [\"java\"]\n}]}");
-		List<Repository> repos = rss.getRepoList(json);
+		CompletableFuture<Object> json = CompletableFuture.supplyAsync(() -> Json.parse("{\"items\": [{\n\"owner\": {\n  \"login\": \"abc\"\n},\n  \"name\": \"def\",\n  \"issues_url\": \"mno\",\n  \"commits_url\": \"pqr\",\n  \"topics\": [\"java\"]\n}]}"));
+		List<Repository> repos = rss.getRepoList(json).toCompletableFuture().get();
 		
 		// Expected RepoList
 		ArrayList<String> topics = new ArrayList<String>();

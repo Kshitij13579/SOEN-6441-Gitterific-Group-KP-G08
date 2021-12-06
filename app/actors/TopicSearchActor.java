@@ -8,6 +8,7 @@ import play.libs.Json;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletionStage;
 
 import com.google.inject.Inject;
 
@@ -55,30 +56,34 @@ public class TopicSearchActor extends AbstractActor {
 	
 	 private void send(Data d) throws Exception {
 		 Logger.debug("New Topic Search Actor Query {}",this.query);
-		 List<Repository> repoList = ghApi.getRepositoryInfo(query, cache);
+		 if (this.query != null && this.query != "") {
+			 CompletionStage<List<Repository>> repoList = ghApi.getRepositoryInfo(query, cache);
+			 
+			 repoList.thenAcceptAsync(res -> {
 
-		 if(this.repoHistory.containsKey(this.query)) {
-			 Logger.debug("Subsequent Query:{}",this.query);
-			 repoList = getDifference(repoList);
-		 }else {
-			 Logger.debug("First Query:{}",this.query);
-			 this.repoHistory.put(this.query,repoList);
-		 }
-		 
-		 if(!repoList.isEmpty()) {
-		     repoList.forEach(r -> {
-		    	 
-		    	 ObjectNode response = Json.newObject();
-		         response.put("name", r.name);
-		         response.put("login", r.login);
-		         ArrayNode arrayNode = response.putArray("topics");
-		         for (String item : r.topics) {
-		             arrayNode.add(item);
-		         }
-		         Logger.debug("New Topic Search Actor Response {}",response);
-		    	 ws.tell(response, self());
-		    	 
-		     });
+				 if(this.repoHistory.containsKey(this.query)) {
+					 Logger.debug("Subsequent Query:{}",this.query);
+					 res = getDifference(res);
+				 }else {
+					 Logger.debug("First Query:{}",this.query);
+					 this.repoHistory.put(this.query,res);
+				 }
+				 if(!res.isEmpty()) {
+					 res.forEach(r -> {
+				    	 
+				    	 ObjectNode response = Json.newObject();
+				         response.put("name", r.name);
+				         response.put("login", r.login);
+				         ArrayNode arrayNode = response.putArray("topics");
+				         for (String item : r.topics) {
+				             arrayNode.add(item);
+				         }
+				         Logger.debug("New Repo Search Actor Response {}",response);
+				    	 ws.tell(response, self());
+				    	 
+				     });						 
+				 }
+			 });
 		 }		
 	 }
 	 
