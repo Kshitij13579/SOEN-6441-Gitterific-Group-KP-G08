@@ -5,6 +5,7 @@ import play.cache.AsyncCacheApi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
 
+import actors.IssueServiceActor;
 import actors.CommitSupervisorActor;
 import actors.CommitStatActor;
 import actors.RepoSearchActor;
@@ -135,9 +136,8 @@ public class HomeController extends Controller implements WSBodyReadables {
     
     public WebSocket wsRepositoryProfile() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepositoryProfileActor.props(ws, cache,ghApi), actorSystem, materializer));
-    }
     
-    /**
+    }/**
      * This method retrieves repositories by taking query as an input
 	 * An API call is made and response is then processed.
      * @author Kshitij Yerande
@@ -321,14 +321,17 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @author Akshay
 	 * 
 	 */
-	public Result issues(String user, String repository) throws InterruptedException, ExecutionException{
+	public Result issues(Http.Request request, String user, String repository) throws InterruptedException, ExecutionException{
 
-	  
-	  List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);	  
-	  IssueStatService issueStatService=new IssueStatService();
-	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);	  	  
-	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));
+	return ok(issues.render(request,user,repository));
+	
+//	List<Issues> issuesList = this.ghApi.getIssuesFromResponse(user, repository, cache);	  
+//	  IssueStatService issueStatService=new IssueStatService();
+//	  List[] frequencyList=issueStatService.wordCountDescening(issuesList);	  	  
+//	  return ok(issues.render(issuesList,frequencyList[0],frequencyList[1],repository));
 	  
 	  }
-	 
+	  public WebSocket wsIssue() {
+	    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> IssueServiceActor.props(ws, cache,ghApi), actorSystem, materializer));
+	    }	 
 }
