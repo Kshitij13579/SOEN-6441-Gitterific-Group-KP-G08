@@ -290,9 +290,9 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException
 	 * @throws FileNotFoundException
 	 */
-	public List<Repository> fetchRepositoryInfo(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
-		return this.ghApi.getRepositoryInfo(topic, this.cache);
-	}
+//	public List<Repository> fetchRepositoryInfo(String topic) throws InterruptedException, ExecutionException, FileNotFoundException {
+//		return this.ghApi.getRepositoryInfo(topic, this.cache);
+//	}
 	
 	/**
 	 * Gets the response from Github API for the searched query
@@ -304,9 +304,9 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException
 	 * @throws FileNotFoundException
 	 */
-	public List<Repository> fetchRepositories(String query) throws InterruptedException, ExecutionException, FileNotFoundException {
-		return this.ghApi.getRepositories(query, this.cache);
-	}
+//	public List<Repository> fetchRepositories(String query) throws InterruptedException, ExecutionException, FileNotFoundException {
+//		return this.ghApi.getRepositories(query, this.cache);
+//	}
 	
 	
 	/**
