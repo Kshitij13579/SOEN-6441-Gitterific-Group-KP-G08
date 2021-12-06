@@ -69,7 +69,9 @@ public class RepositoryProfileActor extends AbstractActor {
 	
 	 private void send(Data d) throws Exception {
 		// Logger.debug("********* Repository ******* ",this.repository);
-		 Logger.debug("*********  User ******* {} :",username);
+		 Logger.debug("*********  User ******* {} ",username);
+		 Logger.debug("*********  Repository ******* {} ",repository);
+		 if(this.username !=null && this.repository!=null) {
 		    RepositoryProfileService rps = new RepositoryProfileService();
 	    	RepositoryProfile rp = new RepositoryProfile();
 	    	List<RepositoryProfileIssues> rpi = new ArrayList<>();
@@ -151,6 +153,10 @@ public class RepositoryProfileActor extends AbstractActor {
 	     	
 	    	Logger.debug("*****Response - {}",response);
 	 	    ws.tell(response, self());
+	 	    
+		 }else {
+			 Logger.debug("Either user or Repository is null");
+		 }
 	 }
 	
 }
