@@ -85,14 +85,8 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.commits_page"))
 	              .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
 
-    	CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(user+"-"+repository+"-list", 
-    			new Callable<CompletionStage<JsonNode>>() {
-    				public CompletionStage<JsonNode> call() {
-    					return request.get().thenApply(r -> r.getBody(json()));
-    				};
-    	}, 3600);
-    	
-    	
+    	CompletionStage<JsonNode> jsonPromise =  request.get().thenApply(r -> r.getBody(json()));
+
     	CompletableFuture<List<String>> shaList = jsonPromise.toCompletableFuture().thenApply(r -> commStatService.getShaList(r));
     	
     	shaList.get().forEach(sha -> {
@@ -100,12 +94,7 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
   	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
     		      .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
 
-    		CompletionStage<JsonNode> jsonCommit = cache.getOrElseUpdate(sha, 
-        			new Callable<CompletionStage<JsonNode>>() {
-        				public CompletionStage<JsonNode> call() {
-        					return r.get().thenApply(r -> r.getBody(json()));
-        				};
-        	}, 3600);
+    		CompletionStage<JsonNode> jsonCommit =  r.get().thenApply(r1 -> r1.getBody(json()));        				
     		
     	    try {
     	    	
@@ -180,7 +169,8 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	public CompletableFuture<Object> getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
 		//Repository Profile
     	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository)
-	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
+    			  .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
 	    CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
 	 			new Callable<CompletionStage<JsonNode>>() {
 				public CompletionStage<JsonNode> call() {
@@ -197,7 +187,8 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	public CompletableFuture<Object> getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException{
 		// Repository Issues
     	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_repositoryprofile_url")+"/"+username + "/" + repository + "/issues?sort=created&direction=desc&per_page=20&page=1")
-	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
+	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
+	              .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
 	    CompletionStage<JsonNode> json_issues = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
 	 			new Callable<CompletionStage<JsonNode>>() {
 				public CompletionStage<JsonNode> call() {

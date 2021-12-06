@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
 
 import actors.IssueServiceActor;
+import actors.CommitSupervisorActor;
+import actors.CommitStatActor;
 import actors.RepoSearchActor;
+import actors.RepositoryProfileActor;
 import actors.SupervisorActor;
 import actors.TopicSearchActor;
 import akka.actor.ActorSystem;
@@ -71,6 +74,7 @@ public class HomeController extends Controller implements WSBodyReadables {
 	  public HomeController(AsyncCacheApi cache,ActorSystem system) {
 	    this.cache = cache;
 	    system.actorOf(SupervisorActor.getProps(),"supervisorActor");
+	    system.actorOf(CommitSupervisorActor.getProps(),"commitSupervisorActor");
 	  }
 	
     /**
@@ -114,6 +118,10 @@ public class HomeController extends Controller implements WSBodyReadables {
         return ok(topics.render(request, topic));
     }
     
+    public Result repository_profile(Http.Request request, String username, String repository) throws InterruptedException, ExecutionException {
+        return ok(repositoryprofile.render(request, username, repository));
+    }
+    
     public WebSocket ws() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepoSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
@@ -126,8 +134,10 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> TopicSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
     
+    public WebSocket wsRepositoryProfile() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepositoryProfileActor.props(ws, cache,ghApi), actorSystem, materializer));
     
-    /**
+    }/**
      * This method retrieves repositories by taking query as an input
 	 * An API call is made and response is then processed.
      * @author Kshitij Yerande
@@ -158,11 +168,13 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
 	 * 							  retrieve the result of any task
 	 */
-    public Result commits(String user, String repository) throws InterruptedException, ExecutionException {
-    	
-    	CommitStat commitStat = this.ghApi.getCommitStatistics(user, repository, cache);
-    	return ok(commit.render(commitStat));
-   }
+	public Result commits(String user,String repository,Http.Request request) throws InterruptedException, ExecutionException {
+    	return ok(commit.render(request));
+    }
+    
+    public WebSocket wsCommit() {
+    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> CommitStatActor.props(ws, cache,ghApi), actorSystem, materializer));
+    }
 
 	/**
 	 * This method retrieves user profile by taking user name as an input
@@ -224,7 +236,8 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
+	/*
+    public Result repository_profile(String username, String repository) throws InterruptedException, ExecutionException{
 		 
 		    RepositoryProfileService rps = new RepositoryProfileService();
 	    	RepositoryProfile rp = new RepositoryProfile();
@@ -247,6 +260,7 @@ public class HomeController extends Controller implements WSBodyReadables {
   		return ok(repositoryprofile.render(rp,rpi,rpc));
     	
     }	
+    */
 	 
 	/**
 	 * An action that renders an Topic HTML page with 10 latest repositories for the selected topic.

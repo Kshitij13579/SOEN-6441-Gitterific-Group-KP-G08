@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -39,7 +40,7 @@ public class RepositoryProfileServiceTest {
 		
 		// Calculated Repos from dummy data
 		RepositoryProfileService rps=new RepositoryProfileService();
-		JsonNode json = Json.parse("{\n\"owner\": {\n  \"login\": \"abc\", \"node_id\": \"abc\",\"avatar_url\": \"abc\"\n  },\n  \"name\": \"def\",\n  \"collaborators_url\": \"pqr\",\n \"issues_url\": \"pqr\",\n \"open_issues_count\": \"pqr\"\n}");
+		CompletableFuture<Object> json = CompletableFuture.supplyAsync(() -> Json.parse("{\n\"owner\": {\n  \"login\": \"abc\", \"node_id\": \"abc\",\"avatar_url\": \"abc\"\n  },\n  \"name\": \"def\",\n  \"collaborators_url\": \"pqr\",\n \"issues_url\": \"pqr\",\n \"open_issues_count\": \"pqr\"\n}"));
 		RepositoryProfile repos = rps.getRepositoryProfile(json);
 		
 		// Expected expectedRepo
@@ -58,7 +59,7 @@ public class RepositoryProfileServiceTest {
 		
 		// Calculated RepoList from dummy data
 		RepositoryProfileService rps=new RepositoryProfileService();
-		JsonNode json = Json.parse("[{  \"number\": \"def\",  \"title\": \"pqr\", \"state\": \"pqr\", \"created_at\": \"pqr\" , \"updated_at\": \"pqr\" }]");
+		CompletableFuture<Object> json = CompletableFuture.supplyAsync(()-> Json.parse("[{  \"number\": \"def\",  \"title\": \"pqr\", \"state\": \"pqr\", \"created_at\": \"pqr\" , \"updated_at\": \"pqr\" }]"));
 		//System.out.println(json);
 		List<RepositoryProfileIssues> rpi = rps.getRepositoryProfile_Issue(json);
 		//System.out.println(rpi.get(0).issue_number);
@@ -81,7 +82,7 @@ public class RepositoryProfileServiceTest {
 		
 		// Calculated RepoList from dummy data
 		RepositoryProfileService rps=new RepositoryProfileService();
-		JsonNode json = Json.parse("[{  \"login\": \"def\",  \"id\": \"pqr\", \"role_name\": \"pqr\", \"url\": \"pqr\" }]");
+		CompletableFuture<Object> json = CompletableFuture.supplyAsync(() -> Json.parse("[{  \"login\": \"def\",  \"id\": \"pqr\", \"role_name\": \"pqr\", \"url\": \"pqr\" }]"));
 		//System.out.println(json);
 		List<RepositoryProfileCollaborators> rpc = rps.getRepositoryProfile_Collaborators(json);
 		System.out.println(rpc.get(0).login);

@@ -4,26 +4,33 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import akka.actor.AbstractActor.Receive;
 import akka.actor.AbstractActorWithTimers;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import model.GithubApi;
-import model.GithubApiImpl;
-import model.Repository;
-import play.cache.AsyncCacheApi;
 import java.util.concurrent.TimeUnit;
 import com.google.inject.Inject;
 import scala.concurrent.duration.Duration;
 
-public class SupervisorActor extends AbstractActorWithTimers {
+/**
+* The Commit Supervisor Actor class is a timer which ticks every 45 seconds
+* and notifies all its clients.
+*
+* @author  Kshitij Yerande
+* @version 1.0
+* @since   2021-12-04 
+*/
+public class CommitSupervisorActor extends AbstractActorWithTimers {
     
+private Set<ActorRef> commitActors;
 	
-	private Set<ActorRef> userActors;
-	
+    /**
+     * Timer method which ticks every 45 seconds.
+     */
 	@Override
     public void preStart() {
     	// Logger.info("TimeActor {} started", self());
-        getTimers().startPeriodicTimer("Timer", new Tick(), Duration.create(10, TimeUnit.SECONDS));
+        getTimers().startPeriodicTimer("Timer", new Tick(), Duration.create(45, TimeUnit.SECONDS));
     }
 	
 	public static final class Tick {
@@ -42,27 +49,27 @@ public class SupervisorActor extends AbstractActorWithTimers {
     }
     
     static public Props getProps() {
-    	return Props.create(SupervisorActor.class,() -> new SupervisorActor());
+    	return Props.create(CommitSupervisorActor.class, () -> new CommitSupervisorActor());
     }
     
 
-    private SupervisorActor() {
+    private CommitSupervisorActor() {
 	  	// TODO Auto-generated constructor stub
-    	this.userActors = new HashSet<>();
+    	this.commitActors = new HashSet<>();
 	}
 	
 	@Override
 	public Receive createReceive() {
 		// TODO Auto-generated method stub
 		return receiveBuilder()
-    			.match(RegisterMsg.class, msg -> userActors.add(sender()))
+    			.match(RegisterMsg.class, msg -> commitActors.add(sender()))
     			.match(Tick.class, msg -> notifyClients())
-    			.match(DeRegister.class, msg -> userActors.remove(sender()))
+    			.match(DeRegister.class, msg -> commitActors.remove(sender()))
     		    .build();
 	}
 	
+	
 	 private void notifyClients() throws Exception {
-		 userActors.forEach(ar -> ar.tell(new Data(), self()));
+		 commitActors.forEach(ar -> ar.tell(new Data(), self()));
 	 }
-
 }

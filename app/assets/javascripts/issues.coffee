@@ -14,17 +14,7 @@ $ ->
     $('#titleList').empty()
    	for titleName in issues.titles
   	    $('#titleList').append $('<li/>').text(titleName)
-  	for x in [0..issues.words.length]
-  		row1=$('<tr>')
-  		row1.append $('<td style="border:1px solid black" />').append issues.words[x]
-  		row1.append $('<td style="border:1px solid black" />').append issues.count[x]
-  		row1.append $('<tr/>')
+  	row1=$('<tr>')
+  	for x in issues.words
+  		row1.append $('<td style="border:1px solid black" />').append 'Hello'
   	$('#issueStat').append row1
-#   	for x in [0..issues.count.length-1]
-#   		row1=$('<tr>')
-#   		row1.append $('<td style="border:1px solid black" />').append issues.words[x]
-#   		row1.append $('<td style="border:1px solid black" />').append issues.count[x]
-#   		row1.append $('<tr/>')
-#   $('#issueStat').append row1
-  		
-  		
