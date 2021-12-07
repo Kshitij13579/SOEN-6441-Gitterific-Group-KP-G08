@@ -28,10 +28,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import play.libs.Json;
 import service.IssueStatService;
 
-import java.util.List;
-
-import com.google.inject.Inject;
-
 
 public class IssueServiceActor extends AbstractActor{
 	private final ActorRef ws;
@@ -97,7 +93,7 @@ public class IssueServiceActor extends AbstractActor{
 
 		 ObjectNode response = Json.newObject(); 
 		List<String> titles=issuesList.stream().map(Issues::getTitle).collect(Collectors.toList());
-		
+
 		List<String> wordList=frequencyList[0];
 		List<Long>   wordCount=frequencyList[1];	
 			
@@ -117,7 +113,7 @@ public class IssueServiceActor extends AbstractActor{
 
 		Logger.debug("Response{}",response);
 		 
-	    	 ws.tell(response, self());
+	    ws.tell(response, self());
 	    	 
 		});
 	    	 

@@ -161,7 +161,8 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	  .addQueryParameter(GIT_PARAM.PER_PAGE.value,
 	  ConfigFactory.load().getString("constants.issues_per_page"))
 	  .addQueryParameter(GIT_PARAM.PAGE.value,
-	  ConfigFactory.load().getString("constants.issues_page") );  
+	  ConfigFactory.load().getString("constants.issues_page"))
+	  .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
 	  
 //	  CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
 // 			new Callable<CompletionStage<JsonNode>>() {
