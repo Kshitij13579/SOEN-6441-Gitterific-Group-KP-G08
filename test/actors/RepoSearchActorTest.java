@@ -24,12 +24,20 @@ import static play.inject.Bindings.bind;
 
 import java.time.Duration;
 
+/**
+ * This is the Test Class to perform RepoSearch Actor testing
+ * @author Kshitij Yerande
+ * @since 2021-12-07
+ * @version 1.0
+ *
+ */
 public class RepoSearchActorTest {
     
 public static ActorSystem system;
 public static Materializer materializer;
 public AsyncCacheApi cache;
 public GithubApi ghApi;
+
 Application application;
 
 	

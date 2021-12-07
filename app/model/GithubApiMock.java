@@ -145,7 +145,11 @@ public class GithubApiMock implements GithubApi {
 		
 		return c;
 	}
-
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Akshay
+	 * @since 2021-12-07
+	 */
 	@Override
 	public CompletableFuture<List<Issues>> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
@@ -178,9 +182,6 @@ public class GithubApiMock implements GithubApi {
 });
 		
 		return titleIssues;
-		
-		
-
 	}
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })

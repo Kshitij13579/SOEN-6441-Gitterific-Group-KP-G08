@@ -150,9 +150,12 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 		return commitStatFinal;
 	}
 
-	@Override
-//	public CompletableFuture<Object> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache)
-	
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Akshay
+	 * @since 2021-12-07
+	 */
+	@Override	
 	public CompletableFuture<List<Issues>> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
 	 WSRequest request =
 	  ws.url("https://api.github.com/repos/"+user+"/"+repository+"/issues")
@@ -163,16 +166,7 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	  .addQueryParameter(GIT_PARAM.PAGE.value,
 	  ConfigFactory.load().getString("constants.issues_page"))
 	  .setAuth(ConfigFactory.load().getString("constants.git_user"),ConfigFactory.load().getString("constants.git_token"));
-	  
-//	  CompletionStage<JsonNode> jsonPromise = cache.getOrElseUpdate(request.getUrl()+ GIT_PARAM.PER_PAGE.value, 
-// 			new Callable<CompletionStage<JsonNode>>() {
-// 				public CompletionStage<JsonNode> call() {
-// 					return request.get().thenApply(r -> r.getBody(json()));
-// 				};
-// 	},Integer.parseInt(ConfigFactory.load().getString("constants.CACHE_EXPIRY_TIME")) );
-	  
-	//  JsonNode repoIssues=jsonPromise.toCompletableFuture().get();
-	   
+	  	   
 	  CompletableFuture<List<Issues>> IssuesCompFut=request.get().thenApply(r->r.getBody(json())).toCompletableFuture()
 			  .thenApply(j->{
 				  List<Issues> titleList=new ArrayList<Issues>();
@@ -186,8 +180,7 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
   );
 	  
 	  return IssuesCompFut;
-	      	
-	   
+	      	   
 	}
 	
 	@Override

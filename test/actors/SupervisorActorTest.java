@@ -13,6 +13,13 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.testkit.javadsl.TestKit;
 
+/**
+ * This is the Test Class to perform Supervisor Actor testing
+ * @author Kshitij Yerande
+ * @since 2021-12-07
+ * @version 1.0
+ *
+ */
 public class SupervisorActorTest {
     
 	  

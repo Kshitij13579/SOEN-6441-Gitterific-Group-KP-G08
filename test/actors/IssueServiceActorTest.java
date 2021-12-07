@@ -26,6 +26,13 @@ import static play.inject.Bindings.bind;
 import java.time.Duration;
 
 
+/**
+ * This is the Test Class to perform Issue Service Actor testing
+ * @since 2021-12-07
+ * @version 1.0
+ * @author akshay dhabale
+ *
+ */
 public class IssueServiceActorTest {
 	
 	public static ActorSystem system;
