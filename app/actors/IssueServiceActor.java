@@ -110,8 +110,9 @@ public class IssueServiceActor extends AbstractActor{
 		for (Long count : wordCount) {
 			arrayNode2.add(count);
 		}
-
-		Logger.debug("Response{}",response);
+		
+		// Uncomment in local
+		// Logger.debug("Response{}",response);
 		 
 	    ws.tell(response, self());
 	    	 

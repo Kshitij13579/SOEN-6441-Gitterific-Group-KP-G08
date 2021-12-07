@@ -69,7 +69,10 @@ public class GithubApiMock implements GithubApi {
 	@Inject WSClient ws;
 	@Override
 	public CompletableFuture<Object> getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
-		String testResources = System.getProperty("user.dir") + "/test/resources/play.json";
+		if (query == null) {
+			query = "play";
+		}
+		String testResources = System.getProperty("user.dir") + "/test/resources/" + "play" + ".json";
 		java.io.File file = new java.io.File(testResources);
 		ObjectMapper mapper = new ObjectMapper();
 		CompletableFuture<Object> json = null;
