@@ -68,8 +68,8 @@ public class UserProfileSearchActor extends AbstractActor {
 	         response.put("following", userList.following);
 	         response.put("subscriptions_url", userList.subscriptions_url);
 	         response.put("organizations_url", userList.organizations_url);
-
-	         Logger.debug("New User Search Actor Response {}",response);
+	      // Uncomment in local
+	         // Logger.debug("New User Search Actor Response {}",response);
 	    	 ws.tell(response, self());
 	     
 	    
