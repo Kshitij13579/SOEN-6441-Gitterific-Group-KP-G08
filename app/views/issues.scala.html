@@ -3,7 +3,7 @@
 <html lang="en">
 <style>
 table, th, td {
-  border:3px solid black;
+  border:1px solid black;
 }
 </style>
 
@@ -16,17 +16,19 @@ table, th, td {
 
 <body data-ws-url="@routes.HomeController.wsIssue.webSocketURL(request)"> 
 
-<h1 id='title'> </h1>      
+<center><h1 id='title'> </h1></center>
+<h3 id='IssueList'></h3>    
   
     <div>
     	<ul id='titleList'>
     	</ul> 
     </div>
     <div>    
+    <h3 id='titleStat'> </h3>    
     <table id="issueStat">
             	<tr> 
-            		<th>Words </th>
-					<th>Count</th>  
+            		<th> </th>
+					<th> </th>  
                </tr> 	                                                                           
 	</table>   
 </div>

@@ -141,15 +141,18 @@ public class GithubApiImplTest {
 			
 			// TODO: handle exception
 		}	
-		
-		List<Issues> titleIssues=new ArrayList<Issues>();
-		  
-		tempJson.forEach(t->{ 	
 			
-			 String title=t.get("title").asText(); 
-			 titleIssues.add(new Issues(title));
-			 
-			 });
+		JsonNode j=tempJson;
+		
+		CompletableFuture<List<Issues>> titleIssues = CompletableFuture.supplyAsync(() -> {
+			  List<Issues> titleList=new ArrayList<Issues>();
+			  j.forEach(t->{
+		  String title=t.get("title").asText();
+		  titleList.add(new Issues(title));
+		  
+	  });
+			  return titleList;
+});
 		
 		try {
 			
@@ -160,7 +163,7 @@ public class GithubApiImplTest {
 			e.printStackTrace();
 		}
 		
-		List<Issues> actualIssues=ghaMock.getIssuesFromResponse("er1", "s228", cache);
+		List<Issues> actualIssues=ghaMock.getIssuesFromResponse("er1", "s228", cache).get();
 		assertTrue(actualIssues.size()>0);
 		assertTrue(actualIssues.get(0).getClass().getName() == "model.Issues");
 	}

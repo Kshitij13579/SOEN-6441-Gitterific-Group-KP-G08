@@ -224,17 +224,16 @@ public class viewTest {
 		assertEquals("text/html",html.contentType().toString());
 		assertTrue(contentAsString(html).contains("Gitterific"));
 	}
-	
-	@Test 
-	public void testIssues() {
-		
-		String repo="testRep";
-		List<Issues> issuesList=Arrays.asList(new Issues("hello"));
-		IssueStatService issueStatService=new IssueStatService();
-		List[] frequencyList=issueStatService.wordCountDescening(issuesList);
-		Content html=views.html.issues.render(issuesList,frequencyList[0],frequencyList[1],repo);
-		assertEquals("text/html", html.contentType().toString());
-		assertTrue(contentAsString(html).contains("Repository Issues"));		
-	}
-	
+
+//	@Test 
+//	public void testIssues() {
+//		
+//		String repo="testRep";
+//		List<Issues> issuesList=Arrays.asList(new Issues("hello"));
+//		IssueStatService issueStatService=new IssueStatService();
+//		List[] frequencyList=issueStatService.wordCountDescening(issuesList);
+//		Content html=views.html.issues.render(issuesList,frequencyList[0],frequencyList[1],repo);
+//		assertEquals("text/html", html.contentType().toString());
+//		assertTrue(contentAsString(html).contains("Repository Issues"));		
+//	}
 }

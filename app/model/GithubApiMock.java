@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
-
+import play.Logger;
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -144,7 +144,7 @@ public class GithubApiMock implements GithubApi {
 	}
 
 	@Override
-	public List<Issues> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache)
+	public CompletableFuture<List<Issues>> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
 		
 		String testJson=System.getProperty("user.dir") +"/test/resources/issues.json";
@@ -162,19 +162,25 @@ public class GithubApiMock implements GithubApi {
 			// TODO: handle exception
 		}
 		
-		List<Issues> titleIssues=new ArrayList<Issues>();
+		JsonNode j=tempJson;
 		
-		tempJson.forEach(t->{
-			
-			String title=t.get("title").asText();
-			titleIssues.add(new Issues(title));
-			
-		});
+		CompletableFuture<List<Issues>> titleIssues = CompletableFuture.supplyAsync(() -> {
+			  List<Issues> titleList=new ArrayList<Issues>();
+			  j.forEach(t->{
+		  String title=t.get("title").asText();
+		  titleList.add(new Issues(title));
+		  
+	  });
+			  return titleList;
+});
 		
 		return titleIssues;
+		
+		
+
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	public CompletableFuture<Object> getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException {
 		
@@ -182,18 +188,15 @@ public class GithubApiMock implements GithubApi {
 		java.io.File file = new java.io.File(path);
 		ObjectMapper mapper = new ObjectMapper();
 		 CompletionStage<JsonNode> json = null;
-		 
-		try {
-			json = (CompletionStage<JsonNode>) mapper.readTree(file);
-		} 
-		 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	    return json.toCompletableFuture().thenApply(j -> {
-	    	return j ; 
-	    	});
+		 return CompletableFuture.supplyAsync(() -> {
+				try {
+					return mapper.readTree(file);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return json;
+			});	
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -203,18 +206,15 @@ public class GithubApiMock implements GithubApi {
 		java.io.File file = new java.io.File(path);
 		ObjectMapper mapper = new ObjectMapper();
 		CompletionStage<JsonNode> json = null;
-		 
-		try {
-			json = (CompletionStage<JsonNode>) mapper.readTree(file);
-		} 
-		 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return json.toCompletableFuture().thenApply(j -> {
-	    	return j ; 
-	    	});
+		return CompletableFuture.supplyAsync(() -> {
+			try {
+				return mapper.readTree(file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return json;
+		});	
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -224,18 +224,15 @@ public class GithubApiMock implements GithubApi {
 		java.io.File file = new java.io.File(path);
 		ObjectMapper mapper = new ObjectMapper();
 		CompletionStage<JsonNode> json = null;
-		 
-		try {
-			json = (CompletionStage<JsonNode>) mapper.readTree(file);
-		} 
-		 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return json.toCompletableFuture().thenApply(j -> {
-	    	return j ; 
-	    	});
+		return CompletableFuture.supplyAsync(() -> {
+			try {
+				return mapper.readTree(file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return json;
+		});	
 	}
 	
 	public UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException 
