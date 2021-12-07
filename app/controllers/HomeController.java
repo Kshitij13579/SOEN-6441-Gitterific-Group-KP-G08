@@ -148,6 +148,12 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> TopicSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
     
+    /**
+	   * Handles WebSocket for RepositoryProfile Page
+	   * @return WebSocket object
+	   * @author Yogesh Yadav
+	   * @since  2021-12-07
+	   */
     public WebSocket wsRepositoryProfile() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepositoryProfileActor.props(ws, cache,ghApi), actorSystem, materializer));
     
