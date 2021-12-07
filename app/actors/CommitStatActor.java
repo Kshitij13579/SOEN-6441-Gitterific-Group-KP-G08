@@ -56,7 +56,7 @@ public class CommitStatActor extends AbstractActor {
     }
     
     /**
-     * Mthod call before Actor is started to subscribe to supervisor actor.
+     * Method call before Actor is started to subscribe to supervisor actor.
      */
     @Override
     public void preStart() {
