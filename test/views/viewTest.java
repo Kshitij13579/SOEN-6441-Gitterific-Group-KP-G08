@@ -223,18 +223,27 @@ public class viewTest {
 		Content html=views.html.index.render(request);
 		assertEquals("text/html",html.contentType().toString());
 		assertTrue(contentAsString(html).contains("Gitterific"));
-	}
-	
-	@Test 
-	public void testIssues() {
 		
-		String repo="testRep";
-		List<Issues> issuesList=Arrays.asList(new Issues("hello"));
-		IssueStatService issueStatService=new IssueStatService();
-		List[] frequencyList=issueStatService.wordCountDescening(issuesList);
-		Content html=views.html.issues.render(issuesList,frequencyList[0],frequencyList[1],repo);
-		assertEquals("text/html", html.contentType().toString());
-		assertTrue(contentAsString(html).contains("Repository Issues"));		
+		html=views.html.commit.render(request);
+		assertEquals("text/html",html.contentType().toString());
+		
+		
+		html=views.html.issues.render(request,"test","test");
+		assertEquals("text/html",html.contentType().toString());
+		
+		
+		html=views.html.repositories.render(request);
+		assertEquals("text/html",html.contentType().toString());
+		
+		html=views.html.repositoryprofile.render(request,"test","test");
+		assertEquals("text/html",html.contentType().toString());
+		
+		html=views.html.topics.render(request,"play");
+		assertEquals("text/html",html.contentType().toString());
+		
+		html=views.html.users.render(request);
+		assertEquals("text/html",html.contentType().toString());
+		
 	}
-	
+
 }

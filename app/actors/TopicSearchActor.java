@@ -78,7 +78,8 @@ public class TopicSearchActor extends AbstractActor {
 				         for (String item : r.topics) {
 				             arrayNode.add(item);
 				         }
-				         Logger.debug("New Repo Search Actor Response {}",response);
+				      // Uncomment in local
+				         // Logger.debug("New Repo Search Actor Response {}",response);
 				    	 ws.tell(response, self());
 				    	 
 				     });						 

@@ -56,7 +56,7 @@ public class CommitStatActor extends AbstractActor {
     }
     
     /**
-     * Mthod call before Actor is started to subscribe to supervisor actor.
+     * Method call before Actor is started to subscribe to supervisor actor.
      */
     @Override
     public void preStart() {
@@ -108,7 +108,8 @@ public class CommitStatActor extends AbstractActor {
 				 response.put("min_del", commitStat.getMin_deletions());
 				 response.put("max_del", commitStat.getMax_deletions());
 				 response.put("avg_del", commitStat.getAvg_deletions());
-				 Logger.debug("Commit Stat Response {}",response);
+				// Uncomment in local
+				 // Logger.debug("Commit Stat Response {}",response);
 				 ws.tell(response, self());
 			 });
 			 

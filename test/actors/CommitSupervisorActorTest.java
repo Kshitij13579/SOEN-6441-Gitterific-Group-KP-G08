@@ -19,8 +19,7 @@ public class CommitSupervisorActorTest {
 	  public  void setup() {
 	    system = ActorSystem.create();
 	  }
-
-	  
+  
 	
 	@Test
 	public void testCommitSupervisorActor() {
