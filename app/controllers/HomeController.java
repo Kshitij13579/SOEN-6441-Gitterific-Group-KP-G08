@@ -90,8 +90,6 @@ public class HomeController extends Controller implements WSBodyReadables {
      * An action that renders an HTML page with a welcome message.
      * @param request Http Request 
      * @return Result showing the 10 latest repositories for the query
-     * @throws InterruptedException
-     * @throws ExecutionException
      * @author Kshitij Yerande
      * @since 2021-12-07
      */
@@ -110,8 +108,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @param request Request sent by the topics page
 	 * @param topic	selected by the user on the main search page
 	 * @return Result showing the 10 latest repositories for the selected topic
-	 * @throws InterruptedException
-	 * @throws ExecutionException
 	 */
     public Result topics(Http.Request request, String topic) throws InterruptedException, ExecutionException {
         return ok(topics.render(request, topic));
@@ -123,8 +119,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @param username - Git Username
 	 * @param repository - Git Repository name
 	 * @return Goto Render Repository Profile HTML page
-	 * @throws InterruptedException
-	 * @throws ExecutionException
 	 */
     public Result repository_profile(Http.Request request, String username, String repository) throws InterruptedException, ExecutionException {
         return ok(repositoryprofile.render(request, username, repository));
@@ -166,9 +160,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @param user user repository owner
 	 * @param repository repository name
 	 * @return a HTML Response
-	 * @throws InterruptedException InterruptedException Exception during runtime
-	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
-	 * 							  retrieve the result of any task
 	 */
 	public Result commits(String user,String repository,Http.Request request) throws InterruptedException, ExecutionException {
     	return ok(commit.render(request));
@@ -191,9 +182,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @author Siddhartha
 	 * @param username user name
 	 * @return a HTML Response
-	 * @throws InterruptedException InterruptedException Exception during runtime
-	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
-	 * 							  retrieve the result of any task
 	 */
     public Result user_profile(String username , Http.Request request) throws InterruptedException, ExecutionException{
     	
@@ -210,9 +198,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @author Siddhartha
 	 * @param username user name
 	 * @return a HTML Response
-	 * @throws InterruptedException InterruptedException Exception during runtime
-	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
-	 * 							  retrieve the result of any task
 	 */
     public Result user_repository(String username, Http.Request request) throws InterruptedException, ExecutionException{
 
@@ -232,9 +217,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @param user user repository owner
 	 * @param repository repository name
 	 * @return a HTML Response
-	 * @throws InterruptedException InterruptedException Exception during runtime
-	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
-	 * 							  retrieve the result of any task
 	 * @author Akshay
 	 * @since 2021-12-07
 	 * 
