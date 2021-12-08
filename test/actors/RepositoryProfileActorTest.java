@@ -26,6 +26,12 @@ import static play.inject.Bindings.bind;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Test class for RepositoryProfileActorTest  
+ * @author Yogesh Yadav
+ *@version 1.0
+ *@since 2021-12-07
+ */
 public class RepositoryProfileActorTest {
 	 
 	public static ActorSystem system;

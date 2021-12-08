@@ -24,6 +24,15 @@ import model.Repository;
 import model.UserProfile;
 import actors.SupervisorActor.Data;
 
+/**
+* The User Profile Search Actor class is used to fetch details of a user
+* by making an API call every 10 seconds.
+* This actor subscribes to Supervisor Actor.
+*
+* @author  Siddhartha Jha
+* @version 1.0
+* @since   2021-12-04 
+*/
 public class UserProfileSearchActor extends AbstractActor {
 	private final ActorRef ws;
     GithubApi ghApi;
@@ -35,16 +44,29 @@ public class UserProfileSearchActor extends AbstractActor {
     	Logger.debug("New User Search Actor{} for WebSocket {}", self(), wsOut);
     }
     
+    /**
+     * Method to get the Actor protocols and create the actor
+     * @param wsout
+     * @param ghApi
+     * @return Props
+     */    
     public static Props props(final ActorRef wsout,GithubApi ghApi) {
         return Props.create(UserProfileSearchActor.class, wsout, ghApi);
     }
-    
+
+    /**
+     * Method call before Actor is started to subscribe to supervisor actor.
+     */    
     @Override
     public void preStart() {
        	context().actorSelection("/user/supervisorActor/")
                  .tell(new SupervisorActor.RegisterMsg(), self());
     }
-    
+ 
+    /**
+     * Method call n messages received to actor.
+     * @return Receive 
+     */    
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
@@ -53,8 +75,13 @@ public class UserProfileSearchActor extends AbstractActor {
     			.build();
 	}
 	
+	/**
+	 * Method to fetch user details and send to UI.
+	 * @param d
+	 * @throws Exception
+	 */	
 	 private void send(Data d) throws Exception {
-		 //Logger.debug("New User Search Actor Query {}",this.query);
+		 Logger.debug("New User Search Actor Query {}",username);
 		 UserProfile userList = ghApi.getUserProfile(username);
 	    	 ObjectNode response = Json.newObject();
 	         response.put("name", userList.login);
@@ -68,11 +95,10 @@ public class UserProfileSearchActor extends AbstractActor {
 	         response.put("following", userList.following);
 	         response.put("subscriptions_url", userList.subscriptions_url);
 	         response.put("organizations_url", userList.organizations_url);
-
-	         Logger.debug("New User Search Actor Response {}",response);
+	      // Uncomment in local
+	         // Logger.debug("New User Search Actor Response {}",response);
 	    	 ws.tell(response, self());
-	     
-	    
+	       
 	 }
 }
 

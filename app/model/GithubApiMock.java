@@ -69,7 +69,10 @@ public class GithubApiMock implements GithubApi {
 	@Inject WSClient ws;
 	@Override
 	public CompletableFuture<Object> getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException {
-		String testResources = System.getProperty("user.dir") + "/test/resources/play.json";
+		if (query == null) {
+			query = "play";
+		}
+		String testResources = System.getProperty("user.dir") + "/test/resources/" + "play" + ".json";
 		java.io.File file = new java.io.File(testResources);
 		ObjectMapper mapper = new ObjectMapper();
 		CompletableFuture<Object> json = null;
@@ -142,7 +145,11 @@ public class GithubApiMock implements GithubApi {
 		
 		return c;
 	}
-
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Akshay
+	 * @since 2021-12-07
+	 */
 	@Override
 	public CompletableFuture<List<Issues>> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache)
 			throws InterruptedException, ExecutionException {
@@ -175,9 +182,6 @@ public class GithubApiMock implements GithubApi {
 });
 		
 		return titleIssues;
-		
-		
-
 	}
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
@@ -237,11 +241,14 @@ public class GithubApiMock implements GithubApi {
 	
 	public UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException 
 	{
-		return new UserProfile();
+		UserProfile expected = new UserProfile("a","b","c","d","e","f","g","h","i","j","k");
+		return expected;
 	}
 		
 	public List<UserRepository> getuser_repository(String username) throws InterruptedException, ExecutionException {
 	
-		return new ArrayList<UserRepository>();
+		List<UserRepository> expected = new ArrayList<UserRepository>();
+		expected.add(new UserRepository("abc","def","mno"));
+		return expected;
 	}
 }

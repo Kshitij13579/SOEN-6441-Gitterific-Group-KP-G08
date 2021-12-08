@@ -29,6 +29,16 @@ import scala.concurrent.duration.Duration;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+/**
+ * The Repo Search Actor class is used to display
+ * 10 results for prvided query by making an API call every 10 seconds.
+ * This actor subscribes to Supervisor Actor.
+ *
+ * @author  Kshitij Yerande
+ * @version 1.0
+ * @since   2021-12-07
+ *
+ */
 public class RepoSearchActor extends AbstractActor {
 	private final ActorRef ws;
 	
@@ -38,6 +48,13 @@ public class RepoSearchActor extends AbstractActor {
     
     HashMap<String,List<Repository>> userSearchHist;
     
+    /**
+     * The RepoSearchActor is a constructor for Actor
+     * @param wsOut ActorRef of Actor 
+     * @param cache	Async cached being used in the main controller
+     * @param ghApi GitHubApi Interface Object
+     *
+     */
     public RepoSearchActor(final ActorRef wsOut,AsyncCacheApi cache,GithubApi ghApi) {
     	ws =  wsOut;
     	this.cache = cache;
@@ -46,21 +63,38 @@ public class RepoSearchActor extends AbstractActor {
     	Logger.debug("New Repo Search Actor{} for WebSocket {}", self(), wsOut);
     }
     
+    /**
+     * Method to create the Actor and get Actor Protocol
+     * @param wsout ActorRef of Actor
+     * @param cache Async cached being used in the main controller
+     * @param ghApi GitHubApi Interface Object
+     * @return Props 
+     */
     public static Props props(final ActorRef wsout,AsyncCacheApi cache,GithubApi ghApi) {
         return Props.create(RepoSearchActor.class, wsout,cache,ghApi);
     }
     
+    
+    /**
+     * Method Call before Actor is created and it registers with Supervisor Actor
+     */
     @Override
     public void preStart() {
        	context().actorSelection("/user/supervisorActor/")
                  .tell(new SupervisorActor.RegisterMsg(), self());
     }
-    
+    /**
+     * Method Call before Actor is stopped 
+     */
     @Override
     public void postStop() {
        	Logger.debug("New Repo Search Actor{} Stopped",self());
     }
     
+    /**
+	 * Method called when Actor receives message 
+	 * @return Receive
+	 */
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
@@ -69,6 +103,12 @@ public class RepoSearchActor extends AbstractActor {
     			.build();
 	}
 	
+	 
+	 /**
+	  * Method to display 10 results for provided query and send it to UI via JsonObject
+	 * @param d Data
+	 * @throws Exception
+	 */	
 	 private void send(Data d) throws Exception {
 		 Logger.debug("New Repo Search Actor Query {}",this.query);
 		 if (this.query != null && this.query != "") {
@@ -93,18 +133,23 @@ public class RepoSearchActor extends AbstractActor {
 					         for (String item : r.topics) {
 					             arrayNode.add(item);
 					         }
-					         Logger.debug("New Repo Search Actor Response {}",response);
+					      // Uncomment in local
+					         // Logger.debug("New Repo Search Actor Response {}",response);
 					    	 ws.tell(response, self());
 					    	 
 					     });						 
 					 }
 				 });
-			 // }	 
 			 
 		 }
 	 }
 	 
-	 private List<Repository> getDifference(List<Repository> repoList){
+	 /**
+	  * The method to get the difference between search results
+	 * @param repoList List of repositories
+	 * @return List<Repository> List of updated repositories
+	 */
+	private List<Repository> getDifference(List<Repository> repoList){
 		 
 		 List<Repository> actorRepoList = this.userSearchHist.get(this.query);
 		 List<Repository> res = repoList.stream()

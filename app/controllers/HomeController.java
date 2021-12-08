@@ -82,16 +82,19 @@ public class HomeController extends Controller implements WSBodyReadables {
 	    system.actorOf(CommitSupervisorActor.getProps(),"commitSupervisorActor");
 	  }
 	
-    /**
-     * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
-     */
 	
 	@Inject
 	WSClient ws;
     
+    /**
+     * An action that renders an HTML page with a welcome message.
+     * @param request Http Request 
+     * @return Result showing the 10 latest repositories for the query
+     * @throws InterruptedException
+     * @throws ExecutionException
+     * @author Kshitij Yerande
+     * @since 2021-12-07
+     */
     public Result index(Http.Request request) throws InterruptedException, ExecutionException {
 
         return ok(index.render(request));
@@ -114,10 +117,25 @@ public class HomeController extends Controller implements WSBodyReadables {
         return ok(topics.render(request, topic));
     }
     
+	 /**
+	 * Method to Accept Username and Repository from Index HTML Page and update Repository Profile HTML Page
+	 * @author Yogesh Yadav
+	 * @param username - Git Username
+	 * @param repository - Git Repository name
+	 * @return Goto Render Repository Profile HTML page
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
     public Result repository_profile(Http.Request request, String username, String repository) throws InterruptedException, ExecutionException {
         return ok(repositoryprofile.render(request, username, repository));
     }
     
+	  /**
+	   * Handles WebSocket for Index Page
+	   * @return WebSocket object
+	   * @author Kshitij Yerande
+	   * @since  2021-12-07
+	   */
     public WebSocket ws() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepoSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
@@ -130,6 +148,12 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> TopicSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
     
+    /**
+	   * Handles WebSocket for RepositoryProfile Page
+	   * @return WebSocket object
+	   * @author Yogesh Yadav
+	   * @since  2021-12-07
+	   */
     public WebSocket wsRepositoryProfile() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepositoryProfileActor.props(ws, cache,ghApi), actorSystem, materializer));
     
@@ -150,6 +174,7 @@ public class HomeController extends Controller implements WSBodyReadables {
     	return ok(commit.render(request));
     }
     
+	
     public WebSocket wsCommit() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> CommitStatActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
@@ -185,28 +210,19 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 */
     public Result user_repository(String username, Http.Request request) throws InterruptedException, ExecutionException{
 
-    	return ok(repositories.render(request));
 
+    	return ok(repositories.render(request));
     }
     
     public WebSocket wsur() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> UserRepositoryActor.props(ws,ghApi), actorSystem, materializer));
     }
-    
-	 /**
-	 * Method to Accept Username and Repository from Index HTML Page and update Repository Profile HTML Page
-	 * @author Yogesh Yadav
-	 * @param username - Git Username
-	 * @param repository - Git Repository name
-	 * @return Goto Render Repository Profile HTML page
-	 * @throws InterruptedException
-	 * @throws ExecutionException
-	 */
 	
 	
 	/**
 	 * This method performs repository issues title statistics by taking user and repository name as input
 	 * An API call is made and response is then processed and calculated statistics.
+	 * @param Http Request
 	 * @param user user repository owner
 	 * @param repository repository name
 	 * @return a HTML Response
@@ -214,6 +230,7 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * @throws ExecutionException ExecutionException Exception thrown when attempting to 
 	 * 							  retrieve the result of any task
 	 * @author Akshay
+	 * @since 2021-12-07
 	 * 
 	 */
 	public Result issues(Http.Request request, String user, String repository) throws InterruptedException, ExecutionException{
@@ -221,7 +238,13 @@ public class HomeController extends Controller implements WSBodyReadables {
 	return ok(issues.render(request,user,repository));
 	  
 	  }
-	  public WebSocket wsIssue() {
+	  /**
+	   * Handles WebSocket for Issue Statistics Page
+	   * @return WebSocket object
+	   * @author Akshay
+	   * @since 2021-12-07
+	   */
+	public WebSocket wsIssue() {
 	    	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> IssueServiceActor.props(ws, cache,ghApi), actorSystem, materializer));
 	    }	 
 }

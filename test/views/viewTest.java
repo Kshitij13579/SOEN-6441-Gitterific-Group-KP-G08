@@ -224,6 +224,7 @@ public class viewTest {
 		assertEquals("text/html",html.contentType().toString());
 		assertTrue(contentAsString(html).contains("Gitterific"));
 		
+
 		html=views.html.commit.render(request);
 		assertEquals("text/html",html.contentType().toString());
 		

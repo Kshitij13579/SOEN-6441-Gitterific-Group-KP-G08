@@ -1,7 +1,21 @@
 package actors;
 
-import static org.junit.Assert.*;
+import play.Logger;
 
+import static org.junit.Assert.*;
+import static play.inject.Bindings.bind;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import akka.actor.ActorSystem;
+import akka.stream.Materializer;
+import model.GithubApi;
+import model.GithubApiMock;
+import play.Application;
+import play.cache.AsyncCacheApi;
+import play.inject.guice.GuiceApplicationBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,21 +34,12 @@ import play.inject.guice.GuiceApplicationBuilder;
 import actors.SupervisorActor.Data;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import play.libs.Json;
+import java.time.Duration;
 
 import static play.inject.Bindings.bind;
 
-import java.time.Duration;
+public class UserProfileActorTest {
 
-
-/**
- * This is the Test Class to perform Issue Service Actor testing
- * @since 2021-12-07
- * @version 1.0
- * @author akshay dhabale
- *
- */
-public class IssueServiceActorTest {
-	
 	public static ActorSystem system;
 	public static Materializer materializer;
 	public AsyncCacheApi cache;
@@ -50,11 +55,11 @@ public class IssueServiceActorTest {
 		  }
 		
 		@Test
-		public void testIssueServiceActor() {
+		public void testUserProfileActor() {
 		   
 			new TestKit(system) {
 				{   
-					final Props props = IssueServiceActor.props(getTestActor(), cache, ghApi);
+					final Props props = UserProfileSearchActor.props(getTestActor(), ghApi);
 			        final ActorRef subject = system.actorOf(props);	
 			        final TestKit probe = new TestKit(system);
 			        
@@ -63,18 +68,26 @@ public class IssueServiceActorTest {
 			                () -> {
 			                	
 			                	subject.tell(new Data(),getRef());
-			                	expectNoMsg();
+//			                	expectNoMsg();
 			                	
 			                	ObjectNode testData = Json.newObject(); 
-			                	//testData.put("er1","s228");
-			                	//testData.put("repository","repo");
-			                	testData.put("user","test");
-			                	testData.put("repository","repo");
+			                	testData.put("keyword","user");
 			                	subject.tell(testData,getRef());
 			                	
 			                	subject.tell(new Data(),getRef());
 			                	ObjectNode node = expectMsgClass(ObjectNode.class);
 			                	
+			                	assertEquals("a" , node.get("name").asText());
+			                	assertEquals("b" , node.get("id").asText());
+			                	assertEquals("c" , node.get("node_id").asText());
+			                	assertEquals("d" , node.get("avatar_url").asText());
+			                	assertEquals("e" , node.get("repos_url").asText());
+			                	assertEquals("f" , node.get("email").asText());
+			                	assertEquals("g" , node.get("twitter_username").asText());
+			                	assertEquals("h" , node.get("followers").asText());
+			                	assertEquals("i" , node.get("following").asText());
+			                	assertEquals("j" , node.get("subscriptions_url").asText());
+			                	assertEquals("k" , node.get("organizations_url").asText());
 			                	return null;
 			                });
 				}
@@ -89,5 +102,4 @@ public class IssueServiceActorTest {
 		    TestKit.shutdownActorSystem(system);
 		    system = null;
 		  }
-
-}
+	}

@@ -26,6 +26,15 @@ import model.Repository;
 import model.UserProfile;
 import actors.SupervisorActor.Data;
 
+/**
+* The User Repository Actor class is used to fetch all the repositories of a user
+* by making an API call every 10 seconds.
+* This actor subscribes to Supervisor Actor.
+*
+* @author  Siddhartha Jha
+* @version 1.0
+* @since   2021-12-04 
+*/
 public class UserRepositoryActor extends AbstractActor {
 	private final ActorRef ws;
     GithubApi ghApi;
@@ -38,16 +47,29 @@ public class UserRepositoryActor extends AbstractActor {
     	Logger.debug("New User Search Actor{} for WebSocket {}", self(), wsOut);
     }
     
+    /**
+     * Method to get the Actor protocols and create the actor
+     * @param wsout
+     * @param ghApi
+     * @return Props
+     */      
     public static Props props(final ActorRef wsout,GithubApi ghApi) {
         return Props.create(UserRepositoryActor.class, wsout, ghApi);
     }
-    
+
+    /**
+     * Method call before Actor is started to subscribe to supervisor actor.
+     */        
     @Override
     public void preStart() {
        	context().actorSelection("/user/supervisorActor/")
                  .tell(new SupervisorActor.RegisterMsg(), self());
     }
-    
+
+    /**
+     * Method call n messages received to actor.
+     * @return Receive 
+     */       
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
@@ -56,6 +78,11 @@ public class UserRepositoryActor extends AbstractActor {
     			.build();
 	}
 	
+	/**
+	 * Method to fetch user repositories list and send to UI.
+	 * @param d
+	 * @throws Exception
+	 */		
 	 private void send(Data d) throws Exception {
          Logger.debug("New Repo Search Actor Response {}",username);
 		 List<UserRepository> userrepoList = ghApi.getuser_repository(username);
@@ -64,7 +91,8 @@ public class UserRepositoryActor extends AbstractActor {
 	         response.put("login", r.login);
 	         response.put("name", r.name);
 	         response.put("reponame", r.reponame);
-	         Logger.debug("New Repo Search Actor Response {}",response);
+	      // Uncomment in local
+	         // Logger.debug("New Repo Search Actor Response {}",response);
 	    	 ws.tell(response, self());	 
 	     });
 	 }
