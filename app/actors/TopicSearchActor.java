@@ -20,6 +20,16 @@ import model.Repository;
 import actors.SupervisorActor.Data;
 import java.util.stream.Collectors;
 
+/**
+ * It is used to display latest
+ * 10 results for provided topic by making an API call every 10 seconds.
+ * This actor subscribes to Supervisor Actor.
+ *
+ * @author  Mrinal Rai
+ * @version 1.0
+ * @since   2021-12-07
+ *
+ */
 public class TopicSearchActor extends AbstractActor {
 	private final ActorRef ws;
 	
@@ -28,6 +38,13 @@ public class TopicSearchActor extends AbstractActor {
     String query;
     HashMap<String,List<Repository>> repoHistory;
     
+    /**
+     * Constructor for TopicSearchActor
+     * @param wsOut ActorRef of Actor 
+     * @param cache	Async cached being used in the main controller
+     * @param ghApi GitHubApi Interface Object
+     *
+     */
     public TopicSearchActor(final ActorRef wsOut,AsyncCacheApi cache,GithubApi ghApi) {
     	ws =  wsOut;
     	this.cache = cache;
@@ -36,16 +53,38 @@ public class TopicSearchActor extends AbstractActor {
     	Logger.debug("New Topic Search Actor{} for WebSocket {}", self(), wsOut);
     }
     
+    /**
+     * Creates the Actor and get Actor Protocol
+     * @param wsout ActorRef of Actor
+     * @param cache Async cached being used in the main controller
+     * @param ghApi GitHubApi Interface Object
+     * @return Props 
+     */
     public static Props props(final ActorRef wsout,AsyncCacheApi cache,GithubApi ghApi) {
         return Props.create(TopicSearchActor.class, wsout,cache,ghApi);
     }
     
+    /**
+     * Gets called before Actor is created and it registers with Supervisor Actor
+     */
     @Override
     public void preStart() {
        	context().actorSelection("/user/supervisorActor/")
                  .tell(new SupervisorActor.RegisterMsg(), self());
     }
     
+    /**
+     * Gets called before Actor is stopped 
+     */
+    @Override
+    public void postStop() {
+       	Logger.debug("New Repo Search Actor{} Stopped",self());
+    }
+    
+    /**
+	 * Gets called when Actor receives message 
+	 * @return Receive
+	 */
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
@@ -54,6 +93,11 @@ public class TopicSearchActor extends AbstractActor {
     			.build();
 	}
 	
+	/**
+	 * Displays 10 latest results for provided query and send it to UI via JsonObject
+	 * @param d Data
+	 * @throws Exception
+	 */	
 	 private void send(Data d) throws Exception {
 		 Logger.debug("New Topic Search Actor Query {}",this.query);
 		 if (this.query != null && this.query != "") {
@@ -88,6 +132,11 @@ public class TopicSearchActor extends AbstractActor {
 		 }		
 	 }
 	 
+	 /**
+	 * Fetches the difference between the new and old topic results
+	 * @param repoList List of repositories
+	 * @return List<Repository> List of updated repositories
+	 */
 	 private List<Repository> getDifference(List<Repository> repoList){
 		 
 		 List<Repository> actorRepoList = this.repoHistory.get(this.query);

@@ -24,6 +24,13 @@ import static play.inject.Bindings.bind;
 
 import java.time.Duration;
 
+/**
+ * This class Performs testing on Topic Search Actor class
+ * @since 2021-12-07
+ * @version 1.0
+ * @author Mrinal Rai
+ *
+ */
 public class TopicSearchActorTest {
     
 public static ActorSystem system;
@@ -33,6 +40,9 @@ public GithubApi ghApi;
 Application application;
 
 	
+	/**
+	 * Sets up the test environment
+	 */
 	@Before
 	  public  void setup() {
 	    system = ActorSystem.create();
@@ -40,6 +50,9 @@ Application application;
 	    ghApi = application.injector().instanceOf(GithubApi.class);
 	  }
 	
+	/**
+	 * Tests TopicSearchActor
+	 */
 	@Test
 	public void testTopicSearchActor() {
 	   
@@ -53,6 +66,7 @@ Application application;
 		                Duration.ofSeconds(20),
 		                () -> {
 		                	
+		                	// When no data is sent
 		                	subject.tell(new Data(), getRef());
 		                	expectNoMsg();
 		                	
@@ -60,10 +74,12 @@ Application application;
 		                	testData.put("keyword","play");
 		                	subject.tell(testData, getRef());
 		                	
+		                	// When first time data is fetched
 		                	subject.tell(new Data(), getRef());
 		                	ObjectNode response = expectMsgClass(ObjectNode.class);
 		                	assertTrue(response.get("topics").size() > 0 ? true : false);
 		                	
+		                	// When second time data is fetched
 		                	subject.tell(new Data(), getRef());
 		                	response = expectMsgClass(ObjectNode.class);
 		                	assertTrue(response.get("topics").size() > 0 ? true : false);
@@ -77,6 +93,9 @@ Application application;
 	}
 	
 	
+	/**
+	 * Shuts down the actor system
+	 */
 	@After
 	  public  void teardown() {
 	    TestKit.shutdownActorSystem(system);

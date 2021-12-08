@@ -145,7 +145,7 @@ public class RepoSearchActor extends AbstractActor {
 	 }
 	 
 	 /**
-	  * The method to get the difference between search results
+	 * Fetches the difference between the new and old search results
 	 * @param repoList List of repositories
 	 * @return List<Repository> List of updated repositories
 	 */

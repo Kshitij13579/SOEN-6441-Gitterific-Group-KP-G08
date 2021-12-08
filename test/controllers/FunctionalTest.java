@@ -27,12 +27,16 @@ import static org.junit.Assert.assertTrue;
 import static play.test.Helpers.running;
 import static play.test.Helpers.testServer;
 
+/**
+ * This class implements test cases for WebSockets in HomeController
+ * @author Mrinal Rai
+ *
+ */
 public class FunctionalTest {
 
 
     /**
      * Tests if the ws() is accepting WebSocket requests
-     * @author Mrinal Rai
      */
     @Test
     public void testWsAcceptWebSocket() {
@@ -60,7 +64,6 @@ public class FunctionalTest {
     
     /**
      * Tests if the wsTopic() is accepting WebSocket requests
-     * @author Mrinal Rai
      */
     @Test
     public void testWsTopicAcceptWebSocket() {
@@ -88,7 +91,6 @@ public class FunctionalTest {
     
     /**
      * Tests if the wsRepositoryProfile() is accepting WebSocket requests
-     * @author Mrinal Rai
      */
     @Test
     public void testwsRepositoryProfileAcceptWebSocket() {
@@ -116,7 +118,6 @@ public class FunctionalTest {
     
     /**
      * Tests if the ws() is accepting WebSocket requests
-     * @author Mrinal Rai
      */
     @Test
     public void testwsCommitAcceptWebSocket() {
@@ -144,7 +145,6 @@ public class FunctionalTest {
     
     /**
      * Tests if the wsup() is accepting WebSocket requests
-     * @author Mrinal Rai
      */
     @Test
     public void testwsupCommitAcceptWebSocket() {
@@ -172,7 +172,6 @@ public class FunctionalTest {
     
     /**
      * Tests if the wsur() is accepting WebSocket requests
-     * @author Mrinal Rai
      */
     @Test
     public void testwsurCommitAcceptWebSocket() {
@@ -200,7 +199,6 @@ public class FunctionalTest {
     
     /**
      * Tests if the wsIssue() is accepting WebSocket requests
-     * @author Mrinal Rai
      */
     @Test
     public void testwsIssueCommitAcceptWebSocket() {

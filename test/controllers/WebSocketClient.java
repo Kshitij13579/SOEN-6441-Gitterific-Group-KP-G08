@@ -13,6 +13,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+/**
+ * This class sets up Server for testing web sockets 
+ * @author Mrinal Rai
+ *
+ */
 public class WebSocketClient {
 
     private AsyncHttpClient client;

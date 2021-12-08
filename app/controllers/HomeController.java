@@ -142,8 +142,10 @@ public class HomeController extends Controller implements WSBodyReadables {
     
     /**
      * Handles WebSocket for Topics Page
-     * @return WebSocket
-     */
+	 * @return WebSocket object
+	 * @author Mrinal Rai
+	 * @since  2021-12-07
+	 */
     public WebSocket wsTopic() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> TopicSearchActor.props(ws, cache,ghApi), actorSystem, materializer));
     }

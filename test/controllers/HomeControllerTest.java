@@ -91,11 +91,6 @@ public class HomeControllerTest extends WithApplication {
 		Helpers.start(application);
 
 		hcMock = mock(HomeController.class);
-//		List<Repository> repoList = testApi.getRepositoryInfo("play", cache);
-//		when(hcMock.fetchRepositoryInfo("play")).thenReturn(repoList);
-//		when(hcMock.fetchRepositories("play")).thenReturn(repoList);
-//		//when(hcMock.topics("play")).thenCallRealMethod();
-//		when(hcMock.ws()).thenReturn(WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepoSearchActor.props(ws, cache,testApi), actorSystem, materializer)));
 	}
 
 	@Override
@@ -184,10 +179,7 @@ public class HomeControllerTest extends WithApplication {
 	public void testGoodRouteCallForIndex() {
 		RequestBuilder request = Helpers.fakeRequest(routes.HomeController.index());
 		Result result = route(app, request);
-		// ###replace: assertEquals(OK, result.status());
 		assertEquals(OK, result.status());
-		// assertEquals(NOT_FOUND, result.status()); // NOT_FOUND since the routes files
-		// aren't used
 	}
 
 
