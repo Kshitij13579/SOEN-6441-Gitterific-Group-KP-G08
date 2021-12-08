@@ -175,6 +175,12 @@ public class HomeController extends Controller implements WSBodyReadables {
     }
     
 	
+	 /**
+	   * Handles WebSocket for Commits Page
+	   * @return WebSocket object
+	   * @author Kshitij Yerande
+	   * @since  2021-12-07
+	   */
     public WebSocket wsCommit() {
     	return WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> CommitStatActor.props(ws, cache,ghApi), actorSystem, materializer));
     }
