@@ -8,11 +8,9 @@
 GET     /                                 			controllers.HomeController.index(request :Request)
 GET     /topics/:topic	                         	controllers.HomeController.topics(request :Request, topic: String)
 GET     /repository/:username/:repository         	controllers.HomeController.repository_profile(request :Request,username:String,repository:String)
-GET     /search                           			controllers.HomeController.search(query:String)
 GET     /search/:user/:repository/commits 			controllers.HomeController.commits(user:String,repository:String,request :Request)
 GET     /users/:username                  			controllers.HomeController.user_profile(username:String, request :Request)
 GET     /users/repos/:username      	    		controllers.HomeController.user_repository(username:String, request :Request)
-# GET     /topics/:topic       	    				controllers.HomeController.topics(topic: String)
 GET     /search/:user/:repository/issues 			controllers.HomeController.issues(request:Request, user:String,repository:String)
 GET     /ws                                         controllers.HomeController.ws
 GET     /wsCommit                                   controllers.HomeController.wsCommit

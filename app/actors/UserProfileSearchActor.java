@@ -3,7 +3,6 @@ package actors;
 import play.Logger;
 import play.cache.AsyncCacheApi;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import play.libs.Json;
 import play.libs.ws.WSRequest;
@@ -96,8 +95,8 @@ public class UserProfileSearchActor extends AbstractActor {
 	         response.put("following", userList.following);
 	         response.put("subscriptions_url", userList.subscriptions_url);
 	         response.put("organizations_url", userList.organizations_url);
-
-	         Logger.debug("New User Search Actor Response {}",response);
+	      // Uncomment in local
+	         // Logger.debug("New User Search Actor Response {}",response);
 	    	 ws.tell(response, self());
 	       
 	 }

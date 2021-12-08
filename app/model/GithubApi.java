@@ -26,7 +26,7 @@ public interface GithubApi {
 	 * @author Mrinal Rai
 	 * @param query Topic selected by the user
 	 * @param cache	Async cached being used in the main controller
-	 * @return List<Repository> containing the 10 latest repositories for the topic
+	 * @return CompletionStage<List<Repository>> containing the 10 latest repositories for the topic
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
@@ -37,7 +37,7 @@ public interface GithubApi {
 	 * @author Mrinal Rai
 	 * @param query Query searched by the user
 	 * @param cache	Async cached being used in the main controller
-	 * @return List<Repository> containing the 10 latest repositories for the topic
+	 * @return CompletionStage<List<Repository>> containing the 10 latest repositories for the topic
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
@@ -58,7 +58,21 @@ public interface GithubApi {
 	 * @throws ExecutionException
 	 */
 	CompletableFuture<Object> getResponse(String query, String per_page, String page, String sort, AsyncCacheApi cache) throws InterruptedException, ExecutionException;
-	List<Issues> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
+	
+	/**
+	 * Get the CompletableFuture List of repository issues for provided user and repository
+	 * @param user User Name of type String
+	 * @param repository Repository Name of type String
+	 * @param cache Asnyc cached being used in main controller
+	 * @return List of Issues as CompletableFuture Object
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @author Akshay
+	 * @since 2021-12-07
+	 */
+	CompletableFuture<List<Issues>> getIssuesFromResponse(String user, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
+	
+	
 	CompletableFuture<Object> getRepositoryProfileFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	CompletableFuture<Object> getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	CompletableFuture<Object> getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;

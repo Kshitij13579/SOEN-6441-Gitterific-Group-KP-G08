@@ -91,7 +91,8 @@ public class UserRepositoryActor extends AbstractActor {
 	         response.put("login", r.login);
 	         response.put("name", r.name);
 	         response.put("reponame", r.reponame);
-	         Logger.debug("New Repo Search Actor Response {}",response);
+	      // Uncomment in local
+	         // Logger.debug("New Repo Search Actor Response {}",response);
 	    	 ws.tell(response, self());	 
 	     });
 	 }

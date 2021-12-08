@@ -11,6 +11,10 @@ import play.mvc.Http.MultipartFormData.Part;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import actors.RepoSearchActor;
+import actors.SupervisorActor;
+import akka.actor.ActorSystem;
+import akka.stream.Materializer;
 import model.CommitStat;
 import model.GithubApi;
 import model.GithubApiMock;
@@ -20,12 +24,10 @@ import play.Application;
 import play.cache.AsyncCacheApi;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
+import play.libs.streams.ActorFlow;
 import play.libs.ws.WSClient;
-import play.mvc.Call;
-import play.mvc.Http;
-import play.mvc.*;
+import play.mvc.WebSocket;
 import play.mvc.Http.RequestBuilder;
-import play.mvc.Result;
 import play.routing.RoutingDsl;
 import play.server.Server;
 import play.test.Helpers;
@@ -38,6 +40,7 @@ import views.html.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.GET;
 import static play.test.Helpers.route;
@@ -76,21 +79,23 @@ public class HomeControllerTest extends WithApplication {
 	@Inject
 	static
 	AsyncCacheApi cache;
+	@Inject private static ActorSystem actorSystem;
+	@Inject private static Materializer materializer;
+	
 	@BeforeClass
 	public static void startApp() throws InterruptedException, ExecutionException, FileNotFoundException {
 		List<Repository> globalRepoList = new ArrayList<Repository>();  
 		application = new GuiceApplicationBuilder().overrides(bind(GithubApi.class).to(GithubApiMock.class)).build();
 		GithubApi testApi = application.injector().instanceOf(GithubApi.class);
-		
+
 		Helpers.start(application);
 
 		hcMock = mock(HomeController.class);
-		hcMock.globalRepoList = globalRepoList;
 //		List<Repository> repoList = testApi.getRepositoryInfo("play", cache);
 //		when(hcMock.fetchRepositoryInfo("play")).thenReturn(repoList);
 //		when(hcMock.fetchRepositories("play")).thenReturn(repoList);
 //		//when(hcMock.topics("play")).thenCallRealMethod();
-//		when(hcMock.search("play")).thenCallRealMethod();
+//		when(hcMock.ws()).thenReturn(WebSocket.Json.accept(request -> ActorFlow.actorRef( ws -> RepoSearchActor.props(ws, cache,testApi), actorSystem, materializer)));
 	}
 
 	@Override
@@ -102,7 +107,7 @@ public class HomeControllerTest extends WithApplication {
 	/**
 	 * Test to Validate testIndex() 
 	 *  Testing the Index page for HTML Response
-	 * @author Yogesh Yadavn
+	 * @author Yogesh Yadav
 	 */
 	@Test
 	public void testIndex() {
@@ -112,25 +117,55 @@ public class HomeControllerTest extends WithApplication {
 		assertEquals(OK, result.status());
 
 	}
-
-
-	/**
-	 * Test Index Page to return a HTML Response with expected status code,content
-	 * type and character set
-	 * @throws InterruptedException
-	 * @throws ExecutionException
-	 */
+	
 	@Test
-	public void testIndex1() throws InterruptedException, ExecutionException {
-		// Result result = new HomeController.index();
-//		RequestBuilder request = Helpers.fakeRequest(routes.HomeController.index());
-//		Result result = route(app, request);
-//		assertEquals(OK, result.status());
-//		assertEquals("text/html", result.contentType().get());
-//		assertEquals("utf-8", result.charset().get());
+	public void testCommit() {
+		Http.RequestBuilder request = new Http.RequestBuilder().method(GET).uri("/search/test/repo/commits");
+		Result result = route(app, request);
+		assertEquals(OK, result.status());
+
+	}
+	
+	@Test
+	public void testIssues() {
+		Http.RequestBuilder request = new Http.RequestBuilder().method(GET).uri("/search/test/repo/issues");
+		Result result = route(app, request);
+		assertEquals(OK, result.status());
+
+	}
+	
+	@Test
+	public void testRepositories() {
+		Http.RequestBuilder request = new Http.RequestBuilder().method(GET).uri("/users/repos/jack");
+		Result result = route(app, request);
+		assertEquals(OK, result.status());
+
+	}
+	
+	@Test
+	public void testRepositoryProfile() {
+		Http.RequestBuilder request = new Http.RequestBuilder().method(GET).uri("/repository/test/repo");
+		Result result = route(app, request);
+		assertEquals(OK, result.status());
+
+	}
+	
+	@Test
+	public void testTopics() {
+		Http.RequestBuilder request = new Http.RequestBuilder().method(GET).uri("/topics/play");
+		Result result = route(app, request);
+		assertEquals(OK, result.status());
+
+	}
+	
+	@Test
+	public void testUsers() {
+		Http.RequestBuilder request = new Http.RequestBuilder().method(GET).uri("/users/jack");
+		Result result = route(app, request);
+		assertEquals(OK, result.status());
+
 	}
 
-	// 
 	/**
 	 * Testing Controller Action through Routing :  Bad Route Testing
 	 */
@@ -235,6 +270,7 @@ public class HomeControllerTest extends WithApplication {
 //    	
 //    	assertEquals("utf-8", result.charset().get());
     }
+
 
 	@AfterClass
 	public static void stopApp() {
