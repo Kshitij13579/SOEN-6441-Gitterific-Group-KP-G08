@@ -27,7 +27,14 @@ import java.util.*;
 import service.RepositoryProfileService;
 import views.html.*;
 
-
+/**
+* The Repository Profile Actor class is used to for computing and displaying repository profile 
+* details by making an API call every 10 seconds.
+* This actor subscribes to CommitSupervisor Actor.
+*
+* @author  Yogesh Yadav
+* @since   2021-12-07 
+*/
 public class RepositoryProfileActor extends AbstractActor {
 	private final ActorRef ws;
 	
@@ -36,6 +43,14 @@ public class RepositoryProfileActor extends AbstractActor {
     String username;
     String repository;
     
+    /**
+     * Constructor to initialize the Repository Actor
+     * @author  Yogesh Yadav
+     * @since   2021-12-07 
+     * @param wsOut 
+     * @param cache 
+     * @param ghApi
+     */
     public RepositoryProfileActor(final ActorRef wsOut,AsyncCacheApi cache,GithubApi ghApi) {
     	this.ws =  wsOut;
     	this.cache = cache;
@@ -43,16 +58,35 @@ public class RepositoryProfileActor extends AbstractActor {
     	Logger.debug("***************New Repository Profile Actor{} for WebSocket {}", self(), wsOut);
     }
 	
+    /**     
+     * Method to start the Actor
+     * @author  Yogesh Yadav
+     * @since   2021-12-07 
+     * @param wsout
+     * @param cache
+     * @param ghApi
+     * @return
+     */
     public static Props props(final ActorRef wsout,AsyncCacheApi cache,GithubApi ghApi) {
         return Props.create(RepositoryProfileActor.class, wsout,cache,ghApi);
     }
     
+    /**
+     * Method to register to supervisor
+     * @author  Yogesh Yadav
+     * @since   2021-12-07 
+     */
     @Override
     public void preStart() {
        	context().actorSelection("/user/supervisorActor/")
                  .tell(new SupervisorActor.RegisterMsg(), self());
     }
     
+    /**
+     * Method to receive data from front end
+     * @author  Yogesh Yadav
+     * @since   2021-12-07 
+     */
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
@@ -61,13 +95,25 @@ public class RepositoryProfileActor extends AbstractActor {
     			.build();
 	}
 	
+	 /**
+     * Method to set Actor variables
+     * @author  Yogesh Yadav
+     * @since   2021-12-07 
+     */
 	private void setData(ObjectNode o) {
 		this.username = o.get("user").asText();
 		this.repository = o.get("repository").asText();
 		Logger.debug("*********Recevied parameters {} {}",this.username,this.repository);
 	}
 	
-	 private void send(Data d) throws Exception {
+	 /**
+	 * Method to call git api calls and compute repository details and share data to front end
+     * @author  Yogesh Yadav
+     * @since   2021-12-07 * 
+     * @param d
+	 * @throws Exception
+	 */
+	private void send(Data d) throws Exception {
 		 Logger.debug("*********  User ******* {} ",username);
 		 Logger.debug("*********  Repository ******* {} ",repository);
 		 if(this.username !=null && this.repository!=null) {
