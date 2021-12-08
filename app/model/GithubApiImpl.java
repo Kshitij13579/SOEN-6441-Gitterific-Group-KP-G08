@@ -234,7 +234,12 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	    	return json ; 
 	    	});
 	}
-	
+
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Siddhartha Jha
+	 * @since 2021-11-20
+	 */
 	@Override
 	public UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException {
 		
@@ -248,6 +253,11 @@ public class GithubApiImpl implements GithubApi, WSBodyReadables  {
 	    	return repoList;
 	}
 	
+	/**
+	 * Method described in GithubApi Interface
+	 * @author Siddhartha Jha
+	 * @since 2021-11-20
+	 */	
 	public List<UserRepository> getuser_repository(String username) throws InterruptedException, ExecutionException {
 	    	UserService repoService = new UserService();
 	    	List<UserRepository> repoList = new ArrayList<>();

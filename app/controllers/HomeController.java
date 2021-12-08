@@ -193,13 +193,6 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 */
     public Result user_profile(String username , Http.Request request) throws InterruptedException, ExecutionException{
     	
-//    	UserService repoService = new UserService();
-//    	UserProfile repoList = new UserProfile();
-//    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username)
-//	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"));
-//	   
-//    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
-//    	repoList = repoService.getUser(jsonPromise.toCompletableFuture().get());
     	return ok(users.render(request));
     }
     
@@ -218,17 +211,8 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 * 							  retrieve the result of any task
 	 */
     public Result user_repository(String username, Http.Request request) throws InterruptedException, ExecutionException{
-//    	UserService repoService = new UserService();
-//    	List<UserRepository> repoList = new ArrayList<>();
-//    	WSRequest request = ws.url(ConfigFactory.load().getString("constants.git_search_user_url")+"/"+username+"/repos")
-//	              .addHeader(GIT_HEADER.CONTENT_TYPE.value, ConfigFactory.load().getString("constants.git_header.Content-Type"))
-//	              .addQueryParameter(GIT_PARAM.PER_PAGE.value, ConfigFactory.load().getString("constants.repo_per_page_repo"))
-//	              .addQueryParameter(GIT_PARAM.PAGE.value, ConfigFactory.load().getString("constants.repo_page"));
-//    	CompletionStage<JsonNode> jsonPromise = request.get().thenApply(r -> r.getBody(json()));
-//    	repoList = repoService.getUser_repository(jsonPromise.toCompletableFuture().get());
-//      return ok(repositories.render(repoList));
-    	return ok(repositories.render(request));
 
+    	return ok(repositories.render(request));
     }
     
     public WebSocket wsur() {

@@ -240,11 +240,14 @@ public class GithubApiMock implements GithubApi {
 	
 	public UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException 
 	{
-		return new UserProfile();
+		UserProfile expected = new UserProfile("a","b","c","d","e","f","g","h","i","j","k");
+		return expected;
 	}
 		
 	public List<UserRepository> getuser_repository(String username) throws InterruptedException, ExecutionException {
 	
-		return new ArrayList<UserRepository>();
+		List<UserRepository> expected = new ArrayList<UserRepository>();
+		expected.add(new UserRepository("abc","def","mno"));
+		return expected;
 	}
 }
