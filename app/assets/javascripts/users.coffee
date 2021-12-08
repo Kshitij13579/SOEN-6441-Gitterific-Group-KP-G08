@@ -8,7 +8,7 @@ $ ->
     $('#id').text(repo.id)
     $('#node_id').text(repo.node_id)
     $('#avatar_url').text(repo.avatar_url)
-    $('#repos_url').append('<a href="/users/repos/'+repo.name+'">'+repo.repos_url+'</a>')
+    $('#repos_url').empty().append('<a href="/users/repos/'+repo.name+'">'+repo.repos_url+'</a>')
     $('#email').text(repo.email)
     $('#twitter_username').text(repo.twitter_username)
     $('#followers').text(repo.followers)

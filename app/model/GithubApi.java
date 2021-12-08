@@ -77,7 +77,26 @@ public interface GithubApi {
 	CompletableFuture<Object> getRepositoryProfileIssuesFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	CompletableFuture<Object> getRepositoryProfileCollaborationsFromResponse(String username, String repository, AsyncCacheApi cache) throws InterruptedException,ExecutionException;
 	
+	/**
+	 * Fetch user details 
+	 * 
+	 * @author Siddhartha Jha
+	 * @param username selected by the user from query page
+	 * @return UserProfile user details
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	UserProfile getUserProfile(String username) throws InterruptedException, ExecutionException ;
+	
+	/**
+	 * Fetch user repositories details 
+	 * 
+	 * @author Siddhartha Jha
+	 * @param username selected by the user from user profile page
+	 * @return List<UserRepository> list of repositories details
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	List<UserRepository> getuser_repository(String username) throws InterruptedException, ExecutionException;
 	
 }

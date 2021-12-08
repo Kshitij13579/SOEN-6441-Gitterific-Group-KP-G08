@@ -210,8 +210,8 @@ public class HomeController extends Controller implements WSBodyReadables {
 	 */
     public Result user_repository(String username, Http.Request request) throws InterruptedException, ExecutionException{
 
-    	return ok(repositories.render(request));
 
+    	return ok(repositories.render(request));
     }
     
     public WebSocket wsur() {
