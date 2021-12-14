@@ -38,6 +38,13 @@ import java.time.Duration;
 
 import static play.inject.Bindings.bind;
 
+/**
+ * This is the Test Class to perform UserProfile Actor testing
+ * @author Siddhartha Jha
+ * @since 2021-12-07
+ * @version 1.0
+ *
+ */
 public class UserProfileActorTest {
 
 	public static ActorSystem system;
