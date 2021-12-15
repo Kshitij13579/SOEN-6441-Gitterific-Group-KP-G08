@@ -22,7 +22,7 @@ If you do not have the required versions, follow these links to obtain them:
 
 ## Build and run the project
 
-This example Play project was created from a seed template. It includes all Play components and an Akka HTTP server. The project is also configured with filters for Cross-Site Request Forgery (CSRF) protection and security headers.
+This example Play project It includes all Play components and an Akka HTTP server. The project is also configured with filters for Cross-Site Request Forgery (CSRF) protection and security headers.
 
 To build and run the project:
 
