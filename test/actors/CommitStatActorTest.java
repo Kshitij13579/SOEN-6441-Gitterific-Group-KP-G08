@@ -23,6 +23,14 @@ import static play.inject.Bindings.bind;
 
 import java.time.Duration;
 
+/**
+ * This test file is to test the CommitStatActor class functionality.
+ * 
+ * @author Kshitij Yerande
+ * @version 1.0
+ * @since 7-Dec-2021
+ *
+ */
 public class CommitStatActorTest {
     
 public static ActorSystem system;

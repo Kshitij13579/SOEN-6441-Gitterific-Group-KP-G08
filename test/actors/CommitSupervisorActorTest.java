@@ -11,6 +11,14 @@ import akka.actor.Props;
 import akka.testkit.javadsl.TestKit;
 import java.time.Duration;
 
+/**
+ * This test file is to test the CommitSupervisorActor class functionality.
+ * 
+ * @author Kshitij Yerande
+ * @version 1.0
+ * @since 7-Dec-2021
+ *
+ */
 public class CommitSupervisorActorTest {
     
 	public static ActorSystem system;
